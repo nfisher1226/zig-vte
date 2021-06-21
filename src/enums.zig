@@ -77,7 +77,7 @@ pub const Orientation = enum {
 
 };
 
-///enum GtkWindowType
+/// enum GtkWindowType
 pub const window_toplevel = @intToEnum(GtkWindowType, GTK_WINDOW_TOPLEVEL);
 pub const window_popup = @intToEnum(GtkWindowType, GTK_WINDOW_POPUP);
 
@@ -104,17 +104,17 @@ pub const pos_top = @intToEnum(GtkPositionType, GTK_POS_TOP);
 pub const pos_bottom = @intToEnum(GtkPositionType, GTK_POS_BOTTOM);
 
 pub const PositionType = enum {
-    pos_left,
-    pos_right,
-    pos_top,
-    pos_bottom,
+    left,
+    right,
+    top,
+    bottom,
 
     pub fn parse(self: PositionType) GtkPositionType {
         switch (self) {
-            .pos_left => return pos_left,
-            .pos_right => return pos_right,
-            .pos_top => return pos_top,
-            .pos_bottom => return pos_bottom,
+            .left => return pos_left,
+            .right => return pos_right,
+            .top => return pos_top,
+            .bottom => return pos_bottom,
         }
     }
 };
