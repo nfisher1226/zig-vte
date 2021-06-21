@@ -1,0 +1,12 @@
+pkgs:
+  vte:
+    version: 0.1.1
+    description: "Convenience functions and wrappers for using Vte and Gtk+ in Zig"
+    source_url: "https://github.com/nfisher1226/zig-vte"
+
+    root: lib.zig
+    files:
+      README.md
+      LICENSE
+      src/*.zig
+      examples/*.zig
