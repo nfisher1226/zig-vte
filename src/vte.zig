@@ -4,9 +4,9 @@ usingnamespace @import("widget.zig");
 const std = @import("std");
 
 /// Vte enum VteCursorBlinkMode
-pub const cursor_blink_system = @intoToEnum(VteCursorBlinkMode, VTE_CURSOR_BLINK_SYSTEM);
-pub const cursor_blink_on = @intoToEnum(VteCursorBlinkMode, VTE_CURSOR_BLINK_ON);
-pub const cursor_blink_off = @intoToEnum(VteCursorBlinkMode, VTE_CURSOR_BLINK_OFF);
+pub const cursor_blink_system = @intToEnum(VteCursorBlinkMode, VTE_CURSOR_BLINK_SYSTEM);
+pub const cursor_blink_on = @intToEnum(VteCursorBlinkMode, VTE_CURSOR_BLINK_ON);
+pub const cursor_blink_off = @intToEnum(VteCursorBlinkMode, VTE_CURSOR_BLINK_OFF);
 
 /// VtePtyFlags enum
 pub const pty_no_lastlog = @intToEnum(VtePtyFlags, VTE_PTY_NO_LASTLOG);
