@@ -55,37 +55,37 @@ pub const Terminal = struct {
     ptr: *VteTerminal,
 
     pub fn new() Terminal {
-        return Terminal {
+        return Terminal{
             .ptr = @ptrCast(*VteTerminal, vte_terminal_new()),
         };
     }
 
     pub fn spawn_async(
-            self: Terminal,
-            flags: VtePtyFlags,
-            wkgdir: ?[:0]const u8,
-            command: [:0]const u8,
-            env: ?[][:0]const u8,
-            spawn_flags: GSpawnFlags,
-            child_setup_func: ?GSpawnChildSetupFunc,
-            timeout: c_int,
-            cancellable: ?*GCancellable,
-            ) void {
+        self: Terminal,
+        flags: VtePtyFlags,
+        wkgdir: ?[:0]const u8,
+        command: [:0]const u8,
+        env: ?[][:0]const u8,
+        spawn_flags: GSpawnFlags,
+        child_setup_func: ?GSpawnChildSetupFunc,
+        timeout: c_int,
+        cancellable: ?*GCancellable,
+    ) void {
         vte_terminal_spawn_async(
             self.ptr,
             flags,
-            wkgdir.?,
+            if (wkgdir) |d| d else null,
             @ptrCast([*c][*c]gchar, &([2][*c]gchar{
                 g_strdup(command),
                 null,
             })),
             if (env) |e| @ptrCast([*c][*c]u8, e) else null,
             spawn_flags,
-            child_setup_func.?,
+            if (child_setup_func) |f| f else null,
             @intToPtr(?*c_void, @as(c_int, 0)),
             null,
             timeout,
-            cancellable.?,
+            if (cancellable) |cn| cn else null,
             null,
             @intToPtr(?*c_void, @as(c_int, 0)),
         );
@@ -146,14 +146,18 @@ pub const Terminal = struct {
         vte_terminal_set_cursor_blink_mode(self.ptr, mode.parse());
     }
 
+    pub fn connect_child_exited(self: Terminal, callback: GCallback, data: ?gpointer) void {
+        self.as_widget().connect("child_exited", callback, if (data) |d| d else null);
+    }
+
     pub fn as_widget(self: Terminal) Widget {
-        return Widget {
+        return Widget{
             .ptr = @ptrCast(*GtkWidget, self.ptr),
         };
     }
 
     pub fn from_widget(widget: Widget) ?Terminal {
-        return Terminal {
+        return Terminal{
             .ptr = @ptrCast(*VteTerminal, widget.ptr),
         };
     }

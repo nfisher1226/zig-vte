@@ -6,7 +6,7 @@ const Gui = struct {
     term: vte.Terminal,
 
     fn init(app: *c.GtkApplication) Gui {
-        return Gui {
+        return Gui{
             .window = gtk.ApplicationWindow.new(app).as_window(),
             .term = vte.Terminal.new(),
         };
@@ -15,25 +15,8 @@ const Gui = struct {
     fn setup(self: Gui) void {
         self.window.set_title("Simple Terminal");
         self.window.as_container().add(self.term.as_widget());
-        c.vte_terminal_spawn_async(
-            self.term.ptr,
-            vte.pty_default,
-            null,
-            @ptrCast([*c][*c]c.gchar, &([2][*c]c.gchar{
-                c.g_strdup("/bin/sh"),
-                null,
-            })),
-            null,
-            gtk.g_spawn_default,
-            null,
-            @intToPtr(?*c_void, @as(c_int, 0)),
-            null,
-            -1,
-            null,
-            null,
-            @intToPtr(?*c_void, @as(c_int, 0)),
-        );
-        //self.term.spawn_async(vte.pty_default, null, "/bin/sh", null, gtk.g_spawn_default, null, -1, null);
+        self.term.spawn_async(vte.pty_default, null, "/bin/sh", null, gtk.g_spawn_default, null, -1, null);
+        self.term.connect_child_exited(@ptrCast(c.GCallback, close_callback), null);
     }
 };
 
@@ -60,4 +43,8 @@ fn activate(app: *c.GtkApplication, data: c.gpointer) void {
     gui.setup();
     // show_all() is a Widget method
     gui.window.as_widget().show_all();
+}
+
+fn close_callback(term: *c.VteTerminal, data: c.gpointer) void {
+    c.gtk_widget_destroy(@ptrCast(*c.GtkWidget, term));
 }
