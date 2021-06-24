@@ -1,6 +1,8 @@
 usingnamespace @import("zig-vte");
 const std = @import("std");
 
+var gui: Gui = undefined;
+
 const Gui = struct {
     window: gtk.Window,
     term: vte.Terminal,
@@ -15,13 +17,13 @@ const Gui = struct {
     fn setup(self: Gui) void {
         self.window.set_title("Simple Terminal");
         self.window.as_container().add(self.term.as_widget());
-        self.term.spawn_async(vte.pty_default, null, "/bin/sh", null, gtk.g_spawn_default, null, -1, null);
+        self.term.spawn_async(.default, null, "/bin/sh", null, .default, null, -1, null);
         self.term.connect_child_exited(@ptrCast(c.GCallback, close_callback), null);
     }
 };
 
 pub fn main() void {
-    const app = c.gtk_application_new("org.vte.example", .G_APPLICATION_FLAGS_NONE) orelse @panic("null app :(");
+    const app = c.gtk_application_new("org.vte.example", c.G_APPLICATION_FLAGS_NONE) orelse @panic("null app :(");
     defer c.g_object_unref(app);
 
     // Call the C function directly to connect our "activate" signal
@@ -31,7 +33,7 @@ pub fn main() void {
         @ptrCast(c.GCallback, activate),
         null,
         null,
-        gtk.connect_after,
+        c.G_CONNECT_AFTER,
     );
     _ = c.g_application_run(@ptrCast(*c.GApplication, app), 0, null);
 }
@@ -39,12 +41,13 @@ pub fn main() void {
 fn activate(app: *c.GtkApplication, data: c.gpointer) void {
     // Create an ApplicationWindow using our *GtkApplication pointer, which we then use as a window
     // in order to inherit the Window methods
-    const gui = Gui.init(app);
+    gui = Gui.init(app);
     gui.setup();
     // show_all() is a Widget method
     gui.window.as_widget().show_all();
 }
 
 fn close_callback(term: *c.VteTerminal, data: c.gpointer) void {
-    c.gtk_widget_destroy(@ptrCast(*c.GtkWidget, term));
+    gui.term.as_widget().destroy();
+    gui.window.as_widget().destroy();
 }

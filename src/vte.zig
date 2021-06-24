@@ -3,18 +3,37 @@ usingnamespace @import("enums.zig");
 usingnamespace @import("widget.zig");
 const std = @import("std");
 
-/// Vte enum VteCursorBlinkMode
-pub const cursor_blink_system = @intToEnum(VteCursorBlinkMode, VTE_CURSOR_BLINK_SYSTEM);
-pub const cursor_blink_on = @intToEnum(VteCursorBlinkMode, VTE_CURSOR_BLINK_ON);
-pub const cursor_blink_off = @intToEnum(VteCursorBlinkMode, VTE_CURSOR_BLINK_OFF);
+/// PtyFlags enum
+pub const PtyFlags = enum {
+    no_lastlog,
+    no_utmp,
+    no_wtmp,
+    no_helper,
+    no_fallback,
+    default,
 
-/// VtePtyFlags enum
-pub const pty_no_lastlog = @intToEnum(VtePtyFlags, VTE_PTY_NO_LASTLOG);
-pub const pty_no_utmp = @intToEnum(VtePtyFlags, VTE_PTY_NO_UTMP);
-pub const pty_no_wtmp = @intToEnum(VtePtyFlags, VTE_PTY_NO_WTMP);
-pub const pty_no_helper = @intToEnum(VtePtyFlags, VTE_PTY_NO_HELPER);
-pub const pty_no_fallback = @intToEnum(VtePtyFlags, VTE_PTY_NO_FALLBACK);
-pub const pty_default = @intToEnum(VtePtyFlags, VTE_PTY_DEFAULT);
+    pub fn parse(self: PtyFlags) VtePtyFlags {
+        return switch (self) {
+            .no_lastlog => VTE_PTY_NO_LASTLOG,
+            .no_utmp => VTE_PTY_NO_UTMP,
+            .no_wtmp => VTE_PTY_NO_WTMP,
+            .no_helper => VTE_PTY_NO_HELPER,
+            .no_fallback => VTE_PTY_NO_FALLBACK,
+            .default => VTE_PTY_DEFAULT,
+        };
+    }
+
+    pub fn from_c(flags: VtePtyFlags) PtyFlags {
+        return switch (flags) {
+            VTE_PTY_NO_LASTLOG => .no_lastlog,
+            VTE_PTY_NO_UTMP => .no_utmp,
+            VTE_PTY_NO_WTMP => .no_wtmp,
+            VTE_PTY_NO_HELPER => .no_helper,
+            VTE_PTY_NO_FALLBACK => .no_fallback,
+            VTE_PTY_DEFAULT => .default,
+        };
+    }
+};
 
 /// Zig enum CursorBlinkMode
 pub const CursorBlinkMode = enum {
@@ -23,18 +42,21 @@ pub const CursorBlinkMode = enum {
     off,
 
     pub fn parse(self: CursorBlinkMode) VteCursorBlinkMode {
-        switch (self) {
-            .system => return cursor_blink_system,
-            .on => return cursor_blink_on,
-            .off => return cursor_blink_off,
-        }
+        return switch (self) {
+            .system => VTE_CURSOR_BLINK_SYSTEM,
+            .on => VTE_CURSOR_BLINK_ON,
+            .off => VTE_CURSOR_BLINK_OFF,
+        };
+    }
+
+    pub fn from_c(mode: VteCursorBlinkMode) CursorBlinkMode {
+        return switch (mode) {
+            VTE_CURSOR_BLINK_SYSTEM => .system,
+            VTE_CURSOR_BLINK_ON => .on,
+            VTE_CURSOR_BLINK_OFF => .off,
+        };
     }
 };
-
-/// Vte enum VteCursorShape
-pub const cursor_shape_block = @intToEnum(VteCursorShape, VTE_CURSOR_SHAPE_BLOCK);
-pub const cursor_shape_ibeam = @intToEnum(VteCursorShape, VTE_CURSOR_SHAPE_IBEAM);
-pub const cursor_shape_underline = @intToEnum(VteCursorShape, VTE_CURSOR_SHAPE_UNDERLINE);
 
 /// Zig enum CursorShape
 pub const CursorShape = enum {
@@ -43,11 +65,19 @@ pub const CursorShape = enum {
     underline,
 
     pub fn parse(self: CursorShape) VteCursorShape {
-        switch (self) {
-            .block => return cursor_shape_block,
-            .ibeam => return cursor_shape_ibeam,
-            .underline => return cursor_shape_underline,
-        }
+        return switch (self) {
+            .block => VTE_CURSOR_SHAPE_BLOCK,
+            .ibeam => VTE_CURSOR_SHAPE_IBEAM,
+            .underline => VTE_CURSOR_SHAPE_UNDERLINE,
+        };
+    }
+
+    pub fn from_c(shape: VteCursorShape) CursorShape {
+        return switch (shape) {
+            VTE_CURSOR_SHAPE_BLOCK => .block,
+            VTE_CURSOR_SHAPE_IBEAM => .ibeam,
+            VTE_CURSOR_SHAPE_UNDERLINE => .underline,
+        };
     }
 };
 
@@ -62,25 +92,25 @@ pub const Terminal = struct {
 
     pub fn spawn_async(
         self: Terminal,
-        flags: VtePtyFlags,
+        flags: PtyFlags,
         wkgdir: ?[:0]const u8,
         command: [:0]const u8,
         env: ?[][:0]const u8,
-        spawn_flags: GSpawnFlags,
+        spawn_flags: SpawnFlags,
         child_setup_func: ?GSpawnChildSetupFunc,
         timeout: c_int,
         cancellable: ?*GCancellable,
     ) void {
         vte_terminal_spawn_async(
             self.ptr,
-            flags,
+            flags.parse(),
             if (wkgdir) |d| d else null,
             @ptrCast([*c][*c]gchar, &([2][*c]gchar{
                 g_strdup(command),
                 null,
             })),
             if (env) |e| @ptrCast([*c][*c]u8, e) else null,
-            spawn_flags,
+            spawn_flags.parse(),
             if (child_setup_func) |f| f else null,
             @intToPtr(?*c_void, @as(c_int, 0)),
             null,
@@ -121,12 +151,7 @@ pub const Terminal = struct {
 
     pub fn get_cursor_shape(self: Terminal) CursorShape {
         const shape = vte_terminal_get_cursor_shape(self.ptr);
-        switch (shape) {
-            cursor_shape_block => return CursorShape.block,
-            cursor_shape_ibeam => return CursorShape.ibeam,
-            cursor_shape_underline => return CursorShape.underline,
-            else => unreachable,
-        }
+        return CursorShape.from_c(shape);
     }
 
     pub fn set_cursor_shape(self: Terminal, shape: CursorShape) void {
@@ -135,11 +160,7 @@ pub const Terminal = struct {
 
     pub fn get_cursor_blink_mode(self: Terminal) CursorBlinkMode {
         const mode = vte_terminal_get_cursor_blink_mode(self.ptr);
-        switch (mode) {
-            cursor_blink_system => return CursorBlinkMode.system,
-            cursor_blink_on => return CursorBlinkMode.on,
-            cursor_blink_off => return CursorBlinkMode.off,
-        }
+        return CursorBlinkMode.from_c(mode);
     }
 
     pub fn set_cursor_blink_mode(self: Terrminal, mode: CursorBlinkMode) void {

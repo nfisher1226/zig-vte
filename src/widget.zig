@@ -14,12 +14,12 @@ pub const Widget = struct {
         gtk_widget_show_all(self.ptr);
     }
 
+    pub fn destroy(self: Widget) void {
+        gtk_widget_destroy(self.ptr);
+    }
+
     pub fn connect(self: Widget, sig: [:0]const u8, callback: GCallback, data: ?gpointer) void {
-        if (data) |d| {
-            _ = signal_connect(self.ptr, sig, callback, d);
-        } else {
-            _ = signal_connect(self.ptr, sig, callback, null);
-        }
+        _ = signal_connect(self.ptr, sig, callback, if (data) |d| d else null);
     }
 
     fn get_g_type(self: Widget) u64 {
