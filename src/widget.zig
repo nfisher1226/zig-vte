@@ -32,6 +32,10 @@ pub const Widget = struct {
         return (gtk_widget_is_focus(self.ptr) == 1);
     }
 
+    pub fn has_focus(self: Widget) bool {
+        return (gtk_widget_has_focus(self.ptr) == 1);
+    }
+
     pub fn grab_focus(self: Widget) void {
         gtk_widget_grab_focus(self.ptr);
     }
@@ -65,6 +69,25 @@ pub const Widget = struct {
 
     pub fn get_parent(self: Widget) ?Widget {
         return if (gtk_widget_get_parent(self.ptr)) |w| Widget{ .ptr = w } else null;
+    }
+
+    pub fn get_has_tooltip(self: Widget) bool {
+        return (gtk_widget_get_has_tooltip(self.ptr) == 1);
+    }
+
+    pub fn set_has_tooltip(self: Widget, tooltip: bool) void {
+        gtk_widget_set_has_tooltip(self.ptr, bool_to_c_int(tooltip));
+    }
+
+    pub fn get_tooltip_text(self: Widget, allocator: *mem.Allocator) ?[:0]const u8 {
+        return if (gtk_widget_get_tooltip_text(self.ptr)) |t|
+            fmt.allocPrintZ(allocator, "{s}", .{t}) catch return null
+        else
+            null;
+    }
+
+    pub fn set_tooltip_text(self: Widget, text: [:0]const u8) void {
+        gtk_widget_set_tooltip_text(self.ptr, text);
     }
 
     pub fn destroy(self: Widget) void {

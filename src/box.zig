@@ -8,10 +8,9 @@ usingnamespace @import("widget.zig");
 pub const Box = struct {
     ptr: *GtkBox,
 
-    pub fn new(orientation: Orientation, spacing: u8) Box {
-        const gtk_orientation = orientation.parse();
+    pub fn new(orientation: Orientation, spacing: c_int) Box {
         return Box{
-            .ptr = @ptrCast(*GtkBox, gtk_box_new(gtk_orientation, @as(c_int, spacing))),
+            .ptr = @ptrCast(*GtkBox, gtk_box_new(orientation.parse(), spacing)),
         };
     }
 
@@ -21,6 +20,14 @@ pub const Box = struct {
 
     pub fn pack_end(self: Box, widget: Widget, expand: bool, fill: bool, padding: c_uint) void {
         gtk_box_pack_end(self.ptr, widget.ptr, bool_to_c_int(expand), bool_to_c_int(fill), padding);
+    }
+
+    pub fn get_homogeneous(self: Box) bool {
+        return (gtk_box_get_homogeneous(self.ptr) == 1);
+    }
+
+    pub fn set_homogeneous(self: Box, hom: bool) void {
+        gtk_box_set_homogeneous(self.ptr, bool_to_c_int(hom));
     }
 
     pub fn as_orientable(self: Box) Orientable {
