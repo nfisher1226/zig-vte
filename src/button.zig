@@ -93,7 +93,7 @@ pub const Button = struct {
 
     /// Returns an Widget struct representing the image which is currently set, or null
     pub fn get_image(self: Button) ?Widget {
-        if (gtk_button_get_image(self.ptr)) |widget| {
+        if (gtk_button_get_image(self.ptr)) |w| {
             return Widget{
                 .ptr = w,
             };
