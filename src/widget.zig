@@ -90,7 +90,7 @@ pub const Widget = struct {
         gtk_widget_set_tooltip_text(self.ptr, text);
     }
 
-    pub fn get_screen(self: Widget) *GdkScreen {
+    pub fn get_screen(self: Widget) ?*GdkScreen {
         return gtk_widget_get_screen(self.ptr);
     }
 
