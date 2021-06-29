@@ -1,6 +1,8 @@
 usingnamespace @import("cimport.zig");
 usingnamespace @import("button.zig");
 usingnamespace @import("convenience.zig");
+usingnamespace @import("menuitem.zig");
+usingnamespace @import("notebook.zig");
 usingnamespace @import("range.zig");
 usingnamespace @import("switch.zig");
 usingnamespace @import("window.zig");
@@ -98,6 +100,10 @@ pub const Widget = struct {
         gtk_widget_set_visual(self.ptr, visual);
     }
 
+    pub fn set_opacity(self: Widget, opacity: f64) void {
+        gtk_widget_set_opacity(self.ptr, opacity);
+    }
+
     pub fn destroy(self: Widget) void {
         gtk_widget_destroy(self.ptr);
     }
@@ -150,6 +156,22 @@ pub const Widget = struct {
         if (self.isa(Switch)) {
             return Switch{
                 .ptr = @ptrCast(*GtkSwitch, self.ptr),
+            };
+        } else return null;
+    }
+
+    pub fn to_menu_item(self: Widget) ?MenuItem {
+        if (self.isa(MenuItem)) {
+            return MenuItem{
+                .ptr = @ptrCast(*GtkMenuItem, self.ptr),
+            };
+        } else return null;
+    }
+
+    pub fn to_notebook(self: Widget) ?Notebook {
+        if (self.isa(Notebook)) {
+            return Notebook{
+                .ptr = @ptrCast(*GtkNotebook, self.ptr),
             };
         } else return null;
     }
