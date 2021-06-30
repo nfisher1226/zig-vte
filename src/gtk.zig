@@ -2,6 +2,7 @@ pub usingnamespace @import("adjustment.zig");
 pub usingnamespace @import("box.zig");
 pub usingnamespace @import("builder.zig");
 pub usingnamespace @import("button.zig");
+pub usingnamespace @import("colorchooser.zig");
 pub usingnamespace @import("container.zig");
 pub usingnamespace @import("convenience.zig");
 pub usingnamespace @import("enums.zig");

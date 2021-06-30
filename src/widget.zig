@@ -1,5 +1,6 @@
 usingnamespace @import("cimport.zig");
 usingnamespace @import("button.zig");
+usingnamespace @import("colorchooser.zig");
 usingnamespace @import("convenience.zig");
 usingnamespace @import("menuitem.zig");
 usingnamespace @import("notebook.zig");
@@ -164,6 +165,22 @@ pub const Widget = struct {
         if (self.isa(MenuItem)) {
             return MenuItem{
                 .ptr = @ptrCast(*GtkMenuItem, self.ptr),
+            };
+        } else return null;
+    }
+
+    pub fn to_color_chooser(self: Widget) ?ColorChooser {
+        if (self.isa(ColorChooser)) {
+            return ColorChooser{
+                .ptr = @ptrCast(*GtkColorChooser, self.ptr),
+            };
+        } else return null;
+    }
+
+    pub fn to_color_button(self: Widget) ?ColorButton {
+        if (self.isa(ColorButton)) {
+            return ColorButton{
+                .ptr = @ptrCast(*GtkColorButton, self.ptr),
             };
         } else return null;
     }
