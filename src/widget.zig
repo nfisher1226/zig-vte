@@ -2,6 +2,7 @@ usingnamespace @import("cimport.zig");
 usingnamespace @import("button.zig");
 usingnamespace @import("colorchooser.zig");
 usingnamespace @import("convenience.zig");
+usingnamespace @import("entry.zig");
 usingnamespace @import("menuitem.zig");
 usingnamespace @import("notebook.zig");
 usingnamespace @import("range.zig");
@@ -129,6 +130,22 @@ pub const Widget = struct {
         } else return null;
     }
 
+    pub fn to_box(self: Widget) ?Box {
+        if (self.isa(Box)) {
+            return Box{
+                .ptr = @ptrCast(*GtkBox, self.ptr),
+            };
+        } else return null;
+    }
+
+    pub fn to_entry(self: Widget) ?Entry {
+        if (self.isa(Entry)) {
+            return Entry{
+                .ptr = @ptrCast(*GtkEntry, self.ptr),
+            };
+        } else return null;
+    }
+
     pub fn to_toggle_button(self: Widget) ?ToggleButton {
         if (self.isa(ToggleButton)) {
             return ToggleButton{
@@ -141,14 +158,6 @@ pub const Widget = struct {
         if (self.isa(CheckButton)) {
             return CheckButton{
                 .ptr = @ptrCast(*GtkCheckButton, self.ptr),
-            };
-        } else return null;
-    }
-
-    pub fn to_box(self: Widget) ?Box {
-        if (self.isa(Box)) {
-            return Box{
-                .ptr = @ptrCast(*GtkBox, self.ptr),
             };
         } else return null;
     }
