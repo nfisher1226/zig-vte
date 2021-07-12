@@ -193,7 +193,7 @@ pub const ToggleButton = struct {
     /// Sets the status of the toggle button.
     /// This action causes the “toggled” signal and the “clicked” signal to be emitted.
     pub fn set_active(self: ToggleButton, state: bool) void {
-        toggle_button_set_active(self.ptr, bool_to_c_int(state));
+        gtk_toggle_button_set_active(self.ptr, bool_to_c_int(state));
     }
 
     /// Casts the internal pointer to a GtkWidget and returns a Widget struct

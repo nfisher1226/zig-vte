@@ -1,8 +1,10 @@
 usingnamespace @import("cimport.zig");
 usingnamespace @import("button.zig");
 usingnamespace @import("colorchooser.zig");
+usingnamespace @import("combobox.zig");
 usingnamespace @import("convenience.zig");
 usingnamespace @import("entry.zig");
+usingnamespace @import("label.zig");
 usingnamespace @import("menuitem.zig");
 usingnamespace @import("notebook.zig");
 usingnamespace @import("range.zig");
@@ -106,6 +108,10 @@ pub const Widget = struct {
         gtk_widget_set_opacity(self.ptr, opacity);
     }
 
+    pub fn set_visible(self: Widget, vis: bool) void {
+        gtk_widget_set_visible(self.ptr, bool_to_c_int(vis));
+    }
+
     pub fn destroy(self: Widget) void {
         gtk_widget_destroy(self.ptr);
     }
@@ -138,22 +144,6 @@ pub const Widget = struct {
         } else return null;
     }
 
-    pub fn to_entry(self: Widget) ?Entry {
-        if (self.isa(Entry)) {
-            return Entry{
-                .ptr = @ptrCast(*GtkEntry, self.ptr),
-            };
-        } else return null;
-    }
-
-    pub fn to_toggle_button(self: Widget) ?ToggleButton {
-        if (self.isa(ToggleButton)) {
-            return ToggleButton{
-                .ptr = @ptrCast(*GtkToggleButton, self.ptr),
-            };
-        } else return null;
-    }
-
     pub fn to_check_button(self: Widget) ?CheckButton {
         if (self.isa(CheckButton)) {
             return CheckButton{
@@ -162,26 +152,10 @@ pub const Widget = struct {
         } else return null;
     }
 
-    pub fn to_switch(self: Widget) ?Switch {
-        if (self.isa(Switch)) {
-            return Switch{
-                .ptr = @ptrCast(*GtkSwitch, self.ptr),
-            };
-        } else return null;
-    }
-
-    pub fn to_menu_item(self: Widget) ?MenuItem {
-        if (self.isa(MenuItem)) {
-            return MenuItem{
-                .ptr = @ptrCast(*GtkMenuItem, self.ptr),
-            };
-        } else return null;
-    }
-
-    pub fn to_color_chooser(self: Widget) ?ColorChooser {
-        if (self.isa(ColorChooser)) {
-            return ColorChooser{
-                .ptr = @ptrCast(*GtkColorChooser, self.ptr),
+    pub fn to_combo_box(self: Widget) ?ComboBox {
+        if (self.isa(ComboBox)) {
+            return ComboBox{
+                .ptr = @ptrCast(*GtkComboBox, self.ptr),
             };
         } else return null;
     }
@@ -194,10 +168,66 @@ pub const Widget = struct {
         } else return null;
     }
 
+    pub fn to_color_chooser(self: Widget) ?ColorChooser {
+        if (self.isa(ColorChooser)) {
+            return ColorChooser{
+                .ptr = @ptrCast(*GtkColorChooser, self.ptr),
+            };
+        } else return null;
+    }
+
+    pub fn to_entry(self: Widget) ?Entry {
+        if (self.isa(Entry)) {
+            return Entry{
+                .ptr = @ptrCast(*GtkEntry, self.ptr),
+            };
+        } else return null;
+    }
+
+    pub fn to_label(self: Widget) ?Label {
+        return if (self.isa(Label)) Label{ .ptr = @ptrCast(*GtkLabel, self.ptr) } else null;
+    }
+
+    pub fn to_menu_item(self: Widget) ?MenuItem {
+        if (self.isa(MenuItem)) {
+            return MenuItem{
+                .ptr = @ptrCast(*GtkMenuItem, self.ptr),
+            };
+        } else return null;
+    }
+
     pub fn to_notebook(self: Widget) ?Notebook {
         if (self.isa(Notebook)) {
             return Notebook{
                 .ptr = @ptrCast(*GtkNotebook, self.ptr),
+            };
+        } else return null;
+    }
+
+    pub fn to_range(self: Widget) ?Range {
+        if (self.isa(Range)) {
+            return Range{
+                .ptr = @ptrCast(*GtkRange, self.ptr),
+            };
+        } else return null;
+    }
+
+    pub fn to_scale(self: Widget) ?Scale {
+        return if (self.isa(Scale)) Scale{ .ptr = @ptrCast(*GtkScale, self.ptr) } else null;
+    }
+
+    pub fn to_switch(self: Widget) ?Switch {
+        if (self.isa(Switch)) {
+            return Switch{
+                .ptr = @ptrCast(*GtkSwitch, self.ptr),
+            };
+        } else return null;
+    }
+
+    pub fn to_toggle_button(self: Widget) ?ToggleButton {
+        if (self.isa(ToggleButton)) {
+            return ToggleButton{
+                .ptr = @ptrCast(*GtkToggleButton, self.ptr),
             };
         } else return null;
     }
