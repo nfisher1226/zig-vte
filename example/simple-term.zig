@@ -45,9 +45,12 @@ fn activate(app: *c.GtkApplication, data: c.gpointer) void {
     gui.setup();
     // show_all() is a Widget method
     gui.window.as_widget().show_all();
+    _ = data;
 }
 
 fn close_callback(term: *c.VteTerminal, data: c.gpointer) void {
     gui.term.as_widget().destroy();
     gui.window.as_widget().destroy();
+    _ = data;
+    _ = term;
 }
