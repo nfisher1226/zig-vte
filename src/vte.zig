@@ -167,6 +167,14 @@ pub const Terminal = struct {
         vte_terminal_set_cursor_blink_mode(self.ptr, mode.parse());
     }
 
+    pub fn copy_primary(self: Terminal) void {
+        vte_terminal_copy_primary(self.ptr);
+    }
+
+    pub fn paste_primary(self: Terminal) void {
+        vte_terminal_paste_primary(self.ptr);
+    }
+
     pub fn connect_child_exited(self: Terminal, callback: GCallback, data: ?gpointer) void {
         self.as_widget().connect("child_exited", callback, if (data) |d| d else null);
     }
