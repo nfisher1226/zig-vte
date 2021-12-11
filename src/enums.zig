@@ -1,14 +1,14 @@
-usingnamespace @import("cimport.zig");
+const c = @import("cimport.zig");
 
 /// enum ConnectFlags
 pub const ConnectFlags = enum {
     after,
     swapped,
 
-    pub fn parse(self: ConnectFlags) GConnectFlags {
+    pub fn parse(self: ConnectFlags) c.GConnectFlags {
         return switch (self) {
-            .after => G_CONNECT_AFTER,
-            .swapped => G_CONNECT_SWAPPED,
+            .after => c.G_CONNECT_AFTER,
+            .swapped => c.G_CONNECT_SWAPPED,
         };
     }
 };
@@ -24,15 +24,15 @@ pub const IconSize = enum {
     dialog,
 
     /// Parses an IconSize into a GtkIconSize
-    pub fn parse(self: IconSize) GtkIconSize {
+    pub fn parse(self: IconSize) c.GtkIconSize {
         return switch (self) {
-            .invalid => GTK_ICON_SIZE_INVALID,
-            .menu => GTK_ICON_SIZE_MENU,
-            .small_toolbar => GTK_ICON_SIZE_SMALL_TOOLBAR,
-            .large_toolbar => GTK_ICON_SIZE_LARGE_TOOLBAR,
-            .button => GTK_ICON_SIZE_BUTTON,
-            .dnd => GTK_ICON_SIZE_DND,
-            .dialog => GTK_ICON_SIZE_DIALOG,
+            .invalid => c.GTK_ICON_SIZE_INVALID,
+            .menu => c.GTK_ICON_SIZE_MENU,
+            .small_toolbar => c.GTK_ICON_SIZE_SMALL_TOOLBAR,
+            .large_toolbar => c.GTK_ICON_SIZE_LARGE_TOOLBAR,
+            .button => c.GTK_ICON_SIZE_BUTTON,
+            .dnd => c.GTK_ICON_SIZE_DND,
+            .dialog => c.GTK_ICON_SIZE_DIALOG,
         };
     }
 };
@@ -43,11 +43,11 @@ pub const BaselinePosition = enum {
     center,
     bottom,
 
-    pub fn parse(self: BaselinePosition) GtkBaselinePosition {
+    pub fn parse(self: BaselinePosition) c.GtkBaselinePosition {
         return switch (self) {
-            .top => GTK_BASELINE_POSITION_TOP,
-            .center => GTK_BASELINE_POSITION_CENTER,
-            .bottom => GTK_BASELINE_POSITION_BOTTOM,
+            .top => c.GTK_BASELINE_POSITION_TOP,
+            .center => c.GTK_BASELINE_POSITION_CENTER,
+            .bottom => c.GTK_BASELINE_POSITION_BOTTOM,
         };
     }
 };
@@ -63,16 +63,16 @@ pub const DeleteType = enum {
     paragraphs,
     whitespace,
 
-    pub fn parse(self: DeleteType) GtkDeleteType {
+    pub fn parse(self: DeleteType) c.GtkDeleteType {
         return switch (self) {
-            .chars => GTK_DELETE_CHARS,
-            .word_ends => GTK_DELETE_WORD_ENDS,
-            .words => GTK_DELETE_WORDS,
-            .line_ends => GTK_DELETE_LINE_ENDS,
-            .lines => GTK_DELETE_LINES,
-            .paragraph_ends => GTK_DELETE_PARAGRAPH_ENDS,
-            .paragraphs => GTK_DELETE_PARAGRAPHS,
-            .whitespace => GTK_DELETE_WHITESPACE,
+            .chars => c.GTK_DELETE_CHARS,
+            .word_ends => c.GTK_DELETE_WORD_ENDS,
+            .words => c.GTK_DELETE_WORDS,
+            .line_ends => c.GTK_DELETE_LINE_ENDS,
+            .lines => c.GTK_DELETE_LINES,
+            .paragraph_ends => c.GTK_DELETE_PARAGRAPH_ENDS,
+            .paragraphs => c.GTK_DELETE_PARAGRAPHS,
+            .whitespace => c.GTK_DELETE_WHITESPACE,
         };
     }
 };
@@ -86,14 +86,14 @@ pub const DirectionType = enum {
     left,
     right,
 
-    pub fn parse(self: DirectionType) GtkDirectionType {
+    pub fn parse(self: DirectionType) c.GtkDirectionType {
         return switch (self) {
-            .forward => GTK_DIR_TAB_FORWARD,
-            .backward => GTK_DIR_TAB_BACKWARD,
-            .up => GTK_DIR_UP,
-            .down => GTK_DIR_DOWN,
-            .left => GTK_DIR_LEFT,
-            .right => GTK_DIR_RIGHT,
+            .forward => c.GTK_DIR_TAB_FORWARD,
+            .backward => c.GTK_DIR_TAB_BACKWARD,
+            .up => c.GTK_DIR_UP,
+            .down => c.GTK_DIR_DOWN,
+            .left => c.GTK_DIR_LEFT,
+            .right => c.GTK_DIR_RIGHT,
         };
     }
 };
@@ -103,10 +103,10 @@ pub const Orientation = enum {
     horizontal,
     vertical,
 
-    pub fn parse(self: Orientation) GtkOrientation {
+    pub fn parse(self: Orientation) c.GtkOrientation {
         return switch (self) {
-            .horizontal => GTK_ORIENTATION_HORIZONTAL,
-            .vertical => GTK_ORIENTATION_VERTICAL,
+            .horizontal => c.GTK_ORIENTATION_HORIZONTAL,
+            .vertical => c.GTK_ORIENTATION_VERTICAL,
         };
     }
 
@@ -117,10 +117,10 @@ pub const WindowType = enum {
     toplevel,
     popup,
 
-    pub fn parse(self: WindowType) GtkWindowType {
+    pub fn parse(self: WindowType) c.GtkWindowType {
         return switch (self) {
-            .toplevel => GTK_WINDOW_TOPLEVEL,
-            .popup => GTK_WINDOW_POPUP,
+            .toplevel => c.GTK_WINDOW_TOPLEVEL,
+            .popup => c.GTK_WINDOW_POPUP,
         };
     }
 };
@@ -130,10 +130,10 @@ pub const PackType = enum {
     start,
     end,
 
-    pub fn parse(self: PackType) GtkPackType {
+    pub fn parse(self: PackType) c.GtkPackType {
         return switch (self) {
-            .end => GTK_PACK_END,
-            .start => GTK_PACK_START,
+            .end => c.GTK_PACK_END,
+            .start => c.GTK_PACK_START,
         };
     }
 };
@@ -145,12 +145,12 @@ pub const PositionType = enum {
     top,
     bottom,
 
-    pub fn parse(self: PositionType) GtkPositionType {
+    pub fn parse(self: PositionType) c.GtkPositionType {
         return switch (self) {
-            .left => GTK_POS_LEFT,
-            .right => GTK_POS_RIGHT,
-            .top => GTK_POS_TOP,
-            .bottom => GTK_POS_BOTTOM,
+            .left => c.GTK_POS_LEFT,
+            .right => c.GTK_POS_RIGHT,
+            .top => c.GTK_POS_TOP,
+            .bottom => c.GTK_POS_BOTTOM,
         };
     }
 };
@@ -160,10 +160,10 @@ pub const ReliefStyle = enum {
     normal,
     none,
 
-    pub fn parse(self: ReliefStyle) GtkReliefStyle {
+    pub fn parse(self: ReliefStyle) c.GtkReliefStyle {
         return switch (self) {
-            .normal => GTK_RELIEF_NORMAL,
-            .none => GTK_RELIEF_NONE,
+            .normal => c.GTK_RELIEF_NORMAL,
+            .none => c.GTK_RELIEF_NONE,
         };
     }
 };
@@ -174,11 +174,11 @@ pub const ModifierType = enum {
     mod1_mask,
     control_mask,
 
-    pub fn parse(self: ModifierType) GdkModifierType {
+    pub fn parse(self: ModifierType) c.GdkModifierType {
         return switch (self) {
-            .shift_mask => GDK_SHIFT_MASK,
-            .mod1_mask => GDK_MOD1_MASK,
-            .control_mask => GDK_CONTROL_MASK,
+            .shift_mask => c.GDK_SHIFT_MASK,
+            .mod1_mask => c.GDK_MOD1_MASK,
+            .control_mask => c.GDK_CONTROL_MASK,
         };
     }
 };
@@ -189,11 +189,11 @@ pub const AccelFlags = enum {
     locked,
     mask,
 
-    pub fn parse(self: AccelFlags) GtkAccelFlags {
+    pub fn parse(self: AccelFlags) c.GtkAccelFlags {
         return switch (self) {
-            .visible => GTK_ACCEL_VISIBLE,
-            .locked => GTK_ACCEL_LOCKED,
-            .mask => GTK_ACCEL_MASK,
+            .visible => c.GTK_ACCEL_VISIBLE,
+            .locked => c.GTK_ACCEL_LOCKED,
+            .mask => c.GTK_ACCEL_MASK,
         };
     }
 };
@@ -211,18 +211,18 @@ pub const SpawnFlags = enum {
     search_path_from_envp,
     cloexec_pipes,
 
-    pub fn parse(self: SpawnFlags) GSpawnFlags {
+    pub fn parse(self: SpawnFlags) c.GSpawnFlags {
         return switch (self) {
-            .default => G_SPAWN_DEFAULT,
-            .leave_descriptors_open => G_SPAWN_LEAVE_DESCRIPTORS_OPEN,
-            .do_not_reap_child => G_SPAWN_DO_NOT_REAP_CHILD,
-            .search_path => G_SPAWN_SEARCH_PATH,
-            .stdout_to_dev_null => G_SPAWN_STDOUT_TO_DEV_NULL,
-            .stderr_to_dev_null => G_SPAWN_STDERR_TO_DEV_NULL,
-            .child_inherits_stdin => G_SPAWN_CHILD_INHERITS_STDIN,
-            .file_and_argv_zero => G_SPAWN_FILE_AND_ARGV_ZERO,
-            .search_path_from_envp => G_SPAWN_SEARCH_PATH_FROM_ENVP,
-            .cloexec_pipes => G_SPAWN_CLOEXEC_PIPES,
+            .default => c.G_SPAWN_DEFAULT,
+            .leave_descriptors_open => c.G_SPAWN_LEAVE_DESCRIPTORS_OPEN,
+            .do_not_reap_child => c.G_SPAWN_DO_NOT_REAP_CHILD,
+            .search_path => c.G_SPAWN_SEARCH_PATH,
+            .stdout_to_dev_null => c.G_SPAWN_STDOUT_TO_DEV_NULL,
+            .stderr_to_dev_null => c.G_SPAWN_STDERR_TO_DEV_NULL,
+            .child_inherits_stdin => c.G_SPAWN_CHILD_INHERITS_STDIN,
+            .file_and_argv_zero => c.G_SPAWN_FILE_AND_ARGV_ZERO,
+            .search_path_from_envp => c.G_SPAWN_SEARCH_PATH_FROM_ENVP,
+            .cloexec_pipes => c.G_SPAWN_CLOEXEC_PIPES,
         };
     }
 };

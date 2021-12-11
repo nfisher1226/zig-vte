@@ -1,4 +1,7 @@
-usingnamespace @import("zig-vte");
+const VTE = @import("zig-vte");
+const c = VTE.c;
+const gtk = VTE.gtk;
+const vte = VTE.vte;
 const std = @import("std");
 
 var gui: Gui = undefined;
