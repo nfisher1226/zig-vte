@@ -25,7 +25,7 @@ pub const AboutDialog = struct {
         };
     }
 
-    pub fn get_program_name(self: AboutDialog, allocator: *mem.Allocator) ?[]const u8 {
+    pub fn get_program_name(self: AboutDialog, allocator: mem.Allocator) ?[]const u8 {
         const val = c.gtk_about_dialog_get_program_name(self.ptr);
         const len = mem.len(val);
         return fmt.allocPrintZ(allocator, "{s}", .{val[0..len]}) catch return null;
@@ -35,7 +35,7 @@ pub const AboutDialog = struct {
         c.gtk_about_dialog_set_program_name(self.ptr, name);
     }
 
-    pub fn get_version(self: AboutDialog, allocator: *mem.Allocator) ?[]const u8 {
+    pub fn get_version(self: AboutDialog, allocator: mem.Allocator) ?[]const u8 {
         const val = c.gtk_about_dialog_get_version(self.ptr);
         const len = mem.len(val);
         return fmt.allocPrintZ(allocator, "{s}", .{val[0..len]}) catch return null;

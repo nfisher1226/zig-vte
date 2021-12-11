@@ -32,7 +32,7 @@ pub const Container = struct {
         c.gtk_container_set_border_width(self.ptr, border);
     }
 
-    pub fn get_children(self: Container, allocator: *mem.Allocator) ?std.ArrayList(Widget) {
+    pub fn get_children(self: Container, allocator: mem.Allocator) ?std.ArrayList(Widget) {
         var kids = c.gtk_container_get_children(self.ptr);
         defer c.g_list_free(kids);
         var list = std.ArrayList(Widget).init(allocator);

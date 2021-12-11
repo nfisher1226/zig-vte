@@ -143,7 +143,7 @@ pub const Notebook = struct {
         c.gtk_notebook_set_tab_detachable(self.ptr, child.ptr, bool_to_c_int(detachable));
     }
 
-    pub fn get_menu_label_text(self: Notebook, allocator: *mem.Allocator, child: Widget) ?[:0]const u8 {
+    pub fn get_menu_label_text(self: Notebook, allocator: mem.Allocator, child: Widget) ?[:0]const u8 {
         if (c.gtk_notebook_get_menu_label_text(self.ptr, child.ptr)) |v| {
             const len = mem.len(v);
             const text = fmt.allocPrintZ(allocator, "{s}", .{v[0..len]}) catch {
@@ -165,7 +165,7 @@ pub const Notebook = struct {
         return (c.gtk_notebook_get_show_tabs(self.ptr) == 1);
     }
 
-    pub fn get_tab_label_text(self: Notebook, allocator: *mem.Allocator, child: Widget) ?[:0]const u8 {
+    pub fn get_tab_label_text(self: Notebook, allocator: mem.Allocator, child: Widget) ?[:0]const u8 {
         if (c.gtk_notebook_get_tab_label_text(self.ptr, child.ptr)) |v| {
             const len = mem.len(v);
             const text = fmt.allocPrintZ(allocator, "{s}", .{v[0..len]}) catch {
@@ -201,7 +201,7 @@ pub const Notebook = struct {
         c.gtk_notebook_set_group_name(self.ptr, name);
     }
 
-    pub fn get_group_name(self: Notebook, allocator: *mem.Allocator) ?[:0]const u8 {
+    pub fn get_group_name(self: Notebook, allocator: mem.Allocator) ?[:0]const u8 {
         if (c.gtk_notebook_get_group_name(self.ptr)) |v| {
             const len = mem.len(v);
             return fmt.allocPrintZ(allocator, "{s}", .{v[0..len]}) catch {

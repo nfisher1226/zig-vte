@@ -34,7 +34,7 @@ pub const ComboBox = struct {
         c.gtk_commbo_box_set_active(self.ptr, if (item) |i| i else -1);
     }
 
-    pub fn get_active_id(self: ComboBox, allocator: *mem.Allocator) ?[:0]const u8 {
+    pub fn get_active_id(self: ComboBox, allocator: mem.Allocator) ?[:0]const u8 {
         if (c.gtk_combo_box_get_active_id(self.ptr)) |val| {
             const len = mem.len(val);
             return fmt.allocPrintZ(allocator, "{s}", .{val[0..len]}) catch return null;

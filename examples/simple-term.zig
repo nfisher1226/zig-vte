@@ -1,7 +1,7 @@
-const VTE = @import("zig-vte");
-const c = VTE.c;
-const gtk = VTE.gtk;
-const vte = VTE.vte;
+const GTK = @import("gtk");
+const c = GTK.c;
+const gtk = GTK.gtk;
+const vte = GTK.vte;
 const std = @import("std");
 
 var gui: Gui = undefined;

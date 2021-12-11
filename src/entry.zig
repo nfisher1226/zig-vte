@@ -35,7 +35,7 @@ pub const Entry = struct {
         c.gtk_entry_set_text(self.ptr, text);
     }
 
-    pub fn get_text(self: Entry, allocator: *mem.Allocator) ?[:0]const u8 {
+    pub fn get_text(self: Entry, allocator: mem.Allocator) ?[:0]const u8 {
         const val = c.gtk_entry_get_text(self.ptr);
         const len = mem.len(val);
         return fmt.allocPrintZ(allocator, "{s}", .{val[0..len]}) catch return null;

@@ -84,7 +84,7 @@ pub const Widget = struct {
         c.gtk_widget_set_name(self.ptr, name);
     }
 
-    pub fn get_name(self: Widget, allocator: *mem.Allocator) ?[:0]const u8 {
+    pub fn get_name(self: Widget, allocator: mem.Allocator) ?[:0]const u8 {
         if (c.gtk_widget_get_name(self.ptr)) |n| {
             const len = mem.len(n);
             return fmt.allocPrintZ(allocator, "{s}", .{n[0..len]}) catch {
@@ -115,7 +115,7 @@ pub const Widget = struct {
         c.gtk_widget_set_has_tooltip(self.ptr, bool_to_c_int(tooltip));
     }
 
-    pub fn get_tooltip_text(self: Widget, allocator: *mem.Allocator) ?[:0]const u8 {
+    pub fn get_tooltip_text(self: Widget, allocator: mem.Allocator) ?[:0]const u8 {
         return if (c.gtk_widget_get_tooltip_text(self.ptr)) |t|
             fmt.allocPrintZ(allocator, "{s}", .{t}) catch return null
         else

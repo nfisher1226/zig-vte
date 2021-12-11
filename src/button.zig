@@ -1,4 +1,4 @@
-const c = @import("cimport.zig").c;
+const c = @import("cimport.zig");
 const common = @import("common.zig");
 const enums = @import("enums.zig");
 const IconSize = enums.IconSize;
@@ -58,7 +58,7 @@ pub const Button = struct {
     }
 
     /// Get the text from the label of the Button, or null if unset
-    pub fn get_label(self: Button, allocator: *mem.Allocator) ?[:0]const u8 {
+    pub fn get_label(self: Button, allocator: mem.Allocator) ?[:0]const u8 {
         if (c.gtk_button_get_label(self.ptr)) |l| {
             const len = mem.len(l);
             const text = fmt.allocPrintZ(allocator, "{s}", .{l[0..len]}) catch {

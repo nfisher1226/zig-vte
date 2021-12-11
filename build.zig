@@ -1,27 +1,26 @@
 const std = @import("std");
 
 const Builder = std.build.Builder;
-// const Mode = builtin.Mode;
 
 pub fn build(b: *Builder) void {
     const target = b.standardTargetOptions(.{});
     const mode = b.standardReleaseOptions();
+    const examples = .{"simple", "glade", "callbacks", "range", "simple-term"};
 
-    const exe = b.addExecutable("simple-term", "example/simple-term.zig");
-    exe.addPackagePath("zig-vte", "lib.zig");
-    exe.setBuildMode(mode);
-    exe.setTarget(target);
-    exe.linkLibC();
-    exe.linkSystemLibrary("gtk+-3.0");
-    exe.linkSystemLibrary("vte-2.91");
-    exe.install();
-
-    const run_cmd = exe.run();
-    run_cmd.step.dependOn(b.getInstallStep());
-    if (b.args) |args| {
-        run_cmd.addArgs(args);
+    const example_step = b.step("examples", "Build examples");
+    inline for (examples) |name| {
+        const example = b.addExecutable(name, "examples/" ++ name ++ ".zig");
+        example.addPackagePath("gtk", "lib.zig");
+        example.setBuildMode(mode);
+        example.setTarget(target);
+        example.linkLibC();
+        example.linkSystemLibrary("gtk+-3.0");
+        example.linkSystemLibrary("vte-2.91");
+        example.install();
+        example_step.dependOn(&example.step);
     }
 
-    const run_step = b.step("run", "Run the app");
-    run_step.dependOn(&run_cmd.step);
+    const all_step = b.step("all", "Build everything");
+    all_step.dependOn(example_step);
+    b.default_step.dependOn(all_step);
 }

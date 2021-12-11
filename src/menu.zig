@@ -29,7 +29,7 @@ pub const MenuItem = struct {
         };
     }
 
-    pub fn get_label(self: MenuItem, allocator: *mem.Allocator) ?[:0]const u8 {
+    pub fn get_label(self: MenuItem, allocator: mem.Allocator) ?[:0]const u8 {
         if (c.gtk_menu_item_get_label(self.ptr)) |v| {
             const len = mem.len(v);
             return fmt.allocPrintZ(allocator, "{s}", .{v[0..len]}) catch {
@@ -62,7 +62,7 @@ pub const MenuItem = struct {
         c.gtk_menu_item_set_accel_path(self.ptr, if (path) |p| p else null);
     }
 
-    pub fn get_accel_path(self: MenuItem, allocator: *mem.Allocator) ?[:0]const u8 {
+    pub fn get_accel_path(self: MenuItem, allocator: mem.Allocator) ?[:0]const u8 {
         if (c.gtk_menu_item_get_accel_path(self.ptr)) |v| {
             const len = mem.len(v);
             return fmt.allocPrintZ(allocator, "{s}", .{v[0..len]}) catch {

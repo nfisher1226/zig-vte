@@ -1,4 +1,4 @@
-# zig-vte
+# zig-gtk3
 This package contains some convenience functions and wrappers around the C api
 of both the Gtk+ and Vte libraries for developing Gui applications using Zig.
 
@@ -7,7 +7,7 @@ We track zig-master, so you will need the current master compiler. In your
 ```build.zig``` file, add the package path:
 ```Zig
     const exe = b.addExecutable("exe-name", "path-to-source.zig");
-    exe.addPackagePath("zig-vte", "path/to/zig-vte/lib.zig");
+    exe.addPackagePath("zig-gtk3", "path/to/zig-vte/lib.zig");
     exe.linkLibC();
     exe.linkSystemLibrary("gtk+-3.0");
     exe.linkSystemLibrary("vte-2.91");
