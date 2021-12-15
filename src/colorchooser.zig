@@ -8,7 +8,7 @@ const Widget = @import("widget.zig").Widget;
 const std = @import("std");
 
 pub const ColorChooser = struct {
-    ptr: *.cGtkColorChooser,
+    ptr: *c.GtkColorChooser,
 
     pub fn get_rgba(self: ColorChooser) c.GdkRGBA {
         var rgba: c.GdkRGBA = undefined;
