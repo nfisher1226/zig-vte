@@ -1,7 +1,10 @@
 const c = @import("cimport.zig");
+const com = @import("common.zig");
 const enums = @import("enums.zig");
 const Widget = @import("widget.zig").Widget;
 const std = @import("std");
+const fmt = std.fmt;
+const mem = std.mem;
 
 /// PtyFlags enum
 pub const PtyFlags = enum {
@@ -119,6 +122,21 @@ pub const Terminal = struct {
             null,
             @intToPtr(?*c_void, @as(c_int, 0)),
         );
+    }
+
+    pub fn set_clear_background(self: Terminal, clear: bool) void {
+        c.vte_terminal_set_clear_background(self.ptr, com.bool_to_c_int(clear));
+    }
+
+    pub fn get_current_directory_uri(self: Terminal, allocator: mem.Allocator) ?[:0]const u8 {
+        const val = c.vte_terminal_get_current_directory_uri(self.ptr);
+        if (val) |v| {
+            const len = mem.len(v);
+            const text = fmt.allocPrintZ(allocator, "{s}", .{v[0..len]}) catch {
+                return null;
+            };
+            return text;
+        } else return null;
     }
 
     pub fn set_default_colors(self: Terminal) void {
