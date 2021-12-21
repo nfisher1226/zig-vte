@@ -139,6 +139,17 @@ pub const Terminal = struct {
         } else return null;
     }
 
+    pub fn get_window_title(self: Terminal, allocator: mem.Allocator) ?[:0]const u8 {
+        const val = c.vte_terminal_get_window_title(self.ptr);
+        if (val) |v| {
+            const len = mem.len(v);
+            const text = fmt.allocPrintZ(allocator, "{s}", .{v[0..len]}) catch {
+                return null;
+            };
+            return text;
+        } else return null;
+    }
+
     pub fn set_default_colors(self: Terminal) void {
         c.vte_terminal_set_default_colors(self.ptr);
     }
