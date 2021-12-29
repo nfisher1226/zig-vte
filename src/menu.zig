@@ -10,16 +10,21 @@ const mem = std.mem;
 
 pub const Menu = struct {
     ptr: *c.GtkMenu,
-    const Self = @This();
 
-    pub fn new() Self {
-        return Self{
+    pub fn new() Menu {
+        return Menu{
             .ptr = @ptrCast(*c.GtkMenu, c.gtk_menu_new()),
         };
     }
 
     pub fn get_accel_group(self: Self) *c.GtkAccelGroup {
         return c.gtk_menu_get_accel_group(self.ptr);
+    }
+
+    pub fn as_widget(self: Menu) Widget {
+        return Widget{
+            .ptr = @ptrCast(*c.GtkWidget, self.ptr),
+        };
     }
 
     pub fn is_instance(gtype: u64) bool {
