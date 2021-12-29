@@ -26,7 +26,9 @@ const EntryCompletion = entry.EntryCompletion;
 
 const Label = @import("label.zig").Label;
 
-const MenuItem = @import("menu.zig").MenuItem;
+const menu = @import("menu.zig");
+const Menu = menu.Menu;
+const MenuItem = menu.MenuItem;
 
 const Notebook = @import("notebook.zig").Notebook;
 
@@ -216,6 +218,14 @@ pub const Widget = struct {
 
     pub fn to_label(self: Widget) ?Label {
         return if (self.isa(Label)) Label{ .ptr = @ptrCast(*c.GtkLabel, self.ptr) } else null;
+    }
+
+    pub fn to_menu(self: Menu) ?Menu {
+        if (self.isa(Menu)) {
+            return Menu{
+                .ptr = @ptrCast(*c.GtkMenu, self.ptr),
+            };
+        } else return null;
     }
 
     pub fn to_menu_item(self: Widget) ?MenuItem {

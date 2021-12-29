@@ -21,6 +21,10 @@ pub const Menu = struct {
     pub fn get_accel_group(self: Self) *c.GtkAccelGroup {
         return c.gtk_menu_get_accel_group(self.ptr);
     }
+
+    pub fn is_instance(gtype: u64) bool {
+        return (gtype == c.gtk_menu_get_type());
+    }
 };
 
 pub const MenuItem = struct {
