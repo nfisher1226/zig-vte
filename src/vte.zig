@@ -115,12 +115,12 @@ pub const Terminal = struct {
             if (env) |e| @ptrCast([*c][*c]u8, e) else null,
             spawn_flags.parse(),
             if (child_setup_func) |f| f else null,
-            @intToPtr(?*c_void, @as(c_int, 0)),
+            @intToPtr(?*anyopaque, @as(c_int, 0)),
             null,
             timeout,
             if (cancellable) |cn| cn else null,
             null,
-            @intToPtr(?*c_void, @as(c_int, 0)),
+            @intToPtr(?*anyopaque, @as(c_int, 0)),
         );
     }
 
