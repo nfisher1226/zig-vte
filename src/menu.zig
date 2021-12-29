@@ -17,7 +17,7 @@ pub const Menu = struct {
         };
     }
 
-    pub fn get_accel_group(self: Self) *c.GtkAccelGroup {
+    pub fn get_accel_group(self: Menu) *c.GtkAccelGroup {
         return c.gtk_menu_get_accel_group(self.ptr);
     }
 
