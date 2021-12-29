@@ -221,11 +221,9 @@ pub const Widget = struct {
     }
 
     pub fn to_menu(self: Menu) ?Menu {
-        if (self.isa(Menu)) {
-            return Menu{
-                .ptr = @ptrCast(*c.GtkMenu, self.ptr),
-            };
-        } else return null;
+        return if (self.isa(Menu)) Menu{
+            .ptr = @ptrCast(*c.GtkMenu, self.ptr),
+        } else null;
     }
 
     pub fn to_menu_item(self: Widget) ?MenuItem {
