@@ -8,6 +8,21 @@ const std = @import("std");
 const fmt = std.fmt;
 const mem = std.mem;
 
+pub const Menu = struct {
+    ptr: *c.GtkMenu,
+    const Self = @This();
+
+    pub fn new() Self {
+        return Self{
+            .ptr = @ptrCast(*c.GtkMenu, c.gtk_menu_new()),
+        };
+    }
+
+    pub fn get_accel_group(self: Self) *c.GtkAccelGroup {
+        return c.gtk_menu_get_accel_group(self.ptr);
+    }
+};
+
 pub const MenuItem = struct {
     ptr: *c.GtkMenuItem,
 
