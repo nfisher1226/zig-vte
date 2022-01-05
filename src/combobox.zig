@@ -107,7 +107,7 @@ pub const ComboBoxText = struct {
 
     pub fn get_active_text(self: Self, allocator: mem.Allocator) ?[]const u8 {
         const val = c.gtk_combo_box_text_get_active_text(self.ptr);
-        defer g_free(@ptrCast(*c.gpointer, val);
+        defer c.g_free(@ptrCast(*c.gpointer, val));
         const len = mem.len(val);
         return fmt.allocPrintZ(allocator, "{s}", .{val[0..len]}) catch return null;
     }
