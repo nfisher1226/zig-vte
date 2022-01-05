@@ -13,7 +13,9 @@ const ColorButton = color.ColorButton;
 const ColorChooserWidget = color.ColorChooserWidget;
 const ColorChooserDialog = color.ColorChooserDialog;
 
-const ComboBox = @import("combobox.zig").ComboBox;
+const combobox = @import("combobox.zig");
+const ComboBox = combobox.ComboBox;
+const ComboBoxText = combobox.ComboBoxText;
 
 const common = @import("common.zig");
 const bool_to_c_int = common.bool_to_c_int;
@@ -188,6 +190,14 @@ pub const Widget = struct {
         if (self.isa(ComboBox)) {
             return ComboBox{
                 .ptr = @ptrCast(*c.GtkComboBox, self.ptr),
+            };
+        } else return null;
+    }
+
+    pub fn to_combo_box_text(self: Widget) ?ComboBoxText {
+        if (self.isa(ComboBoxText)) {
+            return ComboBoxText{
+                .ptr = @ptrCast(*c.GtkComboBoxText, self.ptr),
             };
         } else return null;
     }
