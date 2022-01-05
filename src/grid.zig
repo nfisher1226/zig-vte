@@ -111,6 +111,12 @@ pub const Grid = struct {
         c.gtk_grid_set_row_baseline_position(self.ptr, row, pos.parse());
     }
 
+    pub fn as_widget(self: Self) Widget {
+        return Widget{
+            .ptr = @ptrCast(*c.GtkWidget, self.ptr),
+        };
+    }
+
     pub fn is_instance(gtype: u64) bool {
         return (gtype == c.gtk_grid_get_type());
     }
