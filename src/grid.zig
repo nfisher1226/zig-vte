@@ -1,6 +1,8 @@
 const c = @import("cimport.zig");
 const com = @import("common.zig");
-const PositionType = @import("enums.zig").PositionType;
+const enums = @import("enums.zig");
+const BaselinePosition = enums.BaselinePosition;
+const PositionType = enums.PositionType;
 const Widget = @import("widget.zig").Widget;
 
 const std = @import("std");
