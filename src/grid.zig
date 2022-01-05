@@ -110,4 +110,8 @@ pub const Grid = struct {
     pub fn set_row_baseline_position(self: Self, row: c_int, pos: BaselinePosition) void {
         c.gtk_grid_set_row_baseline_position(self.ptr, row, pos.parse());
     }
+
+    pub fn is_instance(gtype: u64) bool {
+        return (gtype == c.gtk_grid_get_type());
+    }
 };
