@@ -45,6 +45,10 @@ pub const ComboBox = struct {
         c.gtk_combo_box_set_active_id(self.ptr, if (id) |i| i else null);
     }
 
+    pub fn connect_changed(self: ComboBox, callback: c.GCallback, data: ?c.gpointer) void {
+        self.as_widget().connect("changed", callback, if (data) |d| d else null);
+    }
+
     pub fn as_widget(self: ComboBox) Widget {
         return Widget{
             .ptr = @ptrCast(*c.GtkWidget, self.ptr),
