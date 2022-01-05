@@ -48,4 +48,3 @@ pub const Label = struct {
         return (gtype == c.gtk_label_get_type());
     }
 };
-

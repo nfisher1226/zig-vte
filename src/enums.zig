@@ -155,6 +155,46 @@ pub const PositionType = enum {
     }
 };
 
+/// Enum SpinButtonUpdatePolicy
+pub const SpinButtonUpdatePolicy = enum {
+    always,
+    if_valid,
+
+    const Self = @This();
+
+    pub fn parse(self: Self) c.GtkSpinButtonUpdatePolicy {
+        return switch (self) {
+            .always => c.GTK_UPDATE_ALWAYS,
+            .if_valid => c.GTK_UPDATE_IF_VALID,
+        };
+    }
+};
+
+/// Enum SpinType
+pub const SpinType = enum {
+    step_forward,
+    step_backward,
+    page_forward,
+    page_backward,
+    home,
+    end,
+    user_defined,
+
+    const Self = @This();
+
+    pub fn parse(self: Self) c.GtkSpinType {
+        return switch (self) {
+            .step_forward => c.GTK_SPIN_STEP_FORWARD,
+            .step_backward => c.GTK_SPIN_STEP_BACKWARD,
+            .page_forward => c.GTK_SPIN_PAGE_FORWARD,
+            .page_backward => c.GTK_SPIN_PAGE_BACKWARD,
+            .home => c.GTK_SPIN_HOME,
+            .end => c.GTK_SPIN_END,
+            .user_defined => c.GTK_SPIN_USER_DEFINED,
+        };
+    }
+};
+
 /// Enum ReliefStyle
 pub const ReliefStyle = enum {
     normal,
