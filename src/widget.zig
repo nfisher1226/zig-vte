@@ -52,43 +52,45 @@ const mem = std.mem;
 pub const Widget = struct {
     ptr: *c.GtkWidget,
 
-    pub fn show(self: Widget) void {
+    const Self = @This();
+
+    pub fn show(self: Self) void {
         c.gtk_widget_show(self.ptr);
     }
 
-    pub fn show_now(self: Widget) void {
+    pub fn show_now(self: Self) void {
         c.gtk_widget_show_now(self.ptr);
     }
 
-    pub fn hide(self: Widget) void {
+    pub fn hide(self: Self) void {
         c.gtk_widget_hide(self.ptr);
     }
 
-    pub fn show_all(self: Widget) void {
+    pub fn show_all(self: Self) void {
         c.gtk_widget_show_all(self.ptr);
     }
 
-    pub fn is_focus(self: Widget) bool {
+    pub fn is_focus(self: Self) bool {
         return (c.gtk_widget_is_focus(self.ptr) == 1);
     }
 
-    pub fn has_focus(self: Widget) bool {
+    pub fn has_focus(self: Self) bool {
         return (c.gtk_widget_has_focus(self.ptr) == 1);
     }
 
-    pub fn grab_focus(self: Widget) void {
+    pub fn grab_focus(self: Self) void {
         c.gtk_widget_grab_focus(self.ptr);
     }
 
-    pub fn grab_default(self: Widget) void {
+    pub fn grab_default(self: Self) void {
         c.gtk_widget_grab_default(self.ptr);
     }
 
-    pub fn set_name(self: Widget, name: [:0]const u8) void {
+    pub fn set_name(self: Self, name: [:0]const u8) void {
         c.gtk_widget_set_name(self.ptr, name);
     }
 
-    pub fn get_name(self: Widget, allocator: mem.Allocator) ?[:0]const u8 {
+    pub fn get_name(self: Self, allocator: mem.Allocator) ?[:0]const u8 {
         if (c.gtk_widget_get_name(self.ptr)) |n| {
             const len = mem.len(n);
             return fmt.allocPrintZ(allocator, "{s}", .{n[0..len]}) catch {
@@ -97,72 +99,72 @@ pub const Widget = struct {
         } else return null;
     }
 
-    pub fn set_sensitive(self: Widget, visible: bool) void {
+    pub fn set_sensitive(self: Self, visible: bool) void {
         c.gtk_widget_set_sensitive(self.ptr, common.bool_to_c_int(visible));
     }
 
-    pub fn get_toplevel(self: Widget) Widget {
-        return Widget{
+    pub fn get_toplevel(self: Self) Self {
+        return Self{
             .ptr = c.gtk_widget_get_toplevel(self.ptr),
         };
     }
 
-    pub fn get_parent(self: Widget) ?Widget {
-        return if (c.gtk_widget_get_parent(self.ptr)) |w| Widget{ .ptr = w } else null;
+    pub fn get_parent(self: Self) ?Self {
+        return if (c.gtk_widget_get_parent(self.ptr)) |w| Self{ .ptr = w } else null;
     }
 
-    pub fn get_has_tooltip(self: Widget) bool {
+    pub fn get_has_tooltip(self: Self) bool {
         return (c.gtk_widget_get_has_tooltip(self.ptr) == 1);
     }
 
-    pub fn set_has_tooltip(self: Widget, tooltip: bool) void {
+    pub fn set_has_tooltip(self: Self, tooltip: bool) void {
         c.gtk_widget_set_has_tooltip(self.ptr, bool_to_c_int(tooltip));
     }
 
-    pub fn get_tooltip_text(self: Widget, allocator: mem.Allocator) ?[:0]const u8 {
+    pub fn get_tooltip_text(self: Self, allocator: mem.Allocator) ?[:0]const u8 {
         return if (c.gtk_widget_get_tooltip_text(self.ptr)) |t|
             fmt.allocPrintZ(allocator, "{s}", .{t}) catch return null
         else
             null;
     }
 
-    pub fn set_tooltip_text(self: Widget, text: [:0]const u8) void {
+    pub fn set_tooltip_text(self: Self, text: [:0]const u8) void {
         c.gtk_widget_set_tooltip_text(self.ptr, text);
     }
 
-    pub fn get_screen(self: Widget) ?*c.GdkScreen {
+    pub fn get_screen(self: Self) ?*c.GdkScreen {
         return c.gtk_widget_get_screen(self.ptr);
     }
 
-    pub fn set_visual(self: Widget, visual: *c.GdkVisual) void {
+    pub fn set_visual(self: Self, visual: *c.GdkVisual) void {
         c.gtk_widget_set_visual(self.ptr, visual);
     }
 
-    pub fn set_opacity(self: Widget, opacity: f64) void {
+    pub fn set_opacity(self: Self, opacity: f64) void {
         c.gtk_widget_set_opacity(self.ptr, opacity);
     }
 
-    pub fn set_visible(self: Widget, vis: bool) void {
+    pub fn set_visible(self: Self, vis: bool) void {
         c.gtk_widget_set_visible(self.ptr, bool_to_c_int(vis));
     }
 
-    pub fn destroy(self: Widget) void {
+    pub fn destroy(self: Self) void {
         c.gtk_widget_destroy(self.ptr);
     }
 
-    pub fn connect(self: Widget, sig: [:0]const u8, callback: c.GCallback, data: ?c.gpointer) void {
+    pub fn connect(self: Self, sig: [:0]const u8, callback: c.GCallback, data: ?c.gpointer) void {
         _ = signal_connect(self.ptr, sig, callback, if (data) |d| d else null);
     }
 
-    fn get_g_type(self: Widget) u64 {
+    fn get_g_type(self: Self) u64 {
         return self.ptr.*.parent_instance.g_type_instance.g_class.*.g_type;
     }
 
-    pub fn isa(self: Widget, comptime T: type) bool {
+    pub fn isa(self: Self, comptime T: type) bool {
         return T.is_instance(self.get_g_type());
     }
 
-    pub fn to_button(self: Widget) ?Button {
+    pub fn to_button(self: Self) ?Button {
         if (self.isa(Button)) {
             return Button{
                 .ptr = @ptrCast(*c.GtkButton, self.ptr),
@@ -170,7 +172,7 @@ pub const Widget = struct {
         } else return null;
     }
 
-    pub fn to_box(self: Widget) ?Box {
+    pub fn to_box(self: Self) ?Box {
         if (self.isa(Box)) {
             return Box{
                 .ptr = @ptrCast(*c.GtkBox, self.ptr),
@@ -178,7 +180,7 @@ pub const Widget = struct {
         } else return null;
     }
 
-    pub fn to_check_button(self: Widget) ?CheckButton {
+    pub fn to_check_button(self: Self) ?CheckButton {
         if (self.isa(CheckButton)) {
             return CheckButton{
                 .ptr = @ptrCast(*c.GtkCheckButton, self.ptr),
@@ -186,7 +188,7 @@ pub const Widget = struct {
         } else return null;
     }
 
-    pub fn to_combo_box(self: Widget) ?ComboBox {
+    pub fn to_combo_box(self: Self) ?ComboBox {
         if (self.isa(ComboBox)) {
             return ComboBox{
                 .ptr = @ptrCast(*c.GtkComboBox, self.ptr),
@@ -194,7 +196,7 @@ pub const Widget = struct {
         } else return null;
     }
 
-    pub fn to_combo_box_text(self: Widget) ?ComboBoxText {
+    pub fn to_combo_box_text(self: Self) ?ComboBoxText {
         if (self.isa(ComboBoxText)) {
             return ComboBoxText{
                 .ptr = @ptrCast(*c.GtkComboBoxText, self.ptr),
@@ -202,7 +204,7 @@ pub const Widget = struct {
         } else return null;
     }
 
-    pub fn to_color_button(self: Widget) ?ColorButton {
+    pub fn to_color_button(self: Self) ?ColorButton {
         if (self.isa(ColorButton)) {
             return ColorButton{
                 .ptr = @ptrCast(*c.GtkColorButton, self.ptr),
@@ -210,7 +212,7 @@ pub const Widget = struct {
         } else return null;
     }
 
-    pub fn to_color_chooser(self: Widget) ?ColorChooser {
+    pub fn to_color_chooser(self: Self) ?ColorChooser {
         if (self.isa(ColorChooser)) {
             return ColorChooser{
                 .ptr = @ptrCast(*c.GtkColorChooser, self.ptr),
@@ -218,7 +220,7 @@ pub const Widget = struct {
         } else return null;
     }
 
-    pub fn to_entry(self: Widget) ?Entry {
+    pub fn to_entry(self: Self) ?Entry {
         if (self.isa(Entry)) {
             return Entry{
                 .ptr = @ptrCast(*c.GtkEntry, self.ptr),
@@ -226,17 +228,17 @@ pub const Widget = struct {
         } else return null;
     }
 
-    pub fn to_label(self: Widget) ?Label {
+    pub fn to_label(self: Self) ?Label {
         return if (self.isa(Label)) Label{ .ptr = @ptrCast(*c.GtkLabel, self.ptr) } else null;
     }
 
-    pub fn to_menu(self: Menu) ?Menu {
+    pub fn to_menu(self: Self) ?Menu {
         return if (self.isa(Menu)) Menu{
             .ptr = @ptrCast(*c.GtkMenu, self.ptr),
         } else null;
     }
 
-    pub fn to_menu_item(self: Widget) ?MenuItem {
+    pub fn to_menu_item(self: Self) ?MenuItem {
         if (self.isa(MenuItem)) {
             return MenuItem{
                 .ptr = @ptrCast(*c.GtkMenuItem, self.ptr),
@@ -244,7 +246,7 @@ pub const Widget = struct {
         } else return null;
     }
 
-    pub fn to_notebook(self: Widget) ?Notebook {
+    pub fn to_notebook(self: Self) ?Notebook {
         if (self.isa(Notebook)) {
             return Notebook{
                 .ptr = @ptrCast(*c.GtkNotebook, self.ptr),
@@ -252,7 +254,7 @@ pub const Widget = struct {
         } else return null;
     }
 
-    pub fn to_range(self: Widget) ?Range {
+    pub fn to_range(self: Self) ?Range {
         if (self.isa(Range)) {
             return Range{
                 .ptr = @ptrCast(*c.GtkRange, self.ptr),
@@ -260,11 +262,17 @@ pub const Widget = struct {
         } else return null;
     }
 
-    pub fn to_scale(self: Widget) ?Scale {
+    pub fn to_scale(self: Self) ?Scale {
         return if (self.isa(Scale)) Scale{ .ptr = @ptrCast(*c.GtkScale, self.ptr) } else null;
     }
 
-    pub fn to_switch(self: Widget) ?Switch {
+    pub fn to_spin_button(self: Self) ?SpinButton {
+        return if (self.isa(SpinButton)) SpinButton{
+            .ptr = @ptrCast(*c.GtkSpinButton, self.ptr)
+        } else null;
+    }
+
+    pub fn to_switch(self: Self) ?Switch {
         if (self.isa(Switch)) {
             return Switch{
                 .ptr = @ptrCast(*c.GtkSwitch, self.ptr),
@@ -272,7 +280,7 @@ pub const Widget = struct {
         } else return null;
     }
 
-    pub fn to_toggle_button(self: Widget) ?ToggleButton {
+    pub fn to_toggle_button(self: Self) ?ToggleButton {
         if (self.isa(ToggleButton)) {
             return ToggleButton{
                 .ptr = @ptrCast(*c.GtkToggleButton, self.ptr),
@@ -280,7 +288,7 @@ pub const Widget = struct {
         } else return null;
     }
 
-    pub fn to_window(self: Widget) ?Window {
+    pub fn to_window(self: Self) ?Window {
         if (self.isa(Window)) {
             return Window{
                 .ptr = @ptrCast(*c.GtkWindow, self.ptr),
