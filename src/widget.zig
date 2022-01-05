@@ -44,6 +44,8 @@ const SpinButton = range.SpinButton;
 
 const Switch = @import("switch.zig").Switch;
 
+const Stack = @import("stack.zig").Stack;
+
 const window = @import("window.zig");
 const ApplicationWindow = window.ApplicationWindow;
 const Window = window.Window;
@@ -279,11 +281,15 @@ pub const Widget = struct {
         } else null;
     }
 
+    pub fn to_stack(self: Self) ?Stack {
+        return if (self.isa(Stack)) Stack{
+            .ptr = @ptrCast(*c.GtkStack, self.ptr)
+        } else null;
+    }
+
     pub fn to_switch(self: Self) ?Switch {
-        if (self.isa(Switch)) {
-            return Switch{
-                .ptr = @ptrCast(*c.GtkSwitch, self.ptr),
-            };
+        return if (self.isa(Switch)) Switch{
+            .ptr = @ptrCast(*c.GtkSwitch, self.ptr),
         } else return null;
     }
 

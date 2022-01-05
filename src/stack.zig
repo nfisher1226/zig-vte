@@ -1,5 +1,6 @@
 const c = @import("cimport.zig");
 const com = @import("common.zig");
+const Container = @import("container.zig").Container;
 const enums = @import("enums.zig");
 StackTransitionType = enums.StackTransitionType;
 const Widget = @import("widget.zig").Widget;
@@ -90,7 +91,64 @@ pub const Stack = struct {
         c.gtk_stack_set_transition_duration(self.ptr, duration);
     }
 
-    pub fn get_transition_duration(self) c_uint {
+    pub fn get_transition_duration(self: Self) c_uint {
         return c.gtk_stack_get_transition_duration(self.ptr);
+    }
+
+    pub fn set_transition_type(self: Self, transition: StackTransitionType) void {
+        c.gtk_stack_set_transition_type(self.ptr, transition.parse());
+    }
+
+    pub fn get_transition_type(self: Self) StackTransitionType {
+        return switch (c.gtk_stack_get_transition_type(self.ptr)) {
+            GTK_STACK_TRANSITION_TYPE_NONE => .none,
+            GTK_STACK_TRANSITION_TYPE_CROSSFADE => .crossfade,
+            GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT => .slide_right,
+            GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT => .slide_left,
+            GTK_STACK_TRANSITION_TYPE_SLIDE_UP => .slide_up,
+            GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN => .slide_down,
+            GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT => .slide_left_right,
+            GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN => .slide_up_down,
+            GTK_STACK_TRANSITION_TYPE_SLIDE_OVER_UP => .slide_over_up,
+            GTK_STACK_TRANSITION_TYPE_SLIDE_OVER_DOWN => .slide_over_down,
+            GTK_STACK_TRANSITION_TYPE_SLIDE_OVER_LEFT => .slide_over_left,
+            GTK_STACK_TRANSITION_TYPE_SLIDE_OVER_RIGHT => .slide_over_right,
+            GTK_STACK_TRANSITION_TYPE_SLIDE_UNDER_UP => .slide_under_up,
+            GTK_STACK_TRANSITION_TYPE_SLIDE_UNDER_DOWN => .slide_under_down,
+            GTK_STACK_TRANSITION_TYPE_SLIDE_UNDER_LEFT => .slide_under_left,
+            GTK_STACK_TRANSITION_TYPE_SLIDE_UNDER_RIGHT => .slide_under_right,
+            GTK_STACK_TRANSITION_TYPE_OVER_UP_DOWN => .over_up_down,
+            GTK_STACK_TRANSITION_TYPE_OVER_DOWN_UP => .over_down_up,
+            GTK_STACK_TRANSITION_TYPE_OVER_LEFT_RIGHT => .over_left_right,
+            GTK_STACK_TRANSITION_TYPE_OVER_RIGHT_LEFT => .over_right_left,
+        };
+    }
+
+    pub fn get_transition_running(self: Self) bool {
+        return (c.gtk_stack_get_transition_running(self.ptr) == 1);
+    }
+
+    pub fn get_interpolate_size(self: Self) bool {
+        return (c.gtk_stack_get_interpolate_size(self.ptr) == 1);
+    }
+
+    pub fn set_interpolate_size(self.ptr, interpolate_size: bool) void {
+        c.gtk_stack_set_interpolate_size(self.ptr, com.bool_to_c_int(interpolate_size));
+    }
+
+    pub fn as_container(self: Self) Container {
+        return Containerr{
+            .ptr = @ptrCast(*c.GtkContainer, self.ptr),
+        };
+    }
+
+    pub fn as_widget(self: Self) Widget {
+        return Widget{
+            .ptr = @ptrCast(*c.GtkWidget, self.ptr),
+        };
+    }
+
+    pub fn is_instance(gtype: u64) bool {
+        return (gtype == c.gtk_stack_get_type());
     }
 };
