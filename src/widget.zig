@@ -26,6 +26,9 @@ const Entry = entry.Entry;
 const EntryBuffer = entry.EntryBuffer;
 const EntryCompletion = entry.EntryCompletion;
 
+const grid = @import("grid.zig");
+const Grid = grid.Grid;
+
 const Label = @import("label.zig").Label;
 
 const menu = @import("menu.zig");
@@ -221,15 +224,21 @@ pub const Widget = struct {
     }
 
     pub fn to_entry(self: Self) ?Entry {
-        if (self.isa(Entry)) {
-            return Entry{
-                .ptr = @ptrCast(*c.GtkEntry, self.ptr),
-            };
+        return if (self.isa(Entry)) Entry{
+            .ptr = @ptrCast(*c.GtkEntry, self.ptr),
         } else return null;
     }
 
+    pub fn to_grid(self: Self) ?Grid {
+        return if (self.isa(Grid)) Grid{
+            .ptr = @ptrCast(*c.GtkGrid, self.ptr),
+        } else null;
+    }
+
     pub fn to_label(self: Self) ?Label {
-        return if (self.isa(Label)) Label{ .ptr = @ptrCast(*c.GtkLabel, self.ptr) } else null;
+        return if (self.isa(Label)) Label{
+            .ptr = @ptrCast(*c.GtkLabel, self.ptr),
+        } else null;
     }
 
     pub fn to_menu(self: Self) ?Menu {
@@ -239,10 +248,8 @@ pub const Widget = struct {
     }
 
     pub fn to_menu_item(self: Self) ?MenuItem {
-        if (self.isa(MenuItem)) {
-            return MenuItem{
-                .ptr = @ptrCast(*c.GtkMenuItem, self.ptr),
-            };
+        return if (self.isa(MenuItem)) MenuItem{
+            .ptr = @ptrCast(*c.GtkMenuItem, self.ptr),
         } else return null;
     }
 
