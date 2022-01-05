@@ -2,7 +2,7 @@ const c = @import("cimport.zig");
 const com = @import("common.zig");
 const Container = @import("container.zig").Container;
 const enums = @import("enums.zig");
-StackTransitionType = enums.StackTransitionType;
+const StackTransitionType = enums.StackTransitionType;
 const Widget = @import("widget.zig").Widget;
 
 const std = @import("std");
@@ -20,20 +20,20 @@ pub const Stack = struct {
         };
     }
 
-    pub fn add_named(self: Self, child: Widget, name: [*0]const u8) void {
+    pub fn add_named(self: Self, child: Widget, name: [:0]const u8) void {
         c.gtk_stack_add_named(self.ptr, child.ptr, name);
     }
 
     pub fn add_titled(
         self: Self,
         child: Widget,
-        name: [*0]const u8,
-        title: [*0]const u8
+        name: [:0]const u8,
+        title: [:0]const u8
     ) void {
         c.gtk_stack_add_titled(self.ptr, child.ptr, name, title);
     }
 
-    pub fn get_child_by_name(self: Self, name: [*0]const u8) ?Widget {
+    pub fn get_child_by_name(self: Self, name: [:0]const u8) ?Widget {
         return if (c.gtk_stack_get_child_by_name(self.ptr, name)) |w| Widget{
             .ptr = w,
         } else null;
@@ -44,22 +44,22 @@ pub const Stack = struct {
     }
 
     pub fn get_visible_child(self: Self) ?Widget {
-        return -f (c.gtk_stack_get_visible_child(self.ptr)) |w| Widget{
+        return if (c.gtk_stack_get_visible_child(self.ptr)) |w| Widget{
             .ptr = w,
         } else null;
     }
 
-    pub fn set_visible_child_name(self: Self, child: [*0]const u8) void {
+    pub fn set_visible_child_name(self: Self, child: [:0]const u8) void {
         c.gtk_stack_set_visible_child_name(self.ptr, child);
     }
 
-    pub fn get_visible_child_name(self: Self) ?[*0]const u8 {
+    pub fn get_visible_child_name(self: Self) ?[:0]const u8 {
         return if (c.gtk_stack_get_visible_child_name(self.ptr)) |w| Widget{
             .ptr = w,
         } else null;
     }
 
-    pub fn set_visible_child_full(self: Self, name: [*0]const u8, transition: StackTransitionType) void {
+    pub fn set_visible_child_full(self: Self, name: [:0]const u8, transition: StackTransitionType) void {
         c.gtk_stack_set_visible_child_full(self.ptr, name, transition.parse());
     }
 
@@ -68,7 +68,7 @@ pub const Stack = struct {
     }
 
     pub fn get_homogeneous(self: Self) bool {
-        return (c.gtk_stack_get_homeogeneous == 1);
+        return (c.gtk_stack_get_homeogeneous(self.ptr) == 1);
     }
 
     pub fn set_hhomogeneous(self: Self, hom: bool) void {
@@ -76,7 +76,7 @@ pub const Stack = struct {
     }
 
     pub fn get_hhomogeneous(self: Self) bool {
-        return (c.gtk_stack_get_hhomeogeneous == 1);
+        return (c.gtk_stack_get_hhomeogeneous(self.ptr) == 1);
     }
 
     pub fn set_vhomogeneous(self: Self, hom: bool) void {
@@ -84,7 +84,7 @@ pub const Stack = struct {
     }
 
     pub fn get_vhomogeneous(self: Self) bool {
-        return (c.gtk_stack_get_vhomeogeneous == 1);
+        return (c.gtk_stack_get_vhomeogeneous(self.ptr) == 1);
     }
 
     pub fn set_transition_duration(self: Self, duration: c_uint) void {
@@ -132,12 +132,12 @@ pub const Stack = struct {
         return (c.gtk_stack_get_interpolate_size(self.ptr) == 1);
     }
 
-    pub fn set_interpolate_size(self.ptr, interpolate_size: bool) void {
+    pub fn set_interpolate_size(self: Self, interpolate_size: bool) void {
         c.gtk_stack_set_interpolate_size(self.ptr, com.bool_to_c_int(interpolate_size));
     }
 
     pub fn as_container(self: Self) Container {
-        return Containerr{
+        return Container{
             .ptr = @ptrCast(*c.GtkContainer, self.ptr),
         };
     }
