@@ -1,5 +1,20 @@
 const c = @import("cimport.zig");
 
+/// Enum AccelFlags
+pub const AccelFlags = enum {
+    visible,
+    locked,
+    mask,
+
+    pub fn parse(self: AccelFlags) c.GtkAccelFlags {
+        return switch (self) {
+            .visible => c.GTK_ACCEL_VISIBLE,
+            .locked => c.GTK_ACCEL_LOCKED,
+            .mask => c.GTK_ACCEL_MASK,
+        };
+    }
+};
+
 /// enum ConnectFlags
 pub const ConnectFlags = enum {
     after,
@@ -9,30 +24,6 @@ pub const ConnectFlags = enum {
         return switch (self) {
             .after => c.G_CONNECT_AFTER,
             .swapped => c.G_CONNECT_SWAPPED,
-        };
-    }
-};
-
-/// enum IconSize
-pub const IconSize = enum {
-    invalid,
-    menu,
-    small_toolbar,
-    large_toolbar,
-    button,
-    dnd,
-    dialog,
-
-    /// Parses an IconSize into a GtkIconSize
-    pub fn parse(self: IconSize) c.GtkIconSize {
-        return switch (self) {
-            .invalid => c.GTK_ICON_SIZE_INVALID,
-            .menu => c.GTK_ICON_SIZE_MENU,
-            .small_toolbar => c.GTK_ICON_SIZE_SMALL_TOOLBAR,
-            .large_toolbar => c.GTK_ICON_SIZE_LARGE_TOOLBAR,
-            .button => c.GTK_ICON_SIZE_BUTTON,
-            .dnd => c.GTK_ICON_SIZE_DND,
-            .dialog => c.GTK_ICON_SIZE_DIALOG,
         };
     }
 };
@@ -98,6 +89,45 @@ pub const DirectionType = enum {
     }
 };
 
+/// enum IconSize
+pub const IconSize = enum {
+    invalid,
+    menu,
+    small_toolbar,
+    large_toolbar,
+    button,
+    dnd,
+    dialog,
+
+    /// Parses an IconSize into a GtkIconSize
+    pub fn parse(self: IconSize) c.GtkIconSize {
+        return switch (self) {
+            .invalid => c.GTK_ICON_SIZE_INVALID,
+            .menu => c.GTK_ICON_SIZE_MENU,
+            .small_toolbar => c.GTK_ICON_SIZE_SMALL_TOOLBAR,
+            .large_toolbar => c.GTK_ICON_SIZE_LARGE_TOOLBAR,
+            .button => c.GTK_ICON_SIZE_BUTTON,
+            .dnd => c.GTK_ICON_SIZE_DND,
+            .dialog => c.GTK_ICON_SIZE_DIALOG,
+        };
+    }
+};
+
+/// Enum ModifierType
+pub const ModifierType = enum {
+    shift_mask,
+    mod1_mask,
+    control_mask,
+
+    pub fn parse(self: ModifierType) c.GdkModifierType {
+        return switch (self) {
+            .shift_mask => c.GDK_SHIFT_MASK,
+            .mod1_mask => c.GDK_MOD1_MASK,
+            .control_mask => c.GDK_CONTROL_MASK,
+        };
+    }
+};
+
 /// enum Orientation
 pub const Orientation = enum {
     horizontal,
@@ -110,19 +140,6 @@ pub const Orientation = enum {
         };
     }
 
-};
-
-/// enum WindowType
-pub const WindowType = enum {
-    toplevel,
-    popup,
-
-    pub fn parse(self: WindowType) c.GtkWindowType {
-        return switch (self) {
-            .toplevel => c.GTK_WINDOW_TOPLEVEL,
-            .popup => c.GTK_WINDOW_POPUP,
-        };
-    }
 };
 
 /// Enum PackType
@@ -151,6 +168,48 @@ pub const PositionType = enum {
             .right => c.GTK_POS_RIGHT,
             .top => c.GTK_POS_TOP,
             .bottom => c.GTK_POS_BOTTOM,
+        };
+    }
+};
+
+/// Enum ReliefStyle
+pub const ReliefStyle = enum {
+    normal,
+    none,
+
+    pub fn parse(self: ReliefStyle) c.GtkReliefStyle {
+        return switch (self) {
+            .normal => c.GTK_RELIEF_NORMAL,
+            .none => c.GTK_RELIEF_NONE,
+        };
+    }
+};
+
+/// enum SpawnFlags
+pub const SpawnFlags = enum {
+    default,
+    leave_descriptors_open,
+    do_not_reap_child,
+    search_path,
+    stdout_to_dev_null,
+    stderr_to_dev_null,
+    child_inherits_stdin,
+    file_and_argv_zero,
+    search_path_from_envp,
+    cloexec_pipes,
+
+    pub fn parse(self: SpawnFlags) c.GSpawnFlags {
+        return switch (self) {
+            .default => c.G_SPAWN_DEFAULT,
+            .leave_descriptors_open => c.G_SPAWN_LEAVE_DESCRIPTORS_OPEN,
+            .do_not_reap_child => c.G_SPAWN_DO_NOT_REAP_CHILD,
+            .search_path => c.G_SPAWN_SEARCH_PATH,
+            .stdout_to_dev_null => c.G_SPAWN_STDOUT_TO_DEV_NULL,
+            .stderr_to_dev_null => c.G_SPAWN_STDERR_TO_DEV_NULL,
+            .child_inherits_stdin => c.G_SPAWN_CHILD_INHERITS_STDIN,
+            .file_and_argv_zero => c.G_SPAWN_FILE_AND_ARGV_ZERO,
+            .search_path_from_envp => c.G_SPAWN_SEARCH_PATH_FROM_ENVP,
+            .cloexec_pipes => c.G_SPAWN_CLOEXEC_PIPES,
         };
     }
 };
@@ -195,74 +254,66 @@ pub const SpinType = enum {
     }
 };
 
-/// Enum ReliefStyle
-pub const ReliefStyle = enum {
-    normal,
+/// enum StackTransitionStyle
+pub const StackTransitionStyle = enum {
     none,
+    crossfade,
+    slide_right,
+    slide_left,
+    slide_up,
+    slide_down,
+    slide_left_right,
+    slide_up_down,
+    over_up,
+    over_down,
+    over_left,
+    over_right,
+    under_up,
+    under_down,
+    under_left,
+    under_right,
+    over_up_down,
+    over_down_up,
+    over_left_right,
+    over_right_left,
 
-    pub fn parse(self: ReliefStyle) c.GtkReliefStyle {
+    const Self = @This();
+
+    pub fn parse(self: Self) c.GtkStackTransitionStyle {
         return switch (self) {
-            .normal => c.GTK_RELIEF_NORMAL,
-            .none => c.GTK_RELIEF_NONE,
+            none => c.GTK_STACK_TRANSITION_TYPE_NONE,
+            crossfade => c.GTK_STACK_TRANSITION_TYPE_CROSSFADE,
+            slide_right => c.GTK_STACK_TRANSITION_TYPE_RIGHT,
+            slide_left => c.GTK_STACK_TRANSITION_TYPE_LEFT,
+            slide_up => c.GTK_STACK_TRANSITION_TYPE_UP,
+            slide_down => c.GTK_STACK_TRANSITION_TYPE_DOWN,
+            slide_left_right => c.GTK_STACK_TRANSITION_TYPE_LEFT_RIGHT,
+            slide_up_down => c.GTK_STACK_TRANSITION_TYPE_UP_DOWN,
+            over_up => c.GTK_STACK_TRANSITION_TYPE_OVER_UP,
+            over_down => c.GTK_STACK_TRANSITION_TYPE_OVER_DOWN,
+            over_left => c.GTK_STACK_TRANSITION_TYPE_OVER_LEFT,
+            over_right => c.GTK_STACK_TRANSITION_TYPE_OVER_RIGHT,
+            under_up => c.GTK_STACK_TRANSITION_TYPE_UNDER_UP,
+            under_down => c.GTK_STACK_TRANSITION_TYPE_UNDER_DOWN,
+            under_left => c.GTK_STACK_TRANSITION_TYPE_UNDER_LEFT,
+            under_right => c.GTK_STACK_TRANSITION_TYPE_UNDER_RIGHT,
+            over_up_down => c.GTK_STACK_TRANSITION_TYPE_OVER_UP_DOWN,
+            over_down_up => c.GTK_STACK_TRANSITION_TYPE_OVER_DOWN_UP,
+            over_left_right => c.GTK_STACK_TRANSITION_TYPE_OVER_LEFT_RIGHT,
+            over_right_left => c.GTK_STACK_TRANSITION_TYPE_OVER_RIGHT_LEFT,
         };
     }
 };
 
-/// Enum ModifierType
-pub const ModifierType = enum {
-    shift_mask,
-    mod1_mask,
-    control_mask,
+/// enum WindowType
+pub const WindowType = enum {
+    toplevel,
+    popup,
 
-    pub fn parse(self: ModifierType) c.GdkModifierType {
+    pub fn parse(self: WindowType) c.GtkWindowType {
         return switch (self) {
-            .shift_mask => c.GDK_SHIFT_MASK,
-            .mod1_mask => c.GDK_MOD1_MASK,
-            .control_mask => c.GDK_CONTROL_MASK,
-        };
-    }
-};
-
-/// Enum AccelFlags
-pub const AccelFlags = enum {
-    visible,
-    locked,
-    mask,
-
-    pub fn parse(self: AccelFlags) c.GtkAccelFlags {
-        return switch (self) {
-            .visible => c.GTK_ACCEL_VISIBLE,
-            .locked => c.GTK_ACCEL_LOCKED,
-            .mask => c.GTK_ACCEL_MASK,
-        };
-    }
-};
-
-/// enum SpawnFlags
-pub const SpawnFlags = enum {
-    default,
-    leave_descriptors_open,
-    do_not_reap_child,
-    search_path,
-    stdout_to_dev_null,
-    stderr_to_dev_null,
-    child_inherits_stdin,
-    file_and_argv_zero,
-    search_path_from_envp,
-    cloexec_pipes,
-
-    pub fn parse(self: SpawnFlags) c.GSpawnFlags {
-        return switch (self) {
-            .default => c.G_SPAWN_DEFAULT,
-            .leave_descriptors_open => c.G_SPAWN_LEAVE_DESCRIPTORS_OPEN,
-            .do_not_reap_child => c.G_SPAWN_DO_NOT_REAP_CHILD,
-            .search_path => c.G_SPAWN_SEARCH_PATH,
-            .stdout_to_dev_null => c.G_SPAWN_STDOUT_TO_DEV_NULL,
-            .stderr_to_dev_null => c.G_SPAWN_STDERR_TO_DEV_NULL,
-            .child_inherits_stdin => c.G_SPAWN_CHILD_INHERITS_STDIN,
-            .file_and_argv_zero => c.G_SPAWN_FILE_AND_ARGV_ZERO,
-            .search_path_from_envp => c.G_SPAWN_SEARCH_PATH_FROM_ENVP,
-            .cloexec_pipes => c.G_SPAWN_CLOEXEC_PIPES,
+            .toplevel => c.GTK_WINDOW_TOPLEVEL,
+            .popup => c.GTK_WINDOW_POPUP,
         };
     }
 };
