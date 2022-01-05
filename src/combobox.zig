@@ -3,7 +3,7 @@ const common = @import("common.zig");
 const enums = @import("enums.zig");
 const Widget = @import("widget.zig").Widget;
 
-const std = @cImport("std");
+const std = @import("std");
 const fmt = std.fmt;
 const mem = std.mem;
 
