@@ -244,6 +244,10 @@ pub const SpinButton = struct {
         return (c.gtk_spin_button_get_wrap(self.ptr) == 1);
     }
 
+    pub fn connect_value_changed(self: Self, callback: c.GCallback, data: ?c.gpointer) void {
+        self.as_widget().connect("value_changed", callback, if (data) |d| d else null);
+    }
+
     pub fn as_range(self: Self) Range {
         return Range{
             .ptr = @ptrCast(*c.GtkRange, self.ptr),
