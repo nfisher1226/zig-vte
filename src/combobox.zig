@@ -112,6 +112,12 @@ pub const ComboBoxText = struct {
         return fmt.allocPrintZ(allocator, "{s}", .{val[0..len]}) catch return null;
     }
 
+    pub fn as_combo_box(self: Self) ComboBox {
+        return ComboBox{
+            .ptr = @ptrCast(*c.GtkComboBox, self.ptr),
+        };
+    }
+
     pub fn as_widget(self: Self) Widget {
         return Widget{
             .ptr = @ptrCast(*c.GtkWidget, self.ptr),
