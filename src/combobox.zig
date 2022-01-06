@@ -77,27 +77,27 @@ pub const ComboBoxText = struct {
         };
     }
 
-    pub fn append(self: Self, id: ?[]const u8, text: []const u8) void {
+    pub fn append(self: Self, id: ?[:0]const u8, text: [:0]const u8) void {
         c.gtk_combo_box_text_append(self.ptr, if (id) |i| i else null, text);
     }
 
-    pub fn prepend(self: Self, id: ?[]const u8, text: []const u8) void {
+    pub fn prepend(self: Self, id: ?[:0]const u8, text: [:0]const u8) void {
         c.gtk_combo_box_text_prepend(self.ptr, if (id) |i| i else null, text);
     }
 
-    pub fn insert(self: Self, position: c_int, id: ?[]const u8, text: []const u8) void {
+    pub fn insert(self: Self, position: c_int, id: ?[:0]const u8, text: [:0]const u8) void {
         c.gtk_combo_box_text_append(self.ptr, position, if (id) |i| i else null, text);
     }
 
-    pub fn append_text(self: Self, text: []const u8) void {
+    pub fn append_text(self: Self, text: [:0]const u8) void {
         c.gtk_combo_box_append_text(self.ptr, text);
     }
 
-    pub fn prepend_text(self: Self, text: []const u8) void {
+    pub fn prepend_text(self: Self, text: [:0]const u8) void {
         c.gtk_combo_box_prepend_text(self.ptr, text);
     }
 
-    pub fn insert_text(self: Self, position: c_int, text: []const u8) void {
+    pub fn insert_text(self: Self, position: c_int, text: [:0]const u8) void {
         c.gtk_combo_box_prepend_text(self.ptr, position, text);
     }
 
@@ -109,7 +109,7 @@ pub const ComboBoxText = struct {
         c.gtk_combo_box_remove_all(self.ptr);
     }
 
-    pub fn get_active_text(self: Self, allocator: mem.Allocator) ?[]const u8 {
+    pub fn get_active_text(self: Self, allocator: mem.Allocator) ?[:0]const u8 {
         const val = c.gtk_combo_box_text_get_active_text(self.ptr);
         defer c.g_free(@ptrCast(*c.gpointer, val));
         const len = mem.len(val);
