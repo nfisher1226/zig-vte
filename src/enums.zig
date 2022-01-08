@@ -185,6 +185,23 @@ pub const ReliefStyle = enum {
     }
 };
 
+/// Enum SensitivityType
+pub const SensitivityType = enum {
+    auto,
+    on,
+    off,
+
+    const Self = @This();
+
+    pub fn parse(self: Self) c.GtkSensitivityType {
+        return switch (self) {
+            .auto => c.GTK_SENSITIVITY_AUTO,
+            .on => c.GTK_SENSITIVITY_ON,
+            .off => c.GTK_SENSITIVITY_OFF,
+        };
+    }
+};
+
 /// enum SpawnFlags
 pub const SpawnFlags = enum {
     default,
@@ -198,7 +215,9 @@ pub const SpawnFlags = enum {
     search_path_from_envp,
     cloexec_pipes,
 
-    pub fn parse(self: SpawnFlags) c.GSpawnFlags {
+    const Self = @This();
+
+    pub fn parse(self: Self) c.GSpawnFlags {
         return switch (self) {
             .default => c.G_SPAWN_DEFAULT,
             .leave_descriptors_open => c.G_SPAWN_LEAVE_DESCRIPTORS_OPEN,

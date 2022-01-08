@@ -1,10 +1,9 @@
 const c = @import("cimport.zig");
 const Adjustment = @import("adjustment.zig").Adjustment;
-const com = @import("common.zig");
-const bool_to_c_int = com.bool_to_c_int;
 const enums = @import("enums.zig");
 const Orientation = enums.Orientation;
 const PositionType = enums.PositionType;
+const SensitivityType = enums.SensitivityType;
 const SpinType = enums.SpinType;
 const SpinButtonUpdatePolicy = enums.SpinButtonUpdatePolicy;
 const Orientable = @import("orientable.zig").Orientable;
@@ -13,15 +12,107 @@ const Widget = @import("widget.zig").Widget;
 pub const Range = struct {
     ptr: *c.GtkRange,
 
-    pub fn get_value(self: Range) f64 {
+    const Self = @This();
+
+    pub fn get_fill_level(self: Self) f64 {
+        return c.gtk_range_get_fill_level(self.ptr);
+    }
+
+    pub fn get_restrict_to_fill_level(self: Self) bool {
+        return (c.gtk_range_get_restrict_to_fill_level(self.ptr) == 1);
+    }
+
+    pub fn get_show_fill_level(self: Self) bool {
+        return (c.gtk_range_get_show_fill_level(self.ptr) == 1);
+    }
+
+    pub fn set_fill_level(self: Self, level: f64) void {
+        c.gtk_range_set_fill_level(self.ptr, level);
+    }
+
+    pub fn set_restrict_to_fill_level(self: Self, restrict: bool) void {
+        c.gtk_range_set_restrict_to_fill_level(self.ptr, if (restrict) 1 else 0);
+    }
+
+    pub fn set_show_fill_level(self: Self, show: bool) void {
+        c.gtk_range_set_show_fill_level(self.ptr, if (show) 1 else 0);
+    }
+
+    pub fn get_adjustment(self: Self) Adjustment {
+        return Adjustment{
+            .ptr = @ptrCast(*c.GtkAdjustment, c.gtk_range_get_adjustment(self.ptr)),
+        };
+    }
+
+    pub fn set_adjustment(self: Self, adjustment: Adjustment) void {
+        c.gtk_range_set_adjustment(self.ptr, adjustment.ptr);
+    }
+
+    pub fn get_inverted(self: Self) bool {
+        return (c.gtk_range_get_inverted(self.ptr) == 1);
+    }
+
+    pub fn set_inverted(self: Self, inverted: bool) void {
+        c.gtk_range_set_inverted(self.ptr, if (inverted) 1 else 0);
+    }
+
+    pub fn get_value(self: Self) f64 {
         return c.gtk_range_get_value(self.ptr);
     }
 
-    pub fn set_value(self: Range, val: f64) void {
+    pub fn set_value(self: Self, val: f64) void {
         c.gtk_range_set_value(self.ptr, val);
     }
 
-    pub fn as_widget(self: Range) Widget {
+    pub fn set_increments(self: Self, step: f64, page: f64) void {
+        c.gtk_range_set_increments(self.ptr, step, page);
+    }
+
+    pub fn set_range(self: Self, min: f64, max: f64) void {
+        c.gtk_range_set_range(self.ptr, min, max);
+    }
+
+    pub fn get_round_digits(self: Self) c_int {
+        return c.gtk_range_get_round_digits(self.ptr);
+    }
+
+    pub fn set_round_digits(self: Self, digits: c_int) void {
+        c.gtk_range_set_round_digits(self.ptr, digits);
+    }
+
+    pub fn set_lower_stepper_sensitivity(self: Self, sensitivity: SensitivityType) void {
+        c.gtk_range_set_lower_stepper_sensitivity(self.ptr, sensitivity.parse());
+    }
+
+    pub fn get_lower_stepper_sensitivity(self: Self) SensitivityType {
+        return switch (c.gtk_range_get_lower_stepper_sensitivity(self.ptr)) {
+            c.GTK_SENSITIVITY_AUTO => .auto,
+            c.GTK_SENSITIVITY_ON => .on,
+            c.GTK_SENSITIVITY_OFF => .off,
+        };
+    }
+
+    pub fn set_upper_stepper_sensitivity(self: Self, sensitivity: SensitivityType) void {
+        c.gtk_range_set_upper_stepper_sensitivity(self.ptr, sensitivity.parse());
+    }
+
+    pub fn get_upper_stepper_sensitivity(self: Self) SensitivityType {
+        return switch (c.gtk_range_get_upper_stepper_sensitivity(self.ptr)) {
+            c.GTK_SENSITIVITY_AUTO => .auto,
+            c.GTK_SENSITIVITY_ON => .on,
+            c.GTK_SENSITIVITY_OFF => .off,
+        };
+    }
+
+    pub fn get_flippable(self: Self) bool {
+        return (c.gtk_range_get_flippable(self.ptr) == 1);
+    }
+
+    pub fn set_flippable(self: Self, flippable: bool) void {
+        c.gtk_range_set_flippable(self.ptr, if (flippable) 1 else 0);
+    }
+
+    pub fn as_widget(self: Self) Widget {
         return Widget{
             .ptr = @ptrCast(*c.GtkWidget, self.ptr),
         };
@@ -60,7 +151,7 @@ pub const Scale = struct {
     }
 
     pub fn set_draw_value(self: Scale, draw: bool) void {
-        c.gtk_scale_set_draw_value(self.ptr, bool_to_c_int(draw));
+        c.gtk_scale_set_draw_value(self.ptr, if (draw) 1 else 0);
     }
 
     pub fn get_has_origin(self: Scale) bool {
@@ -68,7 +159,7 @@ pub const Scale = struct {
     }
 
     pub fn set_has_origin(self: Scale, origin: bool) void {
-        c.gtk_scale_set_has_origin(self.ptr, bool_to_c_int(origin));
+        c.gtk_scale_set_has_origin(self.ptr, if (origin) 1 else 0);
     }
 
     pub fn get_value_pos(self: Scale) PositionType {
@@ -183,7 +274,7 @@ pub const SpinButton = struct {
     }
 
     pub fn set_numeric(self: Self, numeric: bool) void {
-        c.gtk_spin_button_set_numeric(self.ptr, bool_to_c_int(numeric));
+        c.gtk_spin_button_set_numeric(self.ptr, if (numeric) 1 else 0);
     }
 
     pub fn spin(self: Self, direction: SpinType, increment: f64) void {
@@ -191,11 +282,11 @@ pub const SpinButton = struct {
     }
 
     pub fn set_wrap(self: Self, wrap: bool) void {
-        c.gtk_spin_button_set_wrap(self.ptr, bool_to_c_int(wrap));
+        c.gtk_spin_button_set_wrap(self.ptr, if (wrap) 1 else 0);
     }
 
     pub fn set_snap_to_ticks(self: Self, snap: bool) void {
-        c.gtk_spin_button_set_snap_to_ticks(self.ptr, bool_to_c_int(snap));
+        c.gtk_spin_button_set_snap_to_ticks(self.ptr, if (snap) 1 else 0);
     }
 
     pub fn update(self: Self) void {
