@@ -1,4 +1,8 @@
 const c = @import("cimport.zig");
+const Box = @import("box.zig").Box;
+const Grid = @import("grid.zig").Grid;
+const Notebook = @import("notebook.zig").Notebook;
+const Stack = @import("stack.zig").Stack;
 const Widget = @import("widget.zig").Widget;
 
 const std = @import("std");
