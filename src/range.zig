@@ -112,6 +112,10 @@ pub const Range = struct {
         c.gtk_range_set_flippable(self.ptr, if (flippable) 1 else 0);
     }
 
+    pub fn connect_value_changed(self: Self, callback: c.GCallback, data: ?c.gpointer) void {
+        self.as_widget().connect("value_changed", callback, if (data) |d| d else null);
+    }
+
     pub fn as_widget(self: Self) Widget {
         return Widget{
             .ptr = @ptrCast(*c.GtkWidget, self.ptr),
