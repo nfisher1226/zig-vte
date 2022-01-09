@@ -4,6 +4,7 @@ const enums = @import("enums.zig");
 const Widget = @import("widget.zig").Widget;
 
 const std = @import("std");
+const mem = std.mem;
 
 pub const ColorChooser = struct {
     ptr: *c.GtkColorChooser,
@@ -76,7 +77,7 @@ pub const ColorButton = struct {
         c.gtk_color_button_set_title(self.ptr, title);
     }
 
-    pub fn get_title(self: Self, allocator: Allocator) ?[:0]const u8 {
+    pub fn get_title(self: Self, allocator: mem.Allocator) ?[:0]const u8 {
         const val = c.gtk_color_button_get_title(self.ptr);
         const len = mem.len(val);
         return fmt.allocPrintZ(allocator, "{s}", .{val[0..len]}) catch return null;
