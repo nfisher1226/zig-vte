@@ -4,6 +4,7 @@ const enums = @import("enums.zig");
 const Widget = @import("widget.zig").Widget;
 
 const std = @import("std");
+const fmt = std.fmt;
 const mem = std.mem;
 
 pub const ColorChooser = struct {
