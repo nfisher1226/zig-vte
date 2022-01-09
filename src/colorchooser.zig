@@ -1,7 +1,5 @@
 const c = @import("cimport.zig");
 const Button = @import("button.zig").Button;
-const common = @import("common.zig");
-const bool_to_c_int = common.bool_to_c_int;
 const enums = @import("enums.zig");
 const Widget = @import("widget.zig").Widget;
 
@@ -25,7 +23,7 @@ pub const ColorChooser = struct {
     }
 
     pub fn set_use_alpha(self: ColorChooser, use: bool) void {
-        c.gtk_color_chooser_set_use_alpha(self.ptr, bool_to_c_int(use));
+        c.gtk_color_chooser_set_use_alpha(self.ptr, if (use) 1 else 0);
     }
 
     pub fn is_instance(gtype: u64) bool {
@@ -60,19 +58,47 @@ pub const ColorChooser = struct {
 pub const ColorButton = struct {
     ptr: *c.GtkColorButton,
 
-    pub fn as_color_chooser(self: ColorButton) ColorChooser {
+    const Self = @This();
+
+    pub fn new() Self {
+        return Self{
+            .ptr = @ptrCast(*c.GtkColorButton, c.gtk_color_button_new()),
+        };
+    }
+
+    pub fn new_sith_rgba(rgba: c.GdkRGBA) Self {
+        return Self{
+            .ptr = @ptrCast(*c.GtkColorButton, c.gtk_color_button_new_with_rgba(rgba)),
+        };
+    }
+
+    pub fn set_title(self: Self, title: [:0]const u8) void {
+        c.gtk_color_button_set_title(self.ptr, title);
+    }
+
+    pub fn get_title(self: Self, allocator: Allocator) ?[:0]const u8 {
+        const val = c.gtk_color_button_get_title(self.ptr);
+        const len = mem.len(val);
+        return fmt.allocPrintZ(allocator, "{s}", .{val[0..len]}) catch return null;
+    }
+
+    pub fn connect_color_set(self: Self, callback: c.GCallback, data: ?c.gpointer) void {
+        self.as_widget().connect("color-set", callback, if (data) |d| d else null);
+    }
+
+    pub fn as_color_chooser(self: Self) ColorChooser {
         return ColorChooser{
             .ptr = @ptrCast(*c.GtkColorChooser, self.ptr),
         };
     }
 
-    pub fn as_button(self: ColorButton) Button {
+    pub fn as_button(self: Self) Button {
         return Button{
             .ptr = @ptrCast(*c.GtkButton, self.ptr),
         };
     }
 
-    pub fn as_widget(self: ColorButton) Widget {
+    pub fn as_widget(self: Self) Widget {
         return Widget{
             .ptr = @ptrCast(*c.GtkWidget, self.ptr),
         };
@@ -86,7 +112,9 @@ pub const ColorButton = struct {
 pub const ColorChooserWidget = struct {
     ptr: *c.GtkColorChooserWidget,
 
-    pub fn as_color_chooser(self: ColorChooserWidget) ColorChooser {
+    const Self = @This();
+
+    pub fn as_color_chooser(self: Self) ColorChooser {
         return ColorChooser{
             .ptr = @ptrCast(*c.GtkColorChooser, self.ptr),
         };
@@ -100,7 +128,9 @@ pub const ColorChooserWidget = struct {
 pub const ColorChooserDialog = struct {
     ptr: *c.GtkColorChooserDialog,
 
-    pub fn as_color_chooser(self: ColorChooserDialog) ColorChooser {
+    const Self = @This();
+
+    pub fn as_color_chooser(self: Self) ColorChooser {
         return ColorChooser{
             .ptr = @ptrCast(*c.GtkColorChooser, self.ptr),
         };
