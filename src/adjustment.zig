@@ -3,8 +3,10 @@ const c = @import("cimport.zig");
 pub const Adjustment = struct {
     ptr: *c.GtkAdjustment,
 
-    pub fn new(val: f64, lower: f64, upper: f64, step: f64, page: f64, page_size: f64) Adjustment {
-        return Adjustment {
+    const Self = @This();
+
+    pub fn new(val: f64, lower: f64, upper: f64, step: f64, page: f64, page_size: f64) Self {
+        return Self{
             .ptr = c.gtk_adjustment_new(val, lower, upper, step, page, page_size),
         };
     }

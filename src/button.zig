@@ -13,6 +13,8 @@ const mem = std.mem;
 pub const Button = struct {
     ptr: *c.GtkButton,
 
+    const Self = @This();
+
     /// Creates a new Button
     pub fn new() Button {
         return Button{
