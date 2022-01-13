@@ -42,7 +42,7 @@ pub const ComboBox = struct {
     }
 
     pub fn set_active_id(self: ComboBox, id: ?[:0]const u8) void {
-        c.gtk_combo_box_set_active_id(self.ptr, if (id) |i| i else null);
+        _ = c.gtk_combo_box_set_active_id(self.ptr, if (id) |i| i else null);
     }
 
     pub fn connect_changed(self: ComboBox, callback: c.GCallback, data: ?c.gpointer) void {
