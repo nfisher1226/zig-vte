@@ -1,10 +1,19 @@
 const c = @import("cimport.zig");
 const Container = @import("container.zig").Container;
 const enums = @import("enums.zig");
+const BaselinePosition = enums.BaselinePosition;
 const Orientation = enums.Orientation;
+const PackType = enums.PackType;
 
 const Orientable = @import("orientable.zig").Orientable;
 const Widget = @import("widget.zig").Widget;
+
+pub const Packing = struct {
+    expand: bool,
+    fill: bool,
+    padding: c_uint,
+    pack_type: PackType,
+};
 
 pub const Box = struct {
     ptr: *c.GtkBox,
@@ -31,6 +40,75 @@ pub const Box = struct {
 
     pub fn set_homogeneous(self: Self, hom: bool) void {
         c.gtk_box_set_homogeneous(self.ptr, if (hom) 1 else 0);
+    }
+
+    pub fn get_spacing(self: Self) c_int {
+        return c.gtk_box_get_spacing(self.ptr);
+    }
+
+    pub fn set_spacing(self: Self, spacing: c_int) void {
+        c.gtk_box_set_spacing(self.ptr, spacing);
+    }
+
+    pub fn reorder_child(self: Self, child: Widget, position: c_int) void {
+        c.gtk_box_reorder_child(self.ptr, child.ptr, position);
+    }
+
+    pub fn query_child_packing(self: Self, child: Widget) Packing {
+        var expand: c_int = undefined;
+        var fill: c_int = undefined;
+        var padding: c_uint = undefined;
+        var pack_type: c.GtkPackType = undefined;
+        c.gtk_box_query_packing(self.ptr, child.ptr, expand, fill, padding, pack_type);
+        return Packing{
+            .expand = (expand == 1),
+            .fill = (fill == 1),
+            .padding = padding,
+            .pack_type = switch (pack_type) {
+                c.GtkPackStart => PackType.start,
+                c.GtkPackEnd => PackType.end,
+            },
+        };
+    }
+
+    pub fn set_child_packing(
+        self: Self,
+        child: Widget,
+        expand: bool,
+        fill: bool,
+        padding: c_uint,
+        pack_type: PackType,
+    ) void {
+        c.gtk_box_set_child_packing(
+            self.ptr,
+            child.ptr,
+            if (expand) 1 else 0,
+            if (fill) 1 else 0,
+            padding,
+            pack_type.parse(),
+        );
+    }
+
+    pub fn get_baseline_position(self: Self) BaselinePosition {
+        return switch (c.gtk_box_get_baseline_position(self.ptr)) {
+            c.GTK_BASELINE_POSITION_TOP => BaselinePosition.top,
+            c.GTK_BASELINE_POSITION_CENTER => BaselinePosition.center,
+            c.GTK_BASELINE_POSITION_BOTTOM => BaselinePosition.bottom,
+        };
+    }
+
+    pub fn set_baseline_position(self: Self, pos: BaselinePosition) void {
+        c.gtk_box_set_baseline_position(self.ptr, pos.parse());
+    }
+
+    pub fn get_center_widget(self: Self) Widget {
+        return Widget{
+            .ptr = c.gtk_box_get_center_widget(self.ptr),
+        };
+    }
+
+    pub fn set_center_widget(self: Self, child: Widget) void {
+        c.gtk_box_set_center_widget(self.ptr, child.ptr);
     }
 
     pub fn as_orientable(self: Self) Orientable {

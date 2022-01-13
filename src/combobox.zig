@@ -10,19 +10,21 @@ const mem = std.mem;
 pub const ComboBox = struct {
     ptr: *c.GtkComboBox,
 
-    pub fn new() ComboBox {
-        return ComboBox{
+    const Self = @This();
+
+    pub fn new() Self {
+        return Self{
             .ptr = @ptrCast(*c.GtkComboBox, c.gtk_combo_box_new()),
         };
     }
 
-    pub fn new_with_entry() ComboBox {
-        return ComboBox{
+    pub fn new_with_entry() Self {
+        return Self{
             .ptr = @ptrCast(*c.GtkComboBox, c.gtk_combo_box_new_with_entry()),
         };
     }
 
-    pub fn get_active(self: ComboBox) ?c_int {
+    pub fn get_active(self: Self) ?c_int {
         const res = c.gtk_combo_box_get_active(self.ptr);
         return switch (res) {
             -1 => null,
@@ -30,26 +32,26 @@ pub const ComboBox = struct {
         };
     }
 
-    pub fn set_active(self: ComboBox, item: ?c_int) void {
+    pub fn set_active(self: Self, item: ?c_int) void {
         c.gtk_commbo_box_set_active(self.ptr, if (item) |i| i else -1);
     }
 
-    pub fn get_active_id(self: ComboBox, allocator: mem.Allocator) ?[:0]const u8 {
+    pub fn get_active_id(self: Self, allocator: mem.Allocator) ?[:0]const u8 {
         if (c.gtk_combo_box_get_active_id(self.ptr)) |val| {
             const len = mem.len(val);
             return fmt.allocPrintZ(allocator, "{s}", .{val[0..len]}) catch return null;
         } else return null;
     }
 
-    pub fn set_active_id(self: ComboBox, id: ?[:0]const u8) void {
+    pub fn set_active_id(self: Self, id: ?[:0]const u8) void {
         _ = c.gtk_combo_box_set_active_id(self.ptr, if (id) |i| i else null);
     }
 
-    pub fn connect_changed(self: ComboBox, callback: c.GCallback, data: ?c.gpointer) void {
+    pub fn connect_changed(self: Self, callback: c.GCallback, data: ?c.gpointer) void {
         self.as_widget().connect("changed", callback, if (data) |d| d else null);
     }
 
-    pub fn as_widget(self: ComboBox) Widget {
+    pub fn as_widget(self: Self) Widget {
         return Widget{
             .ptr = @ptrCast(*c.GtkWidget, self.ptr),
         };

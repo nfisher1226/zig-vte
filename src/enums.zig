@@ -99,8 +99,10 @@ pub const IconSize = enum {
     dnd,
     dialog,
 
+    const Self = @This();
+
     /// Parses an IconSize into a GtkIconSize
-    pub fn parse(self: IconSize) c.GtkIconSize {
+    pub fn parse(self: Self) c.GtkIconSize {
         return switch (self) {
             .invalid => c.GTK_ICON_SIZE_INVALID,
             .menu => c.GTK_ICON_SIZE_MENU,
@@ -109,6 +111,53 @@ pub const IconSize = enum {
             .button => c.GTK_ICON_SIZE_BUTTON,
             .dnd => c.GTK_ICON_SIZE_DND,
             .dialog => c.GTK_ICON_SIZE_DIALOG,
+        };
+    }
+};
+
+/// Enum License
+pub const License = enum {
+    unknown,
+    custom,
+    gpl2,
+    gpl3,
+    lgpl2_1,
+    lgpl3,
+    bsd,
+    mit_x11,
+    artistic,
+    gpl2_only,
+    gpl3_only,
+    lgpl2_1_only,
+    lgpl3_only,
+    agpl3,
+    agpl3_only,
+    bsd3,
+    apache2,
+    mpl2,
+
+    const Self = @This();
+
+    pub fn parse(self: Self) c.GtkLicense {
+        return switch (self) {
+            .unknown => c.GTK_LICENSE_UNKNOWN,
+            .custon => c.GTK_LICENSE_CUSTOM,
+            .gpl2 => c.GTK_LICENSE_GPL_2_0,
+            .gtpl3 => c.GTK_LICENSE_GPL_3_0,
+            .lgpl2_1 => c.GTK_LICENSE_LGPL_2_1,
+            .lgpl3 => c.GTK_LICENSE_LGPL_3_0,
+            .bsd => c.GTK_LICENSE_BSD,
+            .mit_x11 => c.GTK_LICENSE_MIT_X11,
+            .artistic => c.GTK_LICENSE_ARTISTIC,
+            .gpl2_only => c.GTK_LICENSE_GPL_2_0_ONLY,
+            .gpl3_only => c.GTK_LICENSE_GPL_3_0_ONLY,
+            .lgpl2_1_only => c.GTK_LICENSE_LGPL_2_1_ONLY,
+            .lgpl3_only => c.GTK_LICENSE_LGPL_3_0_ONLY,
+            .agpl3 => c.GTK_LICENSE_AGPL_3_0,
+            .agpl3_only => c.GTK_LICENSE_AGPL_3_0_ONLY,
+            .bsd3 => c.GTK_LICENSE_BSD_3,
+            .apache2 => c.GTK_LICENSE_APACHE_2_0,
+            .mpl2 => c.GTK_LICENSE_MPL_2_0,
         };
     }
 };
