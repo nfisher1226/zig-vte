@@ -26,6 +26,12 @@ const Entry = entry.Entry;
 const EntryBuffer = entry.EntryBuffer;
 const EntryCompletion = entry.EntryCompletion;
 
+const fontchooser = @import("fontchooser.zig");
+const FontChooser = fontchooser.FontChooser;
+const FontButton = fontchooser.FontButton;
+const FontChooserWidget = fontchooser.FontChooserWidget;
+const FontChooserDialog = fontchooser.FontChooserDialog;
+
 const grid = @import("grid.zig");
 const Grid = grid.Grid;
 
@@ -228,6 +234,30 @@ pub const Widget = struct {
     pub fn to_entry(self: Self) ?Entry {
         return if (self.isa(Entry)) Entry{
             .ptr = @ptrCast(*c.GtkEntry, self.ptr),
+        } else return null;
+    }
+
+    pub fn to_font_chooser(self: Self) ?FontChooser {
+        return if (self.isa(FontChooser)) FontChooser{
+            .ptr = @ptrCast(*c.GtkFontChooser, self.ptr),
+        } else return null;
+    }
+
+    pub fn to_font_button(self: Self) ?FontButton {
+        return if (self.isa(FontButton)) FontButton{
+            .ptr = @ptrCast(*c.GtkFontButton, self.ptr),
+        } else return null;
+    }
+
+    pub fn to_font_chooser_widget(self: Self) ?FontChooserWidget {
+        return if (self.isa(FontChooserWidget)) FontChooserWidget{
+            .ptr = @ptrCast(*c.GtkFontChooserWidget, self.ptr),
+        } else return null;
+    }
+
+    pub fn to_font_chooser_dialog(self: Self) ?FontChooserDialog {
+        return if (self.isa(FontChooserDialog)) FontChooserDialog{
+            .ptr = @ptrCast(*c.GtkFontChooserDialog, self.ptr),
         } else return null;
     }
 
