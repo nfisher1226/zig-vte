@@ -143,7 +143,9 @@ pub const Button = struct {
     }
 
     pub fn is_instance(gtype: u64) bool {
-        return (gtype == c.gtk_button_get_type() or ToggleButton.is_instance(gtype) or CheckButton.is_instance(gtype));
+        return (gtype == c.gtk_button_get_type()
+            or ToggleButton.is_instance(gtype)
+            or CheckButton.is_instance(gtype));
     }
 };
 
