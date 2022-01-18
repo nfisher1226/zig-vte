@@ -126,6 +126,72 @@ pub const AboutDialog = struct {
         c.gtk_about_dialog_set_website(self.ptr, site);
     }
 
+    pub fn get_website_label(self: Self, allocator: mem.Allocator) ?[:0]const u8 {
+        const val = c.gtk_about_dialog_get_website_label(self.ptr);
+        const len = mem.len(val);
+        return fmt.allocPrintZ(allocator, "{s}", .{val[0..len]}) catch return null;
+    }
+
+    pub fn set_website_label(self: Self, label: [:0]const u8) void {
+        c.gtk_about_dialog_set_website_label(self.ptr, label);
+    }
+
+    pub fn get_authors(self: Self) [*c][*c]const u8 {
+        return c.gtk_about_dialog_get_authors(self.ptr);
+    }
+
+    pub fn set_authors(self: Self, authors: [][:0]const u8) void {
+        c.gtk_about_dialog_set_authors(self.ptr, authors);
+    }
+
+    pub fn get_artists(self: Self) [*c][*c]const u8 {
+        return c.gtk_about_dialog_get_artists(self.ptr);
+    }
+
+    pub fn set_artists(self: Self, artists: [][:0]const u8) void {
+        c.gtk_about_dialog_set_artists(self.ptr, artists);
+    }
+
+    pub fn get_documentors(self: Self) [*c][*c]const u8 {
+        return c.gtk_about_dialog_get_documentors(self.ptr);
+    }
+
+    pub fn set_documentors(self: Self, artists: [][:0]const u8) void {
+        c.gtk_about_dialog_set_documentors(self.ptr, artists);
+    }
+
+    pub fn get_translator_credits(self: Self, allocator: mem.Allocator) ?[:0]const u8 {
+        const val = c.gtk_about_dialog_get_translator_credits(self.ptr);
+        const len = mem.len(val);
+        return fmt.allocPrintZ(allocator, "{s}", .{val[0..len]}) catch return null;
+    }
+
+    pub fn set_translator_credits(self: Self, site: [:0]const u8) void {
+        c.gtk_about_dialog_set_translator_credits(self.ptr, site);
+    }
+
+    pub fn get_logo(self: Self) *c.GdkPixbuf {
+        return c.gtk_about_dialog_get_logo(self.ptr);
+    }
+
+    pub fn set_logo(self: Self, logo: *c.GdkPixbuf) void {
+        c.gtk_about_dialog_set_logo(self.ptr, logo);
+    }
+
+    pub fn get_logo_icon_name(self: Self, allocator: mem.Allocator) ?[:0]const u8 {
+        const val = c.gtk_about_dialog_get_logo_icon_name(self.ptr);
+        const len = mem.len(val);
+        return fmt.allocPrintZ(allocator, "{s}", .{val[0..len]}) catch return null;
+    }
+
+    pub fn set_logo_icon_name(self: Self, name: [:0]const u8) void {
+        c.gtk_about_dialog_set_logo_icon_name(self.ptr, name);
+    }
+
+    pub fn add_credit_section(self: Self, section_name: [:0]const u8, people: [][:0]const u8) void {
+        c.gtk_about_dialog_add_credit_section(self.ptr, section_name, people);
+    }
+
     pub fn as_dialog(self: Self) Dialog {
         return Dialog{
             .ptr = @ptrCast(*c.GtkDialog, self.ptr),

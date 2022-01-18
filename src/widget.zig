@@ -48,6 +48,8 @@ const Range = range.Range;
 const Scale = range.Scale;
 const SpinButton = range.SpinButton;
 
+const Revealer = @import("revealer.zig").Revealer;
+
 const Switch = @import("switch.zig").Switch;
 
 const Stack = @import("stack.zig").Stack;
@@ -286,10 +288,8 @@ pub const Widget = struct {
     }
 
     pub fn to_notebook(self: Self) ?Notebook {
-        if (self.isa(Notebook)) {
-            return Notebook{
-                .ptr = @ptrCast(*c.GtkNotebook, self.ptr),
-            };
+        return if (self.isa(Notebook)) Notebook{
+            .ptr = @ptrCast(*c.GtkNotebook, self.ptr),
         } else return null;
     }
 
@@ -299,6 +299,12 @@ pub const Widget = struct {
                 .ptr = @ptrCast(*c.GtkRange, self.ptr),
             };
         } else return null;
+    }
+
+    pub fn to_revealer(self: Self) ?Revealer {
+        return if (self.isa(Revealer)) Revealer{
+            .ptr = @ptrCast(*c.GtkRevealer, self.ptr),
+        } else null;
     }
 
     pub fn to_scale(self: Self) ?Scale {
