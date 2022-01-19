@@ -136,12 +136,12 @@ pub const AboutDialog = struct {
         c.gtk_about_dialog_set_website_label(self.ptr, label);
     }
 
-    pub fn get_authors(self: Self) [*c][*c]const u8 {
+    pub fn get_authors(self: Self) [][:0]const u8 {
         return c.gtk_about_dialog_get_authors(self.ptr);
     }
 
     pub fn set_authors(self: Self, authors: [][:0]const u8) void {
-        c.gtk_about_dialog_set_authors(self.ptr, authors);
+        c.gtk_about_dialog_set_authors(self.ptr, &authors);
     }
 
     pub fn get_artists(self: Self) [*c][*c]const u8 {
