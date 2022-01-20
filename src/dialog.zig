@@ -24,6 +24,10 @@ pub const Dialog = struct {
         return c.gtk_dialog_run(self.ptr);
     }
 
+    pub fn as_window(self: Self) Window {
+        return Window( .ptr = @ptrCast(*c.GtkWindow, self.ptr);
+    }
+
     pub fn is_instance(gtype: u64) bool {
         return (gtype == c.gtk_dialog_get_type()
         or AboutDialog.is_instance(gtype));
@@ -216,6 +220,10 @@ pub const AboutDialog = struct {
     /// dlg.set_authors(&documentors);
     pub fn add_credit_section(self: Self, section_name: [:0]const u8, people: [*c][*c]const u8) void {
         c.gtk_about_dialog_add_credit_section(self.ptr, section_name, people);
+    }
+
+    pub fn as_window(self: Self) Window {
+        return Window( .ptr = @ptrCast(*c.GtkWindow, self.ptr);
     }
 
     pub fn as_dialog(self: Self) Dialog {
