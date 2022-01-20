@@ -14,6 +14,16 @@ pub const Dialog = struct {
 
     const Self = @This();
 
+    pub fn new() Self {
+        return Self{
+            .ptr = @ptrCast(*c.GtkDialog, c.gtk_dialog_new()),
+        };
+    }
+
+    pub fn run(self: Self) c_int {
+        return c.gtk_dialog_run(self.ptr);
+    }
+
     pub fn is_instance(gtype: u64) bool {
         return (gtype == c.gtk_dialog_get_type()
         or AboutDialog.is_instance(gtype));
@@ -140,15 +150,23 @@ pub const AboutDialog = struct {
         return c.gtk_about_dialog_get_authors(self.ptr);
     }
 
-    pub fn set_authors(self: Self, authors: [][:0]const u8) void {
-        c.gtk_about_dialog_set_authors(self.ptr, &authors);
+    /// Gtk+ expects a pointer to a null terminated array of pointers to null
+    /// terminated arrays of u8. In order to coerce properly follow this form:
+    /// var authors = [_:0][*c]const u8{ "Your Name" };
+    /// dlg.set_authors(&authors);
+    pub fn set_authors(self: Self, authors: [*c][*c]const u8) void {
+        c.gtk_about_dialog_set_authors(self.ptr, authors);
     }
 
     pub fn get_artists(self: Self) [*c][*c]const u8 {
         return c.gtk_about_dialog_get_artists(self.ptr);
     }
 
-    pub fn set_artists(self: Self, artists: [][:0]const u8) void {
+    /// Gtk+ expects a pointer to a null terminated array of pointers to null
+    /// terminated arrays of u8. In order to coerce properly follow this form:
+    /// var artists = [_:0][*c]const u8{ "Some Artist" };
+    /// dlg.set_authors(&artists);
+    pub fn set_artists(self: Self, artists: [*c][*c]const u8) void {
         c.gtk_about_dialog_set_artists(self.ptr, artists);
     }
 
@@ -156,7 +174,11 @@ pub const AboutDialog = struct {
         return c.gtk_about_dialog_get_documentors(self.ptr);
     }
 
-    pub fn set_documentors(self: Self, artists: [][:0]const u8) void {
+    /// Gtk+ expects a pointer to a null terminated array of pointers to null
+    /// terminated arrays of u8. In order to coerce properly follow this form:
+    /// var documentors = [_:0][*c]const u8{ "Some Person" };
+    /// dlg.set_authors(&documentors);
+    pub fn set_documentors(self: Self, artists: [*c][*c]const u8) void {
         c.gtk_about_dialog_set_documentors(self.ptr, artists);
     }
 
@@ -188,7 +210,11 @@ pub const AboutDialog = struct {
         c.gtk_about_dialog_set_logo_icon_name(self.ptr, name);
     }
 
-    pub fn add_credit_section(self: Self, section_name: [:0]const u8, people: [][:0]const u8) void {
+    /// Gtk+ expects a pointer to a null terminated array of pointers to null
+    /// terminated arrays of u8. In order to coerce properly follow this form:
+    /// var documentorss = [_:0][*c]const u8{ "Some Person" };
+    /// dlg.set_authors(&documentors);
+    pub fn add_credit_section(self: Self, section_name: [:0]const u8, people: [*c][*c]const u8) void {
         c.gtk_about_dialog_add_credit_section(self.ptr, section_name, people);
     }
 
@@ -200,5 +226,21 @@ pub const AboutDialog = struct {
 
     pub fn is_instance(gtype: u64) bool {
         return (gtype == c.gtk_about_dialog_get_type());
+    }
+};
+
+pub const Flags = enum {
+    modal,
+    destroy_with_parent,
+    use_header_bar,
+
+    const Self = @This();
+
+    pub fn parse(self: Self) c.GtkDialogFlags {
+        return switch (self) {
+            .modal => c.GTK_DIALOG_FLAGS_MODAL,
+            .destroy_with_parent => c.GTK_DIALOG_FLAGS_DESTROY_WITH_PARENT,
+            .use_header_bar => c.GTK_DIALOG_FLAGS_USE_HEADER_BAR,
+        };
     }
 };
