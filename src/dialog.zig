@@ -25,7 +25,7 @@ pub const Dialog = struct {
     }
 
     pub fn as_window(self: Self) Window {
-        return Window( .ptr = @ptrCast(*c.GtkWindow, self.ptr);
+        return Window{ .ptr = @ptrCast(*c.GtkWindow, self.ptr)};
     }
 
     pub fn is_instance(gtype: u64) bool {
@@ -223,7 +223,7 @@ pub const AboutDialog = struct {
     }
 
     pub fn as_window(self: Self) Window {
-        return Window( .ptr = @ptrCast(*c.GtkWindow, self.ptr);
+        return Window{ .ptr = @ptrCast(*c.GtkWindow, self.ptr)};
     }
 
     pub fn as_dialog(self: Self) Dialog {
