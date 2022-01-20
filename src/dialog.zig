@@ -24,6 +24,10 @@ pub const Dialog = struct {
         return c.gtk_dialog_run(self.ptr);
     }
 
+    pub fn as_widget(self: Self) Widget {
+        return Widget{ .ptr = @ptrCast(*c.GtkWidget, self.ptr) };
+    }
+
     pub fn as_window(self: Self) Window {
         return Window{ .ptr = @ptrCast(*c.GtkWindow, self.ptr)};
     }
@@ -222,14 +226,18 @@ pub const AboutDialog = struct {
         c.gtk_about_dialog_add_credit_section(self.ptr, section_name, people);
     }
 
-    pub fn as_window(self: Self) Window {
-        return Window{ .ptr = @ptrCast(*c.GtkWindow, self.ptr)};
-    }
-
     pub fn as_dialog(self: Self) Dialog {
         return Dialog{
             .ptr = @ptrCast(*c.GtkDialog, self.ptr),
         };
+    }
+
+    pub fn as_widget(self: Self) Widget {
+        return Widget{ .ptr = @ptrCast(*c.GtkWidget, self.ptr) };
+    }
+
+    pub fn as_window(self: Self) Window {
+        return Window{ .ptr = @ptrCast(*c.GtkWindow, self.ptr) };
     }
 
     pub fn is_instance(gtype: u64) bool {
