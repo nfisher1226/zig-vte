@@ -17,7 +17,7 @@
 | GtkGrid |   |   | x |
 | GtkRevealer |   |   | x |
 | GtkListBox | x |   |   |
-| GtkFlowBox | x |   |   |
+| GtkFlowBox |   |   | x |
 | GtkStack |   |   | x |
 | GtkStackSwitcher | x |   |   |
 | GtkStackSidebar | x |   |   |

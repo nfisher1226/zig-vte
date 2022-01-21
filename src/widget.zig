@@ -26,6 +26,10 @@ const Entry = entry.Entry;
 const EntryBuffer = entry.EntryBuffer;
 const EntryCompletion = entry.EntryCompletion;
 
+const flowbox = @import("flowbox.zig");
+const FlowBox = flowbox.FlowBox;
+const FlowBoxChild = flowbox.FlowBoxChild;
+
 const fontchooser = @import("fontchooser.zig");
 const FontChooser = fontchooser.FontChooser;
 const FontButton = fontchooser.FontButton;
@@ -236,6 +240,18 @@ pub const Widget = struct {
     pub fn to_entry(self: Self) ?Entry {
         return if (self.isa(Entry)) Entry{
             .ptr = @ptrCast(*c.GtkEntry, self.ptr),
+        } else return null;
+    }
+
+    pub fn to_flow_box(self: Self) ?FlowBox {
+        return if (self.isa(FlowBox)) FlowBox{
+            .ptr = @ptrCast(*c.GtkFlowBox, self.ptr),
+        } else return null;
+    }
+
+    pub fn to_flow_box_child(self: Self) ?FlowBoxChild {
+        return if (self.isa(FlowBoxChild)) FlowBoxChild{
+            .ptr = @ptrCast(*c.GtkFlowBoxChild, self.ptr),
         } else return null;
     }
 

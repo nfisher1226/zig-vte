@@ -234,6 +234,25 @@ pub const ReliefStyle = enum {
     }
 };
 
+/// Enum SelectionMode
+pub const SelectionMode = enum {
+    none,
+    single,
+    browse,
+    multiple,
+
+    const Self = @This();
+
+    pub fn parse(self: Self) c.GtkSelectionType {
+        return switch (self) {
+            .none => c.GTK_SELECTION_NONE,
+            .single => c.GTK_SELECTION_SINGLE,
+            .browse => c.GTK_SELECTION_BROWSE,
+            .multiple => c.GTK_SELECTION_MULTIPLE,
+        };
+    }
+};
+
 /// Enum SensitivityType
 pub const SensitivityType = enum {
     auto,
