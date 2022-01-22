@@ -28,7 +28,7 @@
 | GtkPaned |   |   | x |
 | GtkLayout | x |   |   |
 | GtkNotebook |   |   | x |
-| GtkExpander | x |   |   |
+| GtkExpander |   | x |   |
 | GtkOrientable |   | x |   |
 | GtkAspectFrame | x |   |   |
 | GtkFixed | x |   |   |

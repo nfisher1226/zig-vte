@@ -252,6 +252,12 @@ pub const Widget = struct {
         } else null;
     }
 
+    pub fn to_expander(self: Self) ?Entry {
+        return if (self.isa(Expander)) Entry{
+            .ptr = @ptrCast(*c.GtkExpander, self.ptr),
+        } else null;
+    }
+
     pub fn to_flow_box(self: Self) ?FlowBox {
         return if (self.isa(FlowBox)) FlowBox{
             .ptr = @ptrCast(*c.GtkFlowBox, self.ptr),
