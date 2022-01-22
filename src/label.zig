@@ -16,13 +16,9 @@ pub const Label = struct {
     }
 
     pub fn get_text(self: Label, allocator: mem.Allocator) ?[:0]const u8 {
-        const val = c.gtk_label_get_text(self.ptr);
-        if (val) |v| {
-            const len = mem.len(v);
-            const text = fmt.allocPrintZ(allocator, "{s}", .{v[0..len]}) catch {
-                return null;
-            };
-            return text;
+        if (c.gtk_label_get_text(self.ptr)) |val| {
+            const len = mem.len(val);
+            return fmt.allocPrintZ(allocator, "{s}", .{v[0..len]}) catch return null;
         } else return null;
     }
 

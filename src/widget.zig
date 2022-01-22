@@ -1,5 +1,7 @@
 const c = @import("cimport.zig");
 
+const Bin = @import("bin.zig").Bin;
+
 const Box = @import("box.zig").Box;
 
 const button = @import("button.zig");
@@ -39,6 +41,8 @@ const FontChooserDialog = fontchooser.FontChooserDialog;
 const grid = @import("grid.zig");
 const Grid = grid.Grid;
 
+const HeaderBar = @import("headerbar.zig").HeaderBar;
+
 const Label = @import("label.zig").Label;
 
 const menu = @import("menu.zig");
@@ -47,6 +51,8 @@ const MenuItem = menu.MenuItem;
 
 const Notebook = @import("notebook.zig").Notebook;
 
+const Paned = @import("paned.zig").Paned;
+
 const range = @import("range.zig");
 const Range = range.Range;
 const Scale = range.Scale;
@@ -54,9 +60,12 @@ const SpinButton = range.SpinButton;
 
 const Revealer = @import("revealer.zig").Revealer;
 
-const Switch = @import("switch.zig").Switch;
+const stack = @import("stack.zig");
+const Stack = stack.Stack;
+const StackSwitcher = stack.StackSwitcher;
+const StackSidebar = stack.StackSidebar;
 
-const Stack = @import("stack.zig").Stack;
+const Switch = @import("switch.zig").Switch;
 
 const window = @import("window.zig");
 const ApplicationWindow = window.ApplicationWindow;
@@ -240,48 +249,54 @@ pub const Widget = struct {
     pub fn to_entry(self: Self) ?Entry {
         return if (self.isa(Entry)) Entry{
             .ptr = @ptrCast(*c.GtkEntry, self.ptr),
-        } else return null;
+        } else null;
     }
 
     pub fn to_flow_box(self: Self) ?FlowBox {
         return if (self.isa(FlowBox)) FlowBox{
             .ptr = @ptrCast(*c.GtkFlowBox, self.ptr),
-        } else return null;
+        } else null;
     }
 
     pub fn to_flow_box_child(self: Self) ?FlowBoxChild {
         return if (self.isa(FlowBoxChild)) FlowBoxChild{
             .ptr = @ptrCast(*c.GtkFlowBoxChild, self.ptr),
-        } else return null;
+        } else null;
     }
 
     pub fn to_font_chooser(self: Self) ?FontChooser {
         return if (self.isa(FontChooser)) FontChooser{
             .ptr = @ptrCast(*c.GtkFontChooser, self.ptr),
-        } else return null;
+        } else null;
     }
 
     pub fn to_font_button(self: Self) ?FontButton {
         return if (self.isa(FontButton)) FontButton{
             .ptr = @ptrCast(*c.GtkFontButton, self.ptr),
-        } else return null;
+        } else null;
     }
 
     pub fn to_font_chooser_widget(self: Self) ?FontChooserWidget {
         return if (self.isa(FontChooserWidget)) FontChooserWidget{
             .ptr = @ptrCast(*c.GtkFontChooserWidget, self.ptr),
-        } else return null;
+        } else null;
     }
 
     pub fn to_font_chooser_dialog(self: Self) ?FontChooserDialog {
         return if (self.isa(FontChooserDialog)) FontChooserDialog{
             .ptr = @ptrCast(*c.GtkFontChooserDialog, self.ptr),
-        } else return null;
+        } else null;
     }
 
     pub fn to_grid(self: Self) ?Grid {
         return if (self.isa(Grid)) Grid{
             .ptr = @ptrCast(*c.GtkGrid, self.ptr),
+        } else null;
+    }
+
+    pub fn to_header_bar(self: Self) ?Grid {
+        return if (self.isa(HeaderBar)) HeaderBar{
+            .ptr = @ptrCast(*c.GtkHeaderBar, self.ptr),
         } else null;
     }
 
@@ -300,21 +315,25 @@ pub const Widget = struct {
     pub fn to_menu_item(self: Self) ?MenuItem {
         return if (self.isa(MenuItem)) MenuItem{
             .ptr = @ptrCast(*c.GtkMenuItem, self.ptr),
-        } else return null;
+        } else null;
     }
 
     pub fn to_notebook(self: Self) ?Notebook {
         return if (self.isa(Notebook)) Notebook{
             .ptr = @ptrCast(*c.GtkNotebook, self.ptr),
-        } else return null;
+        } else null;
+    }
+
+    pub fn to_paned(self: Self) ?Paned {
+        return if (self.isa(Paned)) Paned{
+            .ptr = @ptrCast(*c.GtkPaned, self.ptr),
+        } else null;
     }
 
     pub fn to_range(self: Self) ?Range {
-        if (self.isa(Range)) {
-            return Range{
-                .ptr = @ptrCast(*c.GtkRange, self.ptr),
-            };
-        } else return null;
+        return if (self.isa(Range)) Range{
+            .ptr = @ptrCast(*c.GtkRange, self.ptr),
+        } else null;
     }
 
     pub fn to_revealer(self: Self) ?Revealer {
@@ -324,7 +343,9 @@ pub const Widget = struct {
     }
 
     pub fn to_scale(self: Self) ?Scale {
-        return if (self.isa(Scale)) Scale{ .ptr = @ptrCast(*c.GtkScale, self.ptr) } else null;
+        return if (self.isa(Scale)) Scale{
+            .ptr = @ptrCast(*c.GtkScale, self.ptr)
+        } else null;
     }
 
     pub fn to_spin_button(self: Self) ?SpinButton {
@@ -339,25 +360,33 @@ pub const Widget = struct {
         } else null;
     }
 
+    pub fn to_stack_switcher(self: Self) ?StackSwitcher {
+        return if (self.isa(StackSwitcher)) Stack{
+            .ptr = @ptrCast(*c.GtkStackSwitcher, self.ptr)
+        } else null;
+    }
+
+    pub fn to_stack_sidebar(self: Self) ?StackSidebar {
+        return if (self.isa(StackSidebar)) Stack{
+            .ptr = @ptrCast(*c.GtkStackSidebar, self.ptr)
+        } else null;
+    }
+
     pub fn to_switch(self: Self) ?Switch {
         return if (self.isa(Switch)) Switch{
             .ptr = @ptrCast(*c.GtkSwitch, self.ptr),
-        } else return null;
+        } else null;
     }
 
     pub fn to_toggle_button(self: Self) ?ToggleButton {
-        if (self.isa(ToggleButton)) {
-            return ToggleButton{
-                .ptr = @ptrCast(*c.GtkToggleButton, self.ptr),
-            };
-        } else return null;
+        return if (self.isa(ToggleButton)) ToggleButton{
+            .ptr = @ptrCast(*c.GtkToggleButton, self.ptr),
+        } else null;
     }
 
     pub fn to_window(self: Self) ?Window {
-        if (self.isa(Window)) {
-            return Window{
-                .ptr = @ptrCast(*c.GtkWindow, self.ptr),
-            };
-        } else return null;
+        return if (self.isa(Window)) Window{
+            .ptr = @ptrCast(*c.GtkWindow, self.ptr),
+        } else null;
     }
 };

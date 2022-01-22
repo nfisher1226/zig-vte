@@ -19,13 +19,13 @@
 | GtkListBox | x |   |   |
 | GtkFlowBox |   |   | x |
 | GtkStack |   |   | x |
-| GtkStackSwitcher | x |   |   |
-| GtkStackSidebar | x |   |   |
+| GtkStackSwitcher |   |   | x |
+| GtkStackSidebar |   |   | x |
 | GtkActionBar | x |   |   |
-| GtkHeaderBar | x |   |   |
+| GtkHeaderBar |   |   | x |
 | GtkOverlay | x |   |   |
 | GtkButtonBox | x |   |   |
-| GtkPaned | x |   |   |
+| GtkPaned |   |   | x |
 | GtkLayout | x |   |   |
 | GtkNotebook |   |   | x |
 | GtkExpander | x |   |   |
@@ -157,7 +157,7 @@
 | GtkAccessible | x |   |   |
 | GtkWidget |   |   | x |
 | GtkContainer |   |   | x |
-| GtkBin | x |   |   |
+| GtkBin |   |   | x |
 | GtkMenuShell | x |   |   |
 | GtkRange |   |   | x |
 | GtkIMContext | x |   |   |

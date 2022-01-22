@@ -1,8 +1,9 @@
 const c = @import("cimport.zig");
 const com = @import("common.zig");
+const Bin = @import("bin.zig").Bin;
+const Box = @import("box.zig").Box;
 const Container = @import("container.zig").Container;
-const enums = @import("enums.zig");
-const StackTransitionType = enums.StackTransitionType;
+const Orientable = @import("orientable.zig").Orientable;
 const Widget = @import("widget.zig").Widget;
 
 const std = @import("std");
@@ -59,7 +60,7 @@ pub const Stack = struct {
         } else null;
     }
 
-    pub fn set_visible_child_full(self: Self, name: [:0]const u8, transition: StackTransitionType) void {
+    pub fn set_visible_child_full(self: Self, name: [:0]const u8, transition: StackTransitionStyle) void {
         c.gtk_stack_set_visible_child_full(self.ptr, name, transition.parse());
     }
 
@@ -95,11 +96,11 @@ pub const Stack = struct {
         return c.gtk_stack_get_transition_duration(self.ptr);
     }
 
-    pub fn set_transition_type(self: Self, transition: StackTransitionType) void {
+    pub fn set_transition_type(self: Self, transition: StackTransitionStyle) void {
         c.gtk_stack_set_transition_type(self.ptr, transition.parse());
     }
 
-    pub fn get_transition_type(self: Self) StackTransitionType {
+    pub fn get_transition_type(self: Self) StackTransitionStyle {
         return switch (c.gtk_stack_get_transition_type(self.ptr)) {
             c.GTK_STACK_TRANSITION_TYPE_NONE => .none,
             c.GTK_STACK_TRANSITION_TYPE_CROSSFADE => .crossfade,
@@ -150,5 +151,144 @@ pub const Stack = struct {
 
     pub fn is_instance(gtype: u64) bool {
         return (gtype == c.gtk_stack_get_type());
+    }
+};
+
+pub const StackSwitcher = struct {
+    ptr: *c.GtkStackSwitcher,
+
+    const Self = @This();
+
+    pub fn new() Self {
+        return Self{
+            .ptr = @ptrCast(*c.GtkStackSwitcher, c.gtk_stack_switcher_new())
+        };
+    }
+
+    pub fn set_stack(self: Self, stack: Stack) void {
+        c.gtk_stack_switcher_set_stack(self.ptr, stack.ptr);
+    }
+
+    pub fn get_stack(self: Self) Stack {
+        return Stack{ .ptr = c.gtk_stack_switcher_get_stack(self.ptr) };
+    }
+
+    pub fn as_box(self: Self) Box {
+        return Box{
+            .ptr = @ptrCast(*c.GtkBox, self.ptr),
+        };
+    }
+
+    pub fn as_container(self: Self) Container {
+        return Container{
+            .ptr = @ptrCast(*c.GtkContainer, self.ptr),
+        };
+    }
+
+    pub fn as_orientable(self: Self) Orientable {
+        return Orientable{
+            .ptr = @ptrCast(*c.GtkOrientable, self.ptr),
+        };
+    }
+
+    pub fn as_widget(self: Self) Widget {
+        return Widget{
+            .ptr = @ptrCast(*c.GtkWidget, self.ptr),
+        };
+    }
+
+    pub fn is_instance(gtype: u64) bool {
+        return (gtype == c.gtk_stack_switcher_get_type());
+    }
+};
+
+pub const StackSidebar = struct {
+    ptr: *c.GtkStackSidebar,
+
+    const Self = @This();
+
+    pub fn new() Self {
+        return Self{
+            .ptr = @ptrCast(*c.GtkStackSidebar, c.gtk_stack_sidebar_new()),
+        };
+    }
+
+    pub fn set_stack(self: Self, stack: Stack) void {
+        c.gtk_stack_sidebar_set_stack(self.ptr, stack.ptr);
+    }
+
+    pub fn get_stack(self: Self) Stack {
+        return Stack{ .ptr = c.gtk_stack_sidebar_get_stack(self.ptr) };
+    }
+
+    pub fn as_bin(self: Self) Bin {
+        return Bin{ .ptr = @ptrCast(*c.GtkBin, self.ptr) };
+    }
+
+    pub fn as_container(self: Self) Container {
+        return Container{
+            .ptr = @ptrCast(*c.GtkContainer, self.ptr),
+        };
+    }
+
+    pub fn as_widget(self: Self) Widget {
+        return Widget{
+            .ptr = @ptrCast(*c.GtkWidget, self.ptr),
+        };
+    }
+
+    pub fn is_instance(gtype: u64) bool {
+        return (gtype == c.gtk_stack_sidebar_get_type());
+    }
+};
+
+/// enum StackTransitionStyle
+pub const StackTransitionStyle = enum {
+    none,
+    crossfade,
+    slide_right,
+    slide_left,
+    slide_up,
+    slide_down,
+    slide_left_right,
+    slide_up_down,
+    over_up,
+    over_down,
+    over_left,
+    over_right,
+    under_up,
+    under_down,
+    under_left,
+    under_right,
+    over_up_down,
+    over_down_up,
+    over_left_right,
+    over_right_left,
+
+    const Self = @This();
+
+    pub fn parse(self: Self) c.GtkStackTransitionStyle {
+        return switch (self) {
+            .none => c.GTK_STACK_TRANSITION_TYPE_NONE,
+            .crossfade => c.GTK_STACK_TRANSITION_TYPE_CROSSFADE,
+            .slide_right => c.GTK_STACK_TRANSITION_TYPE_RIGHT,
+            .slide_left => c.GTK_STACK_TRANSITION_TYPE_LEFT,
+            .slide_up => c.GTK_STACK_TRANSITION_TYPE_UP,
+            .slide_down => c.GTK_STACK_TRANSITION_TYPE_DOWN,
+            .slide_left_right => c.GTK_STACK_TRANSITION_TYPE_LEFT_RIGHT,
+            .slide_up_down => c.GTK_STACK_TRANSITION_TYPE_UP_DOWN,
+            .over_up => c.GTK_STACK_TRANSITION_TYPE_OVER_UP,
+            .over_down => c.GTK_STACK_TRANSITION_TYPE_OVER_DOWN,
+            .over_left => c.GTK_STACK_TRANSITION_TYPE_OVER_LEFT,
+            .over_right => c.GTK_STACK_TRANSITION_TYPE_OVER_RIGHT,
+            .under_up => c.GTK_STACK_TRANSITION_TYPE_UNDER_UP,
+            .under_down => c.GTK_STACK_TRANSITION_TYPE_UNDER_DOWN,
+            .under_left => c.GTK_STACK_TRANSITION_TYPE_UNDER_LEFT,
+            .under_right => c.GTK_STACK_TRANSITION_TYPE_UNDER_RIGHT,
+            .over_up_down => c.GTK_STACK_TRANSITION_TYPE_OVER_UP_DOWN,
+            .over_down_up => c.GTK_STACK_TRANSITION_TYPE_OVER_DOWN_UP,
+            .over_left_right => c.GTK_STACK_TRANSITION_TYPE_OVER_LEFT_RIGHT,
+            .over_right_left => c.GTK_STACK_TRANSITION_TYPE_OVER_RIGHT_LEFT,
+        };
     }
 };

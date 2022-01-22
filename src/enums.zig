@@ -341,57 +341,6 @@ pub const SpinType = enum {
     }
 };
 
-/// enum StackTransitionStyle
-pub const StackTransitionStyle = enum {
-    none,
-    crossfade,
-    slide_right,
-    slide_left,
-    slide_up,
-    slide_down,
-    slide_left_right,
-    slide_up_down,
-    over_up,
-    over_down,
-    over_left,
-    over_right,
-    under_up,
-    under_down,
-    under_left,
-    under_right,
-    over_up_down,
-    over_down_up,
-    over_left_right,
-    over_right_left,
-
-    const Self = @This();
-
-    pub fn parse(self: Self) c.GtkStackTransitionStyle {
-        return switch (self) {
-            .none => c.GTK_STACK_TRANSITION_TYPE_NONE,
-            .crossfade => c.GTK_STACK_TRANSITION_TYPE_CROSSFADE,
-            .slide_right => c.GTK_STACK_TRANSITION_TYPE_RIGHT,
-            .slide_left => c.GTK_STACK_TRANSITION_TYPE_LEFT,
-            .slide_up => c.GTK_STACK_TRANSITION_TYPE_UP,
-            .slide_down => c.GTK_STACK_TRANSITION_TYPE_DOWN,
-            .slide_left_right => c.GTK_STACK_TRANSITION_TYPE_LEFT_RIGHT,
-            .slide_up_down => c.GTK_STACK_TRANSITION_TYPE_UP_DOWN,
-            .over_up => c.GTK_STACK_TRANSITION_TYPE_OVER_UP,
-            .over_down => c.GTK_STACK_TRANSITION_TYPE_OVER_DOWN,
-            .over_left => c.GTK_STACK_TRANSITION_TYPE_OVER_LEFT,
-            .over_right => c.GTK_STACK_TRANSITION_TYPE_OVER_RIGHT,
-            .under_up => c.GTK_STACK_TRANSITION_TYPE_UNDER_UP,
-            .under_down => c.GTK_STACK_TRANSITION_TYPE_UNDER_DOWN,
-            .under_left => c.GTK_STACK_TRANSITION_TYPE_UNDER_LEFT,
-            .under_right => c.GTK_STACK_TRANSITION_TYPE_UNDER_RIGHT,
-            .over_up_down => c.GTK_STACK_TRANSITION_TYPE_OVER_UP_DOWN,
-            .over_down_up => c.GTK_STACK_TRANSITION_TYPE_OVER_DOWN_UP,
-            .over_left_right => c.GTK_STACK_TRANSITION_TYPE_OVER_LEFT_RIGHT,
-            .over_right_left => c.GTK_STACK_TRANSITION_TYPE_OVER_RIGHT_LEFT,
-        };
-    }
-};
-
 /// enum WindowType
 pub const WindowType = enum {
     toplevel,
