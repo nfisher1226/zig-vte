@@ -25,6 +25,14 @@ pub const Expander = struct {
         };
     }
 
+    pub fn set_expanded(self: Self, ex: bool) void {
+        c.gtk_expander_set_expanded(self.ptr, if (ex) 1 else 0);
+    }
+
+    pub fn get_expanded(self: Self) bool {
+        return (c.gtk_expander_get_expanded(self.ptr) == 1);
+    }
+
     pub fn as_bin(self: Self) Bin {
         return Bin{ .ptr = @ptrCast(*c.GtkBin, self.ptr) };
     }

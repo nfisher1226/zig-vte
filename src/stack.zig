@@ -65,7 +65,7 @@ pub const Stack = struct {
     }
 
     pub fn set_homogeneous(self: Self, hom: bool) void {
-        c.gtk_stack_set_homogeneous(self.ptr, com.bool_to_c_int(hom));
+        c.gtk_stack_set_homogeneous(self.ptr, if (hom) 1 else 0);
     }
 
     pub fn get_homogeneous(self: Self) bool {
@@ -73,7 +73,7 @@ pub const Stack = struct {
     }
 
     pub fn set_hhomogeneous(self: Self, hom: bool) void {
-        c.gtk_stack_set_hhomogeneous(self.ptr, com.bool_to_c_int(hom));
+        c.gtk_stack_set_hhomogeneous(self.ptr, if (hom) 1 else 0);
     }
 
     pub fn get_hhomogeneous(self: Self) bool {
@@ -81,7 +81,7 @@ pub const Stack = struct {
     }
 
     pub fn set_vhomogeneous(self: Self, hom: bool) void {
-        c.gtk_stack_set_vhomogeneous(self.ptr, com.bool_to_c_int(hom));
+        c.gtk_stack_set_vhomogeneous(self.ptr, if (hom) 1 else 0);
     }
 
     pub fn get_vhomogeneous(self: Self) bool {
@@ -134,7 +134,7 @@ pub const Stack = struct {
     }
 
     pub fn set_interpolate_size(self: Self, interpolate_size: bool) void {
-        c.gtk_stack_set_interpolate_size(self.ptr, com.bool_to_c_int(interpolate_size));
+        c.gtk_stack_set_interpolate_size(self.ptr, if (interpolate_size) 1 else 0);
     }
 
     pub fn as_container(self: Self) Container {
