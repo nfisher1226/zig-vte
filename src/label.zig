@@ -9,16 +9,18 @@ const mem = std.mem;
 pub const Label = struct {
     ptr: *c.GtkLabel,
 
+    const Self = @This();
+
     pub fn new(text: ?[:0]const u8) Label {
         return Label {
-            .ptr = if (text) |t| @ptrCast(*c.GtkLabel, c.gtk_label_new(t)) else @ptrCast(*c.GtkLabel, c.gtk_label_new(null)),
+            .ptr = @ptrCast(*c.GtkLabel, c.gtk_label_new(if (text) |t| t else null)),
         };
     }
 
     pub fn get_text(self: Label, allocator: mem.Allocator) ?[:0]const u8 {
         if (c.gtk_label_get_text(self.ptr)) |val| {
             const len = mem.len(val);
-            return fmt.allocPrintZ(allocator, "{s}", .{v[0..len]}) catch return null;
+            return fmt.allocPrintZ(allocator, "{s}", .{val[0..len]}) catch return null;
         } else return null;
     }
 
@@ -31,7 +33,7 @@ pub const Label = struct {
     }
 
     pub fn set_line_wrap(self: Label, wrap: bool) void {
-        c.gtk_label_set_line_wrap(self.ptr, common.bool_to_c_int(wrap));
+        c.gtk_label_set_line_wrap(self.ptr, if (wrap) 1 else 0);
     }
 
     pub fn as_widget(self: Label) Widget {

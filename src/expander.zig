@@ -11,7 +11,7 @@ const mem = std.mem;
 pub const Expander = struct {
     ptr: *c.GtkExpander,
 
-    const Self = @This(),
+    const Self = @This();
 
     pub fn new() Self {
         return Self{
@@ -21,7 +21,7 @@ pub const Expander = struct {
 
     pub fn new_with_mnemonic(label: Widget) Self {
         return Self{
-            .ptr = @ptrCast(*c.GtkExpander, c.gtk_expander_new_with_mnemonic(self.ptr, label.ptr)),
+            .ptr = @ptrCast(*c.GtkExpander, c.gtk_expander_new_with_mnemonic(label.ptr)),
         };
     }
 

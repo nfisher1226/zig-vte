@@ -28,6 +28,8 @@ const Entry = entry.Entry;
 const EntryBuffer = entry.EntryBuffer;
 const EntryCompletion = entry.EntryCompletion;
 
+const Expander = @import("expander.zig").Expander;
+
 const flowbox = @import("flowbox.zig");
 const FlowBox = flowbox.FlowBox;
 const FlowBoxChild = flowbox.FlowBoxChild;
