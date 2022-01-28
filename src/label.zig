@@ -11,32 +11,32 @@ pub const Label = struct {
 
     const Self = @This();
 
-    pub fn new(text: ?[:0]const u8) Label {
-        return Label {
+    pub fn new(text: ?[:0]const u8) Self {
+        return Self {
             .ptr = @ptrCast(*c.GtkLabel, c.gtk_label_new(if (text) |t| t else null)),
         };
     }
 
-    pub fn get_text(self: Label, allocator: mem.Allocator) ?[:0]const u8 {
+    pub fn get_text(self: Self, allocator: mem.Allocator) ?[:0]const u8 {
         if (c.gtk_label_get_text(self.ptr)) |val| {
             const len = mem.len(val);
             return fmt.allocPrintZ(allocator, "{s}", .{val[0..len]}) catch return null;
         } else return null;
     }
 
-    pub fn set_text(self: Label, text: [:0]const u8) void {
+    pub fn set_text(self: Self, text: [:0]const u8) void {
         c.gtk_label_set_text(self.ptr, text);
     }
 
-    pub fn set_markup(self: Label, text: [:0]const u8) void {
+    pub fn set_markup(self: Self, text: [:0]const u8) void {
         c.gtk_label_set_markup(self.ptr, text);
     }
 
-    pub fn set_line_wrap(self: Label, wrap: bool) void {
+    pub fn set_line_wrap(self: Self, wrap: bool) void {
         c.gtk_label_set_line_wrap(self.ptr, if (wrap) 1 else 0);
     }
 
-    pub fn as_widget(self: Label) Widget {
+    pub fn as_widget(self: Self) Widget {
         return Widget {
             .ptr = @ptrCast(*c.GtkWidget, self.ptr),
         };

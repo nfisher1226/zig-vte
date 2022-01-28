@@ -84,17 +84,109 @@ pub const CursorShape = enum {
     }
 };
 
+/// enum Format
+pub const Format = enum {
+    text,
+    html,
+
+    const Self = @This();
+
+    pub fn parse(self: Self) c.VteFormat {
+        return switch (self) {
+            .text => c.VTE_FORMAT_TEXT,
+            .html => c.VTE_FORMAT_HTML,
+        };
+    }
+
+    pub fn from_c(format: c.VteFormat) Self {
+        return switch (format) {
+            c.VTE_FORMAT_TEXT => Self.text,
+            c.VTE_FORMAT_HTML => Self.html,
+        };
+    }
+};
+
 pub const Terminal = struct {
     ptr: *c.VteTerminal,
 
-    pub fn new() Terminal {
-        return Terminal{
+    const Self = @This();
+
+    pub fn new() Self {
+        return Self{
             .ptr = @ptrCast(*c.VteTerminal, c.vte_terminal_new()),
         };
     }
 
+    pub fn feed(self: Self, data: [:0]const u8, length: c_long) void {
+        c.vte_terminal_feed(self.ptr, data, length);
+    }
+
+    pub fn feed_child(self: Self, text: [:0]const u8, length: c_long) void {
+        c.vte_terminal_feed_child(self.ptr, text, length);
+    }
+
+    pub fn select_all(self: Self) void {
+        c.vte_terminal_select_all(self.ptr);
+    }
+
+    pub fn unselect_all(self: Self) void {
+        c.vte_terminal_unselect_all(self.ptr);
+    }
+
+    pub fn copy_clipboard_format(self: Self, format: Format) void {
+        c.vte_terminal_copy_clipboard_format(self.ptr, format.parse());
+    }
+
+    pub fn paste_clipboard(self: Self) void {
+        c.vte_terminal_paste_clipboard(self.ptr);
+    }
+
+    pub fn copy_primary(self: Terminal) void {
+        c.vte_terminal_copy_primary(self.ptr);
+    }
+
+    pub fn paste_primary(self: Terminal) void {
+        c.vte_terminal_paste_primary(self.ptr);
+    }
+
+    pub fn set_size(self: Self, cols: c_long, rows: c_long) void {
+        c.vte_terminal_set_size(self.ptr, cols, rows);
+    }
+
+    pub fn set_font_scale(self: Self, scale: c_longlong) void {
+        c.vte_terminal_set_font_scale(self.ptr, scale);
+    }
+
+    pub fn get_font_scale(self: Self) c_longlong {
+        return c.vte_terminal_get_font_scale(self.ptr);
+    }
+
+    pub fn set_audible_bell(self: Self, audible: bool) void {
+        c.vte_terminal_set_audible_bell(self.ptr, if (audible) 1 else 0);
+    }
+
+    pub fn get_audible_bell(self: Self) bool {
+        return (c.vte_terminal_get_audible_bell(self.ptr) == 1);
+    }
+
+    pub fn set_bold_is_bright(self: Self, bib: bool) void {
+        c.vte_terminal_set_bold_is_bright(self.ptr, if (bib) 1 else 0);
+    }
+
+    pub fn get_bold_is_bright(self: Self) bool {
+        return (c.vte_terminal_get_bold_is_bright(self.ptr) == 1);
+    }
+
+    pub fn set_allow_hyperlink(self: Self, allow: bool) void {
+        c.vte_terminal_set_allow_hyperlink(self.ptr, if (allow) 1 else 0);
+    }
+
+    pub fn get_allow_hyperlink(self: Self) bool {
+        return (c.vte_terminal_get_allow_hyperlink(self.ptr) == 1);
+    }
+
     pub fn spawn_async(
-        self: Terminal,
+        self: Self,
         flags: PtyFlags,
         wkgdir: ?[:0]const u8,
         command: [:0]const u8,
@@ -194,14 +286,6 @@ pub const Terminal = struct {
 
     pub fn set_cursor_blink_mode(self: Terminal, mode: CursorBlinkMode) void {
         c.vte_terminal_set_cursor_blink_mode(self.ptr, mode.parse());
-    }
-
-    pub fn copy_primary(self: Terminal) void {
-        c.vte_terminal_copy_primary(self.ptr);
-    }
-
-    pub fn paste_primary(self: Terminal) void {
-        c.vte_terminal_paste_primary(self.ptr);
     }
 
     pub fn connect_child_exited(self: Terminal, callback: c.GCallback, data: ?c.gpointer) void {
