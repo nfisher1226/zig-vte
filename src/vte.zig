@@ -106,6 +106,70 @@ pub const Format = enum {
     }
 };
 
+/// enum TextBlinkMode
+pub const TextBlinkMode = enum {
+    never,
+    focused,
+    unfocused,
+    always,
+
+    const Self = @This();
+
+    pub fn parse(self: Self) c.VteTextBlinkMode {
+        return switch (self) {
+            .never => c.VTE_TEXT_BLINK_NEVER,
+            .focused => c.VTE_TEXT_BLINK_FOCUSED,
+            .unfocused => c.VTE_TEXT_BLINK_UNFOCUSED,
+            .always => c.VTE_TEXT_BLINK_ALWAYS,
+        };
+    }
+
+    pub fn from_c(mode: c.VteTextBlinkMode) Self {
+        return switch (mode) {
+            c.VTE_TEXT_BLINK_NEVER => Self.never,
+            c.VTE_TEXT_BLINK_FOCUSED => Self.focused,
+            c.VTE_TEXT_BLINK_UNFOCUSED => Self.unfocused,
+            c.VTE_TEXT_BLINK_ALWAYS => Self.always,
+        };
+    }
+};
+
+/// enum EraseBinding
+pub const EraseBinding = enum {
+    auto,
+    ascii_backspace,
+    ascii_delete,
+    delete_sequence,
+    tty,
+
+    const Self = @This();
+
+    pub fn parse(self: Self) c.VteEraseBinding {
+        return switch (self) {
+            .auto => c.VTE_ERASE_AUTO,
+            .ascii_backspace => c.VTE_ERASE_ASCII_BACKSPACE,
+            .ascii_delete => c.VTE_ERASE_ASCII_DELETE,
+            .delete_sequence => c.VTE_ERASE_DELETE_SEQUENCE,
+            .tty => c.VTE_ERRASE_TTY,
+        };
+    }
+
+    pub fn from_c(binding: c.VteEraseBinding) Self {
+        return switch (binding) {
+            c.VTE_ERASE_AUTO => Self.auto,
+            c.VTE_ERASE_ASCII_BACKSPACE => Self.ascii_backspace,
+            c.VTE_ERASE_ASCII_DELETE => Self.ascii_delete,
+            c.VTE_ERASE_DELETE_SEQUENCE => Self.delete_sequence,
+            c.VTE_ERRASE_TTY => Self.tty,
+        };
+    }
+};
+
+pub const CursorPosition = struct {
+    x: c_long,
+    y: c_long,
+};
+
 pub const Terminal = struct {
     ptr: *c.VteTerminal,
 
@@ -185,6 +249,191 @@ pub const Terminal = struct {
         return (c.vte_terminal_get_allow_hyperlink(self.ptr) == 1);
     }
 
+    pub fn set_enable_fallback_scrolling(self: Self, enable: bool) void {
+        c.vte_terminal_set_enable_fallback_scrolling(self.ptr, if (enable) 1 else 0);
+    }
+
+    pub fn get_enable_fallback_scrolling(self: Self) bool {
+        return (c.vte_terminal_get_enable_fallback_scrolling(self.ptr) == 1);
+    }
+
+    pub fn set_scroll_on_output(self: Self, set: bool) void {
+        c.vte_terminal_set_scroll_on_output(self.ptr, if (set) 1 else 0);
+    }
+
+    pub fn get_scroll_on_output(self: Self) bool {
+        return (c.vte_terminal_get_scroll_on_ouput(self.ptr) == 1);
+    }
+
+    pub fn set_scroll_on_keystroke(self: Self, set: bool) void {
+        c.vte_terminal_set_scroll_on_keystroke(self.ptr, if (set) 1 else 0);
+    }
+
+    pub fn get_scroll_on_keystroke(self: Self) bool {
+        return (c.vte_terminal_get_scroll_on_output(self.ptr) == 1);
+    }
+
+    pub fn set_scroll_unit_is_pixels(self: Self, set: bool) void {
+        c.vte_terminal_set_scroll_unit_is_pixels(self.ptr, if (set) 1 else 0);
+    }
+
+    pub fn get_scroll_unit_is_pixels(self: Self) bool {
+        return (c.vte_terminal_get_scroll_unit_is_pixels(self.ptr) == 1);
+    }
+
+    pub fn set_cell_height_scale(self: Self, scale: c_longlong) void {
+        c.vte_terminal_set_cell_height_scale(self.ptr, scale);
+    }
+
+    pub fn get_cell_height_scale(self: Self) c_longlong {
+        return (c.vte_terminal_get_cell_height_scale(self.ptr) == 1);
+    }
+
+    pub fn set_cell_width_scale(self: Self, scale: c_longlong) void {
+        c.vte_terminal_set_cell_width_scale(self.ptr, scale);
+    }
+
+    pub fn get_cell_width_scale(self: Self) c_longlong {
+        return c.vte_terminal_get_cell_width_scale(self.ptr);
+    }
+
+    pub fn set_color_bold(self: Self, color: *c.GdkRGBA) void {
+        c.vte_terminal_set_color_bold(self.ptr, color);
+    }
+
+    pub fn set_color_foreground(self: Terminal, color: *c.GdkRGBA) void {
+        c.vte_terminal_set_color_foreground(self.ptr, color);
+    }
+
+    pub fn set_color_background(self: Terminal, color: *c.GdkRGBA) void {
+        c.vte_terminal_set_color_background(self.ptr, color);
+    }
+
+    pub fn set_color_cursor(self: Terminal, color: *c.GdkRGBA) void {
+        c.vte_terminal_set_color_cursor(self.ptr, color);
+    }
+
+    pub fn set_color_cursor_foreground(self: Terminal, color: *c.GdkRGBA) void {
+        c.vte_termina_set_color_cursor_foreground(self.ptr, color);
+    }
+
+    pub fn set_color_highlight(self: Terminal, color: *c.GdkRGBA) void {
+        c.vte_terminal_set_color_highlight(self.ptr, color);
+    }
+
+    pub fn set_color_highlight_foreground(self: Terminal, color: *c.GdkRGBA) void {
+        c.vte_terminal_set_color_highlight_foreground(self.ptr, color);
+    }
+
+    pub fn get_text_blink_mode(self: Self) TextBlinkMode {
+        return TextBlinkMode.from_c(c.vte_terminal_get_text_blink_mode(self.ptr));
+    }
+
+    pub fn set_text_blink_mode(self: Self, mode: TextBlinkMode) void {
+        c.vte_terminal_set_text_blink_mode(self.ptr, mode.parse());
+    }
+
+    pub fn set_colors(
+        self: Self,
+        foreground: ?*c.GdkRGBA,
+        background: ?*c.GdkRGBA,
+        colors: anytype,
+        psize: c_ulong,
+    ) void {
+        c.vte_terminal_set_colors(
+            self.ptr,
+            if (foreground) |f| f else null,
+            if (background) |b| b else null,
+            colors,
+            psize,
+        );
+    }
+
+    pub fn set_default_colors(self: Terminal) void {
+        c.vte_terminal_set_default_colors(self.ptr);
+    }
+
+    pub fn get_cursor_shape(self: Terminal) CursorShape {
+        const shape = c.vte_terminal_get_cursor_shape(self.ptr);
+        return CursorShape.from_c(shape);
+    }
+
+    pub fn set_cursor_shape(self: Terminal, shape: CursorShape) void {
+        c.vte_terminal_set_cursor_shape(self.ptr, shape.parse());
+    }
+
+    pub fn get_cursor_blink_mode(self: Terminal) CursorBlinkMode {
+        const mode = c.vte_terminal_get_cursor_blink_mode(self.ptr);
+        return CursorBlinkMode.from_c(mode);
+    }
+
+    pub fn set_cursor_blink_mode(self: Terminal, mode: CursorBlinkMode) void {
+        c.vte_terminal_set_cursor_blink_mode(self.ptr, mode.parse());
+    }
+
+    pub fn set_scrollback_lines(self: Self, lines: c_long) void {
+        c.vte_terminal_set_scrollback_lines(self.ptr, lines);
+    }
+
+    pub fn get_scrollback_lines(self: Self) c_long {
+        return c.vte_terminal_get_scrollback_lines(self.ptr);
+    }
+
+    pub fn set_font(self: Self, font: ?*c.PangoFontDescription) void {
+        c.vte_terminal_set_font(self.ptr, if (font) |f| f else null);
+    }
+
+    pub fn get_font(self: Self) *c.PangoFontDescription {
+        return c.vte_terminal_get_font(self.ptr);
+    }
+
+    pub fn get_has_selection(self: Self) bool {
+        return (c.vte_terminal_get_has_selection(self.ptr) == 1);
+    }
+
+    pub fn set_backspace_binding(self: Self, binding: EraseBinding) void {
+        c.vte_terminal_set_backspace_binding(self.ptr, binding.parse());
+    }
+
+    pub fn set_delete_binding(self: Self, binding: EraseBinding) void {
+        c.vte_terminal_set_delete_binding(self.ptr, binding.parse());
+    }
+
+    pub fn set_mouse_autohide(self: Self, hide: bool) void {
+        c.vte_terminal_set_mouse_autohide(self.ptr, if (hide) 1 else 0);
+    }
+
+    pub fn get_mouse_autohide(self: Self) bool {
+        return (c.vte_terminal_get_mouse_autohide(self.ptr) == 1);
+    }
+
+    pub fn set_enable_bidi(self: Self, bidi: bool) void {
+        c.vte_terminal_set_enable_bidi(self.ptr, if (bidi) 1 else 0);
+    }
+
+    pub fn get_enable_bidi(self: Self) bool {
+        return (c.vte_terminal_get_enable_bidi(self.ptr) == 1);
+    }
+
+    pub fn set_enable_shaping(self: Self, set: bool) void {
+        c.vte_terminal_set_enable_shaping(self.ptr, if (set) 1 else 0);
+    }
+
+    pub fn get_enable_shaping(self: Self) bool {
+        return (c.vte_terminal_get_enable_shaping(self.ptr) == 1);
+    }
+
+    pub fn reset(self: Self) void {
+        c.vte_terminal_reset(self.ptr);
+    }
+
+    pub fn get_cursor_position(self: Self) CursorPosition {
+        var x: c_long = undefined;
+        var y: c_long = undefined;
+        c.vte_terminal_get_cursor_position(self.ptr, x, y);
+        return CursorPosition{ .x = x, .y = y };
+    }
+
     pub fn spawn_async(
         self: Self,
         flags: PtyFlags,
@@ -240,52 +489,6 @@ pub const Terminal = struct {
             };
             return text;
         } else return null;
-    }
-
-    pub fn set_default_colors(self: Terminal) void {
-        c.vte_terminal_set_default_colors(self.ptr);
-    }
-
-    pub fn set_color_foreground(self: Terminal, color: *c.GdkRGBA) void {
-        c.vte_terminal_set_color_foreground(self.ptr, color);
-    }
-
-    pub fn set_color_background(self: Terminal, color: *c.GdkRGBA) void {
-        c.vte_terminal_set_color_background(self.ptr, color);
-    }
-
-    pub fn set_color_cursor(self: Terminal, color: *c.GdkRGBA) void {
-        c.vte_terminal_set_color_cursor(self.ptr, color);
-    }
-
-    pub fn set_color_cursor_foreground(self: Terminal, color: *c.GdkRGBA) void {
-        c.vte_termina_set_color_cursor_foreground(self.ptr, color);
-    }
-
-    pub fn set_color_highlight(self: Terminal, color: *c.GdkRGBA) void {
-        c.vte_terminal_set_color_highlight(self.ptr, color);
-    }
-
-    pub fn set_color_highlight_foreground(self: Terminal, color: *c.GdkRGBA) void {
-        c.vte_terminal_set_color_highlight_foreground(self.ptr, color);
-    }
-
-    pub fn get_cursor_shape(self: Terminal) CursorShape {
-        const shape = c.vte_terminal_get_cursor_shape(self.ptr);
-        return CursorShape.from_c(shape);
-    }
-
-    pub fn set_cursor_shape(self: Terminal, shape: CursorShape) void {
-        c.vte_terminal_set_cursor_shape(self.ptr, shape.parse());
-    }
-
-    pub fn get_cursor_blink_mode(self: Terminal) CursorBlinkMode {
-        const mode = c.vte_terminal_get_cursor_blink_mode(self.ptr);
-        return CursorBlinkMode.from_c(mode);
-    }
-
-    pub fn set_cursor_blink_mode(self: Terminal, mode: CursorBlinkMode) void {
-        c.vte_terminal_set_cursor_blink_mode(self.ptr, mode.parse());
     }
 
     pub fn connect_child_exited(self: Terminal, callback: c.GCallback, data: ?c.gpointer) void {
