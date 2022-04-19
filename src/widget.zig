@@ -351,33 +351,23 @@ pub const Widget = struct {
     }
 
     pub fn to_scale(self: Self) ?Scale {
-        return if (self.isa(Scale)) Scale{
-            .ptr = @ptrCast(*c.GtkScale, self.ptr)
-        } else null;
+        return if (self.isa(Scale)) Scale{ .ptr = @ptrCast(*c.GtkScale, self.ptr) } else null;
     }
 
     pub fn to_spin_button(self: Self) ?SpinButton {
-        return if (self.isa(SpinButton)) SpinButton{
-            .ptr = @ptrCast(*c.GtkSpinButton, self.ptr)
-        } else null;
+        return if (self.isa(SpinButton)) SpinButton{ .ptr = @ptrCast(*c.GtkSpinButton, self.ptr) } else null;
     }
 
     pub fn to_stack(self: Self) ?Stack {
-        return if (self.isa(Stack)) Stack{
-            .ptr = @ptrCast(*c.GtkStack, self.ptr)
-        } else null;
+        return if (self.isa(Stack)) Stack{ .ptr = @ptrCast(*c.GtkStack, self.ptr) } else null;
     }
 
     pub fn to_stack_switcher(self: Self) ?StackSwitcher {
-        return if (self.isa(StackSwitcher)) Stack{
-            .ptr = @ptrCast(*c.GtkStackSwitcher, self.ptr)
-        } else null;
+        return if (self.isa(StackSwitcher)) Stack{ .ptr = @ptrCast(*c.GtkStackSwitcher, self.ptr) } else null;
     }
 
     pub fn to_stack_sidebar(self: Self) ?StackSidebar {
-        return if (self.isa(StackSidebar)) Stack{
-            .ptr = @ptrCast(*c.GtkStackSidebar, self.ptr)
-        } else null;
+        return if (self.isa(StackSidebar)) Stack{ .ptr = @ptrCast(*c.GtkStackSidebar, self.ptr) } else null;
     }
 
     pub fn to_switch(self: Self) ?Switch {

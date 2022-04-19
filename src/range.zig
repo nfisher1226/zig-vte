@@ -81,27 +81,19 @@ pub const Range = struct {
     }
 
     pub fn set_lower_stepper_sensitivity(self: Self, sensitivity: SensitivityType) void {
-        c.gtk_range_set_lower_stepper_sensitivity(self.ptr, sensitivity.parse());
+        c.gtk_range_set_lower_stepper_sensitivity(self.ptr, @enumToInt(sensitivity));
     }
 
     pub fn get_lower_stepper_sensitivity(self: Self) SensitivityType {
-        return switch (c.gtk_range_get_lower_stepper_sensitivity(self.ptr)) {
-            c.GTK_SENSITIVITY_AUTO => .auto,
-            c.GTK_SENSITIVITY_ON => .on,
-            c.GTK_SENSITIVITY_OFF => .off,
-        };
+        return c.gtk_range_get_lower_stepper_sensitivity(self.ptr);
     }
 
     pub fn set_upper_stepper_sensitivity(self: Self, sensitivity: SensitivityType) void {
-        c.gtk_range_set_upper_stepper_sensitivity(self.ptr, sensitivity.parse());
+        c.gtk_range_set_upper_stepper_sensitivity(self.ptr, @enumToInt(sensitivity));
     }
 
     pub fn get_upper_stepper_sensitivity(self: Self) SensitivityType {
-        return switch (c.gtk_range_get_upper_stepper_sensitivity(self.ptr)) {
-            c.GTK_SENSITIVITY_AUTO => .auto,
-            c.GTK_SENSITIVITY_ON => .on,
-            c.GTK_SENSITIVITY_OFF => .off,
-        };
+        return c.gtk_range_get_upper_stepper_sensitivity(self.ptr);
     }
 
     pub fn get_flippable(self: Self) bool {
@@ -132,13 +124,13 @@ pub const Scale = struct {
 
     pub fn new(orientation: Orientation, adjustment: Adjustment) Scale {
         return Scale{
-            .ptr = @ptrCast(*c.GtkScale, c.gtk_scale_new(orientation.parse(), adjustment.ptr)),
+            .ptr = @ptrCast(*c.GtkScale, c.gtk_scale_new(@enumToInt(orientation), adjustment.ptr)),
         };
     }
 
     pub fn new_with_range(orientation: Orientation, min: f64, max: f64, step: f64) Scale {
         return Scale{
-            .ptr = @ptrCast(*c.GtkScale, c.gtk_scale_new_with_range(orientation.parse(), min, max, step)),
+            .ptr = @ptrCast(*c.GtkScale, c.gtk_scale_new_with_range(@enumToInt(orientation), min, max, step)),
         };
     }
 
@@ -167,22 +159,15 @@ pub const Scale = struct {
     }
 
     pub fn get_value_pos(self: Scale) PositionType {
-        const val = c.gtk_scale_get_value_pos(self.scale);
-        switch (val) {
-            c.GTK_POS_LEFT => return .left,
-            c.GTK_POS_RIGHT => return .right,
-            c.GTK_POS_TOP => return .top,
-            c.GTK_POS_BOTTOM => return .bottom,
-            else => unreachable,
-        }
+        return c.gtk_scale_get_value_pos(self.scale);
     }
 
     pub fn set_value_pos(self: Scale, pos: PositionType) void {
-        c.gtk_scale_set_value_pos(self.ptr, pos.parse());
+        c.gtk_scale_set_value_pos(self.ptr, @enumToInt(pos));
     }
 
     pub fn add_mark(self: Scale, value: f64, pos: PositionType, markup: ?[:0]const u8) void {
-        c.gtk_scale_add_mark(self.ptr, value, pos.parse(), if (markup) |t| t else null);
+        c.gtk_scale_add_mark(self.ptr, value, @enumToInt(pos), if (markup) |t| t else null);
     }
 
     pub fn clear_marks(self: Scale) void {
@@ -274,7 +259,7 @@ pub const SpinButton = struct {
     }
 
     pub fn set_update_policy(self: Self, policy: SpinButtonUpdatePolicy) void {
-        c.gtk_spin_button_set_update_policy(self.ptr, policy.parse());
+        c.gtk_spin_button_set_update_policy(self.ptr, @enumToInt(policy));
     }
 
     pub fn set_numeric(self: Self, numeric: bool) void {
@@ -282,7 +267,7 @@ pub const SpinButton = struct {
     }
 
     pub fn spin(self: Self, direction: SpinType, increment: f64) void {
-        c.gtk_spin_button_spin(self.ptr, direction.parse(), increment);
+        c.gtk_spin_button_spin(self.ptr, @enumToInt(direction), increment);
     }
 
     pub fn set_wrap(self: Self, wrap: bool) void {

@@ -12,7 +12,7 @@ pub const Label = struct {
     const Self = @This();
 
     pub fn new(text: ?[:0]const u8) Self {
-        return Self {
+        return Self{
             .ptr = @ptrCast(*c.GtkLabel, c.gtk_label_new(if (text) |t| t else null)),
         };
     }
@@ -37,7 +37,7 @@ pub const Label = struct {
     }
 
     pub fn as_widget(self: Self) Widget {
-        return Widget {
+        return Widget{
             .ptr = @ptrCast(*c.GtkWidget, self.ptr),
         };
     }

@@ -22,7 +22,7 @@ pub const Box = struct {
 
     pub fn new(orientation: Orientation, spacing: c_int) Self {
         return Self{
-            .ptr = @ptrCast(*c.GtkBox, c.gtk_box_new(orientation.parse(), spacing)),
+            .ptr = @ptrCast(*c.GtkBox, c.gtk_box_new(@enumToInt(orientation), spacing)),
         };
     }
 
@@ -85,7 +85,7 @@ pub const Box = struct {
             if (expand) 1 else 0,
             if (fill) 1 else 0,
             padding,
-            pack_type.parse(),
+            @enumToInt(pack_type),
         );
     }
 
@@ -98,7 +98,7 @@ pub const Box = struct {
     }
 
     pub fn set_baseline_position(self: Self, pos: BaselinePosition) void {
-        c.gtk_box_set_baseline_position(self.ptr, pos.parse());
+        c.gtk_box_set_baseline_position(self.ptr, @enumToInt(pos));
     }
 
     pub fn get_center_widget(self: Self) Widget {

@@ -39,22 +39,21 @@ pub const Revealer = struct {
     }
 
     pub fn get_transition_type(self: Self) TransitionType {
-        return TransitionType.from_gtk(
-            c.gtk_revealer_get_transition_type(self.ptr));
+        return c.gtk_revealer_get_transition_type(self.ptr);
     }
 
     pub fn set_transition_type(self: Self, transition: TransitionType) void {
-        c.gtk_revealer_set_transition_type(self.ptr, transition.parse());
+        c.gtk_revealer_set_transition_type(self.ptr, @enumToInt(transition));
     }
 
     pub fn as_container(self: Self) Widget {
-        return Widget {
+        return Widget{
             .ptr = @ptrCast(*c.GtkContainer, self.ptr),
         };
     }
 
     pub fn as_widget(self: Self) Widget {
-        return Widget {
+        return Widget{
             .ptr = @ptrCast(*c.GtkWidget, self.ptr),
         };
     }
@@ -64,35 +63,11 @@ pub const Revealer = struct {
     }
 };
 
-pub const TransitionType = enum {
-    none,
-    crossfade,
-    slide_right,
-    slide_left,
-    slide_up,
-    slide_down,
-
-    const Self = @This();
-
-    pub fn parse(self: Self) c.GtkRevealerTransitionType {
-        return switch (self) {
-            .none => c.GTK_REVEALER_TRANSITION_TYPE_NONE,
-            .crossfade => c.GTK_REVEALER_TRANSITION_TYPE_CROSSFADE,
-            .slide_right => c.GTK_REVEALER_TRANSITION_TYPE_SLIDE_RIGHT,
-            .slide_left => c.GTK_REVEALER_TRANSITION_TYPE_SLIDE_LEFT,
-            .slide_up => c.GTK_REVEALER_TRANSITION_TYPE_SLIDE_UP,
-            .slide_down => c.GTK_REVEALER_TRANSITION_TYPE_DOWN,
-        };
-    }
-
-    pub fn from_gtk(gtk_type: c.GtkRevealerTransitionType) Self {
-        return switch (gtk_type) {
-            c.GTK_REVEALER_TRANSITION_TYPE_NONE => Self.none,
-            c.GTK_REVEALER_TRANSITION_TYPE_CROSSFADE => Self.crossfade,
-            c.GTK_REVEALER_TRANSITION_TYPE_SLIDE_RIGHT, => Self.slide_right,
-            c.GTK_REVEALER_TRANSITION_TYPE_SLIDE_LEFT => Self.slide_left,
-            c.GTK_REVEALER_TRANSITION_TYPE_SLIDE_UP => Self.slide_up,
-            c.GTK_REVEALER_TRANSITION_TYPE_DOWN => Self.slide_down,
-        };
-    }
+pub const TransitionType = enum(c_uint) {
+    none = c.GTK_REVEALER_TRANSITION_TYPE_NONE,
+    crossfade = c.GTK_REVEALER_TRANSITION_TYPE_CROSSFADE,
+    slide_right = c.GTK_REVEALER_TRANSITION_TYPE_SLIDE_RIGHT,
+    slide_left = c.GTK_REVEALER_TRANSITION_TYPE_SLIDE_LEFT,
+    slide_up = c.GTK_REVEALER_TRANSITION_TYPE_SLIDE_UP,
+    slide_down = c.GTK_REVEALER_TRANSITION_TYPE_DOWN,
 };

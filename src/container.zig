@@ -83,10 +83,6 @@ pub const Container = struct {
     }
 
     pub fn is_instance(gtype: u64) bool {
-        return (gtype == c.gtk_container_get_type()
-        or Box.is_instance(gtype)
-        or Grid.is_instance(gtype)
-        or Notebook.is_instance(gtype)
-        or Stack.is_instance(gtype));
+        return (gtype == c.gtk_container_get_type() or Box.is_instance(gtype) or Grid.is_instance(gtype) or Notebook.is_instance(gtype) or Stack.is_instance(gtype));
     }
 };

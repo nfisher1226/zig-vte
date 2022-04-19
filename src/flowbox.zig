@@ -24,12 +24,16 @@ const FlowBox = struct {
 
     pub fn get_child_at_index(self: Self, idx: c_int) ?FlowBoxChild {
         return if (c.gtk_flow_box_get_child_at_index(self.ptr, idx)) |child|
-            FlowBoxChild{ .ptr = child } else null;
+            FlowBoxChild{ .ptr = child }
+        else
+            null;
     }
 
     pub fn get_child_at_pos(self: Self, x: c_int, y: c_int) ?FlowBoxChild {
         return if (c.gtk_flow_box_get_child_at_pos(self.ptr, x, y)) |child|
-            FlowBoxChild{ .ptr = child } else null;
+            FlowBoxChild{ .ptr = child }
+        else
+            null;
     }
 
     pub fn set_hadjustment(self: Self, adjustment: Adjustment) void {
@@ -123,16 +127,11 @@ const FlowBox = struct {
     }
 
     pub fn set_selection_mode(self: Self, mode: SelectionMode) void {
-        c.gtk_flow_box_swet_selection_mode(self.ptr, mode.parse());
+        c.gtk_flow_box_swet_selection_mode(self.ptr, @enumToInt(mode));
     }
 
     pub fn get_selection_mode(self: Self) SelectionMode {
-        return switch (c.gtk_flow_box_get_selection_mode(self.ptr)) {
-            c.GTK_SELECTION_NONE => SelectionMode.none,
-            c.GTK_SELECTION_SINGLE => SelectionMode.single,
-            c.GTK_SELECTION_BROWSE => SelectionMode.browse,
-            c.GTK_SELECTION_MULTIPLE => SelectionMode.multiple,
-        };
+        return c.gtk_flow_box_get_selection_mode(self.ptr);
     }
 
     pub fn set_filter_func(

@@ -46,7 +46,7 @@ pub const Window = struct {
 
     pub fn new(window_type: WindowType) Self {
         return Self{
-            .ptr = @ptrCast(*c.GtkWindow, c.gtk_window_new(window_type.parse())),
+            .ptr = @ptrCast(*c.GtkWindow, c.gtk_window_new(@enumToInt(window_type))),
         };
     }
 
@@ -84,9 +84,6 @@ pub const Window = struct {
     }
 
     pub fn is_instance(gtype: u64) bool {
-        return (gtype == c.gtk_window_get_type()
-            or ApplicationWindow.is_instance(gtype)
-            or Dialog.is_instance(gtype)
-        );
+        return (gtype == c.gtk_window_get_type() or ApplicationWindow.is_instance(gtype) or Dialog.is_instance(gtype));
     }
 };

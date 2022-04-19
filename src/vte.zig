@@ -7,162 +7,50 @@ const fmt = std.fmt;
 const mem = std.mem;
 
 /// PtyFlags enum
-pub const PtyFlags = enum {
-    no_lastlog,
-    no_utmp,
-    no_wtmp,
-    no_helper,
-    no_fallback,
-    default,
-
-    pub fn parse(self: PtyFlags) c.VtePtyFlags {
-        return switch (self) {
-            .no_lastlog => c.VTE_PTY_NO_LASTLOG,
-            .no_utmp => c.VTE_PTY_NO_UTMP,
-            .no_wtmp => c.VTE_PTY_NO_WTMP,
-            .no_helper => c.VTE_PTY_NO_HELPER,
-            .no_fallback => c.VTE_PTY_NO_FALLBACK,
-            .default => c.VTE_PTY_DEFAULT,
-        };
-    }
-
-    pub fn from_c(flags: c.VtePtyFlags) PtyFlags {
-        return switch (flags) {
-            c.VTE_PTY_NO_LASTLOG => .no_lastlog,
-            c.VTE_PTY_NO_UTMP => .no_utmp,
-            c.VTE_PTY_NO_WTMP => .no_wtmp,
-            c.VTE_PTY_NO_HELPER => .no_helper,
-            c.VTE_PTY_NO_FALLBACK => .no_fallback,
-            c.VTE_PTY_DEFAULT => .default,
-        };
-    }
+pub const PtyFlags = enum(c_uint) {
+    no_lastlog = c.VTE_PTY_NO_LASTLOG,
+    no_utmp = c.VTE_PTY_NO_UTMP,
+    no_wtmp = c.VTE_PTY_NO_WTMP,
+    no_helper = c.VTE_PTY_NO_HELPER,
+    no_fallback = c.VTE_PTY_NO_FALLBACK,
+    default = c.VTE_PTY_DEFAULT,
 };
 
 /// Zig enum CursorBlinkMode
-pub const CursorBlinkMode = enum {
-    system,
-    on,
-    off,
-
-    pub fn parse(self: CursorBlinkMode) c.VteCursorBlinkMode {
-        return switch (self) {
-            .system => c.VTE_CURSOR_BLINK_SYSTEM,
-            .on => c.VTE_CURSOR_BLINK_ON,
-            .off => c.VTE_CURSOR_BLINK_OFF,
-        };
-    }
-
-    pub fn from_c(mode: c.VteCursorBlinkMode) CursorBlinkMode {
-        return switch (mode) {
-            c.VTE_CURSOR_BLINK_SYSTEM => .system,
-            c.VTE_CURSOR_BLINK_ON => .on,
-            c.VTE_CURSOR_BLINK_OFF => .off,
-        };
-    }
+pub const CursorBlinkMode = enum(c_uint) {
+    system = c.VTE_CURSOR_BLINK_SYSTEM,
+    on = c.VTE_CURSOR_BLINK_ON,
+    off = c.VTE_CURSOR_BLINK_OFF,
 };
 
 /// Zig enum CursorShape
-pub const CursorShape = enum {
-    block,
-    ibeam,
-    underline,
-
-    pub fn parse(self: CursorShape) c.VteCursorShape {
-        return switch (self) {
-            .block => c.VTE_CURSOR_SHAPE_BLOCK,
-            .ibeam => c.VTE_CURSOR_SHAPE_IBEAM,
-            .underline => c.VTE_CURSOR_SHAPE_UNDERLINE,
-        };
-    }
-
-    pub fn from_c(shape: c.VteCursorShape) CursorShape {
-        return switch (shape) {
-            c.VTE_CURSOR_SHAPE_BLOCK => .block,
-            c.VTE_CURSOR_SHAPE_IBEAM => .ibeam,
-            c.VTE_CURSOR_SHAPE_UNDERLINE => .underline,
-        };
-    }
+pub const CursorShape = enum(c_uint) {
+    block = c.VTE_CURSOR_SHAPE_BLOCK,
+    ibeam = c.VTE_CURSOR_SHAPE_IBEAM,
+    underline = c.VTE_CURSOR_SHAPE_UNDERLINE,
 };
 
 /// enum Format
-pub const Format = enum {
-    text,
-    html,
-
-    const Self = @This();
-
-    pub fn parse(self: Self) c.VteFormat {
-        return switch (self) {
-            .text => c.VTE_FORMAT_TEXT,
-            .html => c.VTE_FORMAT_HTML,
-        };
-    }
-
-    pub fn from_c(format: c.VteFormat) Self {
-        return switch (format) {
-            c.VTE_FORMAT_TEXT => Self.text,
-            c.VTE_FORMAT_HTML => Self.html,
-        };
-    }
+pub const Format = enum(c_uint) {
+    text = c.VTE_FORMAT_TEXT,
+    html = c.VTE_FORMAT_HTML,
 };
 
 /// enum TextBlinkMode
-pub const TextBlinkMode = enum {
-    never,
-    focused,
-    unfocused,
-    always,
-
-    const Self = @This();
-
-    pub fn parse(self: Self) c.VteTextBlinkMode {
-        return switch (self) {
-            .never => c.VTE_TEXT_BLINK_NEVER,
-            .focused => c.VTE_TEXT_BLINK_FOCUSED,
-            .unfocused => c.VTE_TEXT_BLINK_UNFOCUSED,
-            .always => c.VTE_TEXT_BLINK_ALWAYS,
-        };
-    }
-
-    pub fn from_c(mode: c.VteTextBlinkMode) Self {
-        return switch (mode) {
-            c.VTE_TEXT_BLINK_NEVER => Self.never,
-            c.VTE_TEXT_BLINK_FOCUSED => Self.focused,
-            c.VTE_TEXT_BLINK_UNFOCUSED => Self.unfocused,
-            c.VTE_TEXT_BLINK_ALWAYS => Self.always,
-        };
-    }
+pub const TextBlinkMode = enum(c_uint) {
+    never = c.VTE_TEXT_BLINK_NEVER,
+    focused = c.VTE_TEXT_BLINK_FOCUSED,
+    unfocused = c.VTE_TEXT_BLINK_UNFOCUSED,
+    always = c.VTE_TEXT_BLINK_ALWAYS,
 };
 
 /// enum EraseBinding
-pub const EraseBinding = enum {
-    auto,
-    ascii_backspace,
-    ascii_delete,
-    delete_sequence,
-    tty,
-
-    const Self = @This();
-
-    pub fn parse(self: Self) c.VteEraseBinding {
-        return switch (self) {
-            .auto => c.VTE_ERASE_AUTO,
-            .ascii_backspace => c.VTE_ERASE_ASCII_BACKSPACE,
-            .ascii_delete => c.VTE_ERASE_ASCII_DELETE,
-            .delete_sequence => c.VTE_ERASE_DELETE_SEQUENCE,
-            .tty => c.VTE_ERRASE_TTY,
-        };
-    }
-
-    pub fn from_c(binding: c.VteEraseBinding) Self {
-        return switch (binding) {
-            c.VTE_ERASE_AUTO => Self.auto,
-            c.VTE_ERASE_ASCII_BACKSPACE => Self.ascii_backspace,
-            c.VTE_ERASE_ASCII_DELETE => Self.ascii_delete,
-            c.VTE_ERASE_DELETE_SEQUENCE => Self.delete_sequence,
-            c.VTE_ERRASE_TTY => Self.tty,
-        };
-    }
+pub const EraseBinding = enum(c_uint) {
+    auto = c.VTE_ERASE_AUTO,
+    ascii_backspace = c.VTE_ERASE_ASCII_BACKSPACE,
+    ascii_delete = c.VTE_ERASE_ASCII_DELETE,
+    delete_sequence = c.VTE_ERASE_DELETE_SEQUENCE,
+    tty = c.VTE_ERRASE_TTY,
 };
 
 pub const CursorPosition = struct {
@@ -198,7 +86,7 @@ pub const Terminal = struct {
     }
 
     pub fn copy_clipboard_format(self: Self, format: Format) void {
-        c.vte_terminal_copy_clipboard_format(self.ptr, format.parse());
+        c.vte_terminal_copy_clipboard_format(self.ptr, @enumToInt(format));
     }
 
     pub fn paste_clipboard(self: Self) void {
@@ -330,7 +218,7 @@ pub const Terminal = struct {
     }
 
     pub fn set_text_blink_mode(self: Self, mode: TextBlinkMode) void {
-        c.vte_terminal_set_text_blink_mode(self.ptr, mode.parse());
+        c.vte_terminal_set_text_blink_mode(self.ptr, @enumToInt(mode));
     }
 
     pub fn set_colors(
@@ -359,7 +247,7 @@ pub const Terminal = struct {
     }
 
     pub fn set_cursor_shape(self: Terminal, shape: CursorShape) void {
-        c.vte_terminal_set_cursor_shape(self.ptr, shape.parse());
+        c.vte_terminal_set_cursor_shape(self.ptr, @enumToInt(shape));
     }
 
     pub fn get_cursor_blink_mode(self: Terminal) CursorBlinkMode {
@@ -368,7 +256,7 @@ pub const Terminal = struct {
     }
 
     pub fn set_cursor_blink_mode(self: Terminal, mode: CursorBlinkMode) void {
-        c.vte_terminal_set_cursor_blink_mode(self.ptr, mode.parse());
+        c.vte_terminal_set_cursor_blink_mode(self.ptr, @enumToInt(mode));
     }
 
     pub fn set_scrollback_lines(self: Self, lines: c_long) void {
@@ -392,11 +280,11 @@ pub const Terminal = struct {
     }
 
     pub fn set_backspace_binding(self: Self, binding: EraseBinding) void {
-        c.vte_terminal_set_backspace_binding(self.ptr, binding.parse());
+        c.vte_terminal_set_backspace_binding(self.ptr, @enumToInt(binding));
     }
 
     pub fn set_delete_binding(self: Self, binding: EraseBinding) void {
-        c.vte_terminal_set_delete_binding(self.ptr, binding.parse());
+        c.vte_terminal_set_delete_binding(self.ptr, @enumToInt(binding));
     }
 
     pub fn set_mouse_autohide(self: Self, hide: bool) void {
@@ -447,14 +335,14 @@ pub const Terminal = struct {
     ) void {
         c.vte_terminal_spawn_async(
             self.ptr,
-            flags.parse(),
+            @enumToInt(flags),
             if (wkgdir) |d| d else null,
             @ptrCast([*c][*c]c.gchar, &([2][*c]c.gchar{
                 c.g_strdup(command),
                 null,
             })),
             if (env) |e| @ptrCast([*c][*c]u8, e) else null,
-            spawn_flags.parse(),
+            @enumToInt(spawn_flags),
             if (child_setup_func) |f| f else null,
             @intToPtr(?*anyopaque, @as(c_int, 0)),
             null,

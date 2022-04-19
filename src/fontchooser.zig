@@ -92,11 +92,7 @@ pub const FontChooser = struct {
     }
 
     pub fn is_instance(gtype: u64) bool {
-        return (gtype == c.gtk_font_chooser_get_type()
-            or FontButton.is_instance(gtype)
-            or FontChooserWidget.is_instance(gtype)
-            or FontChooserDialog.is_instance(gtype)
-        );
+        return (gtype == c.gtk_font_chooser_get_type() or FontButton.is_instance(gtype) or FontChooserWidget.is_instance(gtype) or FontChooserDialog.is_instance(gtype));
     }
 };
 

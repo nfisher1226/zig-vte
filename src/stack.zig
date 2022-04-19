@@ -25,12 +25,7 @@ pub const Stack = struct {
         c.gtk_stack_add_named(self.ptr, child.ptr, name);
     }
 
-    pub fn add_titled(
-        self: Self,
-        child: Widget,
-        name: [:0]const u8,
-        title: [:0]const u8
-    ) void {
+    pub fn add_titled(self: Self, child: Widget, name: [:0]const u8, title: [:0]const u8) void {
         c.gtk_stack_add_titled(self.ptr, child.ptr, name, title);
     }
 
@@ -61,7 +56,7 @@ pub const Stack = struct {
     }
 
     pub fn set_visible_child_full(self: Self, name: [:0]const u8, transition: StackTransitionStyle) void {
-        c.gtk_stack_set_visible_child_full(self.ptr, name, transition.parse());
+        c.gtk_stack_set_visible_child_full(self.ptr, name, @enumToInt(transition));
     }
 
     pub fn set_homogeneous(self: Self, hom: bool) void {
@@ -97,32 +92,11 @@ pub const Stack = struct {
     }
 
     pub fn set_transition_type(self: Self, transition: StackTransitionStyle) void {
-        c.gtk_stack_set_transition_type(self.ptr, transition.parse());
+        c.gtk_stack_set_transition_type(self.ptr, @enumToInt(transition));
     }
 
     pub fn get_transition_type(self: Self) StackTransitionStyle {
-        return switch (c.gtk_stack_get_transition_type(self.ptr)) {
-            c.GTK_STACK_TRANSITION_TYPE_NONE => .none,
-            c.GTK_STACK_TRANSITION_TYPE_CROSSFADE => .crossfade,
-            c.GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT => .slide_right,
-            c.GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT => .slide_left,
-            c.GTK_STACK_TRANSITION_TYPE_SLIDE_UP => .slide_up,
-            c.GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN => .slide_down,
-            c.GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT => .slide_left_right,
-            c.GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN => .slide_up_down,
-            c.GTK_STACK_TRANSITION_TYPE_SLIDE_OVER_UP => .slide_over_up,
-            c.GTK_STACK_TRANSITION_TYPE_SLIDE_OVER_DOWN => .slide_over_down,
-            c.GTK_STACK_TRANSITION_TYPE_SLIDE_OVER_LEFT => .slide_over_left,
-            c.GTK_STACK_TRANSITION_TYPE_SLIDE_OVER_RIGHT => .slide_over_right,
-            c.GTK_STACK_TRANSITION_TYPE_SLIDE_UNDER_UP => .slide_under_up,
-            c.GTK_STACK_TRANSITION_TYPE_SLIDE_UNDER_DOWN => .slide_under_down,
-            c.GTK_STACK_TRANSITION_TYPE_SLIDE_UNDER_LEFT => .slide_under_left,
-            c.GTK_STACK_TRANSITION_TYPE_SLIDE_UNDER_RIGHT => .slide_under_right,
-            c.GTK_STACK_TRANSITION_TYPE_OVER_UP_DOWN => .over_up_down,
-            c.GTK_STACK_TRANSITION_TYPE_OVER_DOWN_UP => .over_down_up,
-            c.GTK_STACK_TRANSITION_TYPE_OVER_LEFT_RIGHT => .over_left_right,
-            c.GTK_STACK_TRANSITION_TYPE_OVER_RIGHT_LEFT => .over_right_left,
-        };
+        return c.gtk_stack_get_transition_type(self.ptr);
     }
 
     pub fn get_transition_running(self: Self) bool {
@@ -160,9 +134,7 @@ pub const StackSwitcher = struct {
     const Self = @This();
 
     pub fn new() Self {
-        return Self{
-            .ptr = @ptrCast(*c.GtkStackSwitcher, c.gtk_stack_switcher_new())
-        };
+        return Self{ .ptr = @ptrCast(*c.GtkStackSwitcher, c.gtk_stack_switcher_new()) };
     }
 
     pub fn set_stack(self: Self, stack: Stack) void {
@@ -243,52 +215,25 @@ pub const StackSidebar = struct {
 };
 
 /// enum StackTransitionStyle
-pub const StackTransitionStyle = enum {
-    none,
-    crossfade,
-    slide_right,
-    slide_left,
-    slide_up,
-    slide_down,
-    slide_left_right,
-    slide_up_down,
-    over_up,
-    over_down,
-    over_left,
-    over_right,
-    under_up,
-    under_down,
-    under_left,
-    under_right,
-    over_up_down,
-    over_down_up,
-    over_left_right,
-    over_right_left,
-
-    const Self = @This();
-
-    pub fn parse(self: Self) c.GtkStackTransitionStyle {
-        return switch (self) {
-            .none => c.GTK_STACK_TRANSITION_TYPE_NONE,
-            .crossfade => c.GTK_STACK_TRANSITION_TYPE_CROSSFADE,
-            .slide_right => c.GTK_STACK_TRANSITION_TYPE_RIGHT,
-            .slide_left => c.GTK_STACK_TRANSITION_TYPE_LEFT,
-            .slide_up => c.GTK_STACK_TRANSITION_TYPE_UP,
-            .slide_down => c.GTK_STACK_TRANSITION_TYPE_DOWN,
-            .slide_left_right => c.GTK_STACK_TRANSITION_TYPE_LEFT_RIGHT,
-            .slide_up_down => c.GTK_STACK_TRANSITION_TYPE_UP_DOWN,
-            .over_up => c.GTK_STACK_TRANSITION_TYPE_OVER_UP,
-            .over_down => c.GTK_STACK_TRANSITION_TYPE_OVER_DOWN,
-            .over_left => c.GTK_STACK_TRANSITION_TYPE_OVER_LEFT,
-            .over_right => c.GTK_STACK_TRANSITION_TYPE_OVER_RIGHT,
-            .under_up => c.GTK_STACK_TRANSITION_TYPE_UNDER_UP,
-            .under_down => c.GTK_STACK_TRANSITION_TYPE_UNDER_DOWN,
-            .under_left => c.GTK_STACK_TRANSITION_TYPE_UNDER_LEFT,
-            .under_right => c.GTK_STACK_TRANSITION_TYPE_UNDER_RIGHT,
-            .over_up_down => c.GTK_STACK_TRANSITION_TYPE_OVER_UP_DOWN,
-            .over_down_up => c.GTK_STACK_TRANSITION_TYPE_OVER_DOWN_UP,
-            .over_left_right => c.GTK_STACK_TRANSITION_TYPE_OVER_LEFT_RIGHT,
-            .over_right_left => c.GTK_STACK_TRANSITION_TYPE_OVER_RIGHT_LEFT,
-        };
-    }
+pub const StackTransitionStyle = enum(c_uint) {
+    none = c.GTK_STACK_TRANSITION_TYPE_NONE,
+    crossfade = c.GTK_STACK_TRANSITION_TYPE_CROSSFADE,
+    slide_right = c.GTK_STACK_TRANSITION_TYPE_RIGHT,
+    slide_left = c.GTK_STACK_TRANSITION_TYPE_LEFT,
+    slide_up = c.GTK_STACK_TRANSITION_TYPE_UP,
+    slide_down = c.GTK_STACK_TRANSITION_TYPE_DOWN,
+    slide_left_right = c.GTK_STACK_TRANSITION_TYPE_LEFT_RIGHT,
+    slide_up_down = c.GTK_STACK_TRANSITION_TYPE_UP_DOWN,
+    over_up = c.GTK_STACK_TRANSITION_TYPE_OVER_UP,
+    over_down = c.GTK_STACK_TRANSITION_TYPE_OVER_DOWN,
+    over_left = c.GTK_STACK_TRANSITION_TYPE_OVER_LEFT,
+    over_right = c.GTK_STACK_TRANSITION_TYPE_OVER_RIGHT,
+    under_up = c.GTK_STACK_TRANSITION_TYPE_UNDER_UP,
+    under_down = c.GTK_STACK_TRANSITION_TYPE_UNDER_DOWN,
+    under_left = c.GTK_STACK_TRANSITION_TYPE_UNDER_LEFT,
+    under_right = c.GTK_STACK_TRANSITION_TYPE_UNDER_RIGHT,
+    over_up_down = c.GTK_STACK_TRANSITION_TYPE_OVER_UP_DOWN,
+    over_down_up = c.GTK_STACK_TRANSITION_TYPE_OVER_DOWN_UP,
+    over_left_right = c.GTK_STACK_TRANSITION_TYPE_OVER_LEFT_RIGHT,
+    over_right_left = c.GTK_STACK_TRANSITION_TYPE_OVER_RIGHT_LEFT,
 };

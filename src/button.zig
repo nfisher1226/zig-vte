@@ -40,23 +40,18 @@ pub const Button = struct {
     /// Creates a new Button containing an icon from the current icon theme.
     pub fn new_from_icon_name(icon_name: [:0]const u8, size: IconSize) Button {
         return Button{
-            .ptr = @ptrCast(*c.GtkButton, c.gtk_button_new_from_icon_name(icon_name, size.parse())),
+            .ptr = @ptrCast(*c.GtkButton, c.gtk_button_new_from_icon_name(icon_name, @enumToInt(size))),
         };
     }
 
     /// Get the ReliefStyle of the Button
     pub fn get_relief(self: Button) ReliefStyle {
-        const rel = c.gtk_button_get_relief(self.ptr);
-        return switch (rel) {
-            c.GTK_RELIEF_NORMAL => .normal,
-            c.GTK_RELIEF_NONE => .none,
-            else => unreachable,
-        };
+        return c.gtk_button_get_relief(self.ptr);
     }
 
     /// Set the ReliefStyle of the Button
     pub fn set_relief(self: Button, style: ReliefStyle) void {
-        c.gtk_button_set_relief(self.ptr, style.parse());
+        c.gtk_button_set_relief(self.ptr, @enumToInt(style));
     }
 
     /// Get the text from the label of the Button, or null if unset
@@ -112,12 +107,12 @@ pub const Button = struct {
 
     /// Gets the position of the image relative to the text inside the button.
     pub fn get_image_position(self: Button) PositionType {
-        return c.gtk_button_get_image_position(self.ptr).parse();
+        return c.gtk_button_get_image_position(self.ptr);
     }
 
     /// Sets the position of the image relative to the text inside the button.
     pub fn set_image_position(self: Button, pos: PositionType) void {
-        c.gtk_button_set_image_position(self.ptr, pos.parse());
+        c.gtk_button_set_image_position(self.ptr, @enumToInt(pos));
     }
 
     /// Returns whether the button will always show the image, if available.
@@ -143,9 +138,7 @@ pub const Button = struct {
     }
 
     pub fn is_instance(gtype: u64) bool {
-        return (gtype == c.gtk_button_get_type()
-            or ToggleButton.is_instance(gtype)
-            or CheckButton.is_instance(gtype));
+        return (gtype == c.gtk_button_get_type() or ToggleButton.is_instance(gtype) or CheckButton.is_instance(gtype));
     }
 };
 

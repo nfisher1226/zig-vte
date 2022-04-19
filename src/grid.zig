@@ -24,19 +24,15 @@ pub const Grid = struct {
         c.gtk_grid_attach(self.ptr, child.ptr, left, top, width, height);
     }
 
-    pub fn attach_next_to(
-        self: Self,
-        child: Widget,
-        sibling: Widget,
-        side: PositionType,
-        width: c_int,
-        height: c_int) void {
-        c.gtk_grid_attach_next_to(self.ptr, child.ptr, sibling.ptr, side.parse(), width, height);
+    pub fn attach_next_to(self: Self, child: Widget, sibling: Widget, side: PositionType, width: c_int, height: c_int) void {
+        c.gtk_grid_attach_next_to(self.ptr, child.ptr, sibling.ptr, @enumToInt(side), width, height);
     }
 
     pub fn get_child_at(self: Self, left: c_int, top: c_int) ?Widget {
         const val = c.gtk_grid_get_child_at(self.ptr, left, top);
-        return if (val) |v| Widget{ .ptr = v, } else null;
+        return if (val) |v| Widget{
+            .ptr = v,
+        } else null;
     }
 
     pub fn insert_row(self: Self, position: c_int) void {
@@ -56,7 +52,7 @@ pub const Grid = struct {
     }
 
     pub fn insert_next_to(self: Self, sibling: Widget, side: PositionType) void {
-        c.gtk_grid_insert_next_to(self.ptr, sibling.ptr, side.parse());
+        c.gtk_grid_insert_next_to(self.ptr, sibling.ptr, @enumToInt(side));
     }
 
     pub fn set_row_homogeneous(self: Self, hom: bool) void {
@@ -108,7 +104,7 @@ pub const Grid = struct {
     }
 
     pub fn set_row_baseline_position(self: Self, row: c_int, pos: BaselinePosition) void {
-        c.gtk_grid_set_row_baseline_position(self.ptr, row, pos.parse());
+        c.gtk_grid_set_row_baseline_position(self.ptr, row, @enumToInt(pos));
     }
 
     pub fn as_widget(self: Self) Widget {

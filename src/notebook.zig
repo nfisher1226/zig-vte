@@ -1,7 +1,5 @@
 const c = @import("cimport.zig");
 const Container = @import("container.zig").Container;
-const common = @import("common.zig");
-const bool_to_c_int = common.bool_to_c_int;
 const enums = @import("enums.zig");
 const PackType = enums.PackType;
 const PositionType = enums.PositionType;
@@ -70,19 +68,19 @@ pub const Notebook = struct {
     }
 
     pub fn set_tab_pos(self: Notebook, pos: PositionType) void {
-        c.gtk_notebook_set_tab_pos(self.ptr, pos.parse());
+        c.gtk_notebook_set_tab_pos(self.ptr, @enumToInt(pos));
     }
 
     pub fn set_show_tabs(self: Notebook, show: bool) void {
-        c.gtk_notebook_set_show_tabs(self.ptr, bool_to_c_int(show));
+        c.gtk_notebook_set_show_tabs(self.ptr, if (show) 1 else 0);
     }
 
     pub fn set_show_border(self: Notebook, show: bool) void {
-        c.gtk_notebook_set_show_border(self.ptr, bool_to_c_int(show));
+        c.gtk_notebook_set_show_border(self.ptr, if (show) 1 else 0);
     }
 
     pub fn set_scrollable(self: Notebook, scrollable: bool) void {
-        c.gtk_notebook_set_scrollable(self.ptr, bool_to_c_int(scrollable));
+        c.gtk_notebook_set_scrollable(self.ptr, if (scrollable) 1 else 0);
     }
 
     pub fn popup_enable(self: Notebook) void {
@@ -136,11 +134,11 @@ pub const Notebook = struct {
     }
 
     pub fn set_tab_reorderable(self: Notebook, child: Widget, reorderable: bool) void {
-        c.gtk_notebook_set_tab_reorderable(self.ptr, child.ptr, bool_to_c_int(reorderable));
+        c.gtk_notebook_set_tab_reorderable(self.ptr, child.ptr, if (reorderable) 1 else 0);
     }
 
     pub fn set_tab_detachable(self: Notebook, child: Widget, detachable: bool) void {
-        c.gtk_notebook_set_tab_detachable(self.ptr, child.ptr, bool_to_c_int(detachable));
+        c.gtk_notebook_set_tab_detachable(self.ptr, child.ptr, if (detachable) 1 else 0);
     }
 
     pub fn get_menu_label_text(self: Notebook, allocator: mem.Allocator, child: Widget) ?[:0]const u8 {
@@ -211,11 +209,11 @@ pub const Notebook = struct {
     }
 
     pub fn set_action_widget(self: Notebook, widget: Widget, packtype: PackType) void {
-        c.gtk_notebook_set_action_widget(self.ptr, widget.ptr, packtype.parse());
+        c.gtk_notebook_set_action_widget(self.ptr, widget.ptr, @enumToInt(packtype));
     }
 
     pub fn get_action_widget(self: Notebook, packtype: PackType) ?Widget {
-        return if (c.gtk_notebook_get_action_widget(self.ptr, packtype.parse())) |v| Widget{ .ptr = v } else null;
+        return if (c.gtk_notebook_get_action_widget(self.ptr, @enumToInt(packtype))) |v| Widget{ .ptr = v } else null;
     }
 
     pub fn connect_page_added(self: Notebook, callback: c.GCallback, data: ?c.gpointer) void {
