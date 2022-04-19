@@ -64,10 +64,7 @@ pub const Box = struct {
             .expand = (expand == 1),
             .fill = (fill == 1),
             .padding = padding,
-            .pack_type = switch (pack_type) {
-                c.GtkPackStart => PackType.start,
-                c.GtkPackEnd => PackType.end,
-            },
+            .pack_type = pack_type,
         };
     }
 
@@ -90,11 +87,7 @@ pub const Box = struct {
     }
 
     pub fn get_baseline_position(self: Self) BaselinePosition {
-        return switch (c.gtk_box_get_baseline_position(self.ptr)) {
-            c.GTK_BASELINE_POSITION_TOP => BaselinePosition.top,
-            c.GTK_BASELINE_POSITION_CENTER => BaselinePosition.center,
-            c.GTK_BASELINE_POSITION_BOTTOM => BaselinePosition.bottom,
-        };
+        return c.gtk_box_get_baseline_position(self.ptr);
     }
 
     pub fn set_baseline_position(self: Self, pos: BaselinePosition) void {

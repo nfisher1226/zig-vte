@@ -96,11 +96,7 @@ pub const Grid = struct {
     }
 
     pub fn get_row_baseline_position(self: Self, row: c_int) BaselinePosition {
-        return switch (c.gtk_grid_get_baseline_position(self.ptr, row)) {
-            c.GTK_BASELINE_POSITION_TOP => .top,
-            c.GTK_BASLINE_POSITION_CENTER => .center,
-            c.GTK_BASELINE_POSITION_BOTTOM => .bottom,
-        };
+        return c.gtk_grid_get_baseline_position(self.ptr, row);
     }
 
     pub fn set_row_baseline_position(self: Self, row: c_int, pos: BaselinePosition) void {

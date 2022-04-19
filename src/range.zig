@@ -309,11 +309,7 @@ pub const SpinButton = struct {
     }
 
     pub fn get_update_policy(self: Self) SpinButtonUpdatePolicy {
-        return switch (c.gtk_spin_button_get_update_policy(self.ptr)) {
-            c.GTK_UPDATE_ALWAYS => .always,
-            c.GTK_UPDATE_IF_VALID => .if_valid,
-            else => unreachable,
-        };
+        return c.gtk_spin_button_get_update_policy(self.ptr);
     }
 
     pub fn get_value(self: Self) f64 {
