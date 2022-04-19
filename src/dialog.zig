@@ -225,8 +225,86 @@ pub const AboutDialog = struct {
     }
 };
 
+pub const MessageDialog = struct {
+    ptr: *c.GtkMessageDialog,
+
+    const Self = @This();
+
+    pub fn new(parent: Window, flags: Flags, kind: Type, buttons: ButtonsType, msg: [:0]const u8) Self {
+        return Self{
+            .ptr = c.gtk_message_dialog_new(parent.ptr, flags, kind, buttons, msg),
+        };
+    }
+
+    pub fn new_with_markup(
+        parent: Window,
+        flags: Flags,
+        kind: Type,
+        buttons: ButtonsType,
+        msg: [:0]const u8
+    ) Self {
+        return Self{
+            .ptr = c.gtk_message_dialog_new_with_markup(parent.ptr, flags, kind, buttons, msg),
+        };
+    }
+
+    pub fn set_markup(self: Self, markup: [:0]const u8) void {
+        c.gtk_message_dialog_set_markup(self.ptr, markup);
+    }
+
+    pub fn format_secondary_text(self: Self, text: [:0]const u8) void {
+        c.gtk_message_dialog_format_secondary_text(self.ptr, text);
+    }
+
+    pub fn format_secondary_markup(self: Self, text: [:0]const u8) void {
+        c.gtk_message_dialog_format_secondary_markup(self.ptr, text);
+    }
+
+    pub fn get_message_area(self: Self) Widget {
+        return Widget{
+            .ptr = c.gtk_message_dialog_get_message_area(self.ptr),
+        };
+    }
+
+    pub fn as_dialog(self: Self) Dialog {
+        return Dialog{
+            .ptr = @ptrCast(*c.GtkDialog, self.ptr),
+        };
+    }
+
+    pub fn as_widget(self: Self) Widget {
+        return Widget{ .ptr = @ptrCast(*c.GtkWidget, self.ptr) };
+    }
+
+    pub fn as_window(self: Self) Window {
+        return Window{ .ptr = @ptrCast(*c.GtkWindow, self.ptr) };
+    }
+
+    pub fn is_instance(gtype: u64) bool {
+        return (gtype == c.gtk_message_dialog_get_type());
+    }
+};
+
+
 pub const Flags = enum(c_uint) {
     modal = c.GTK_DIALOG_FLAGS_MODAL,
     destroy_with_parent = c.GTK_DIALOG_FLAGS_DESTROY_WITH_PARENT,
     use_header_bar = c.GTK_DIALOG_FLAGS_USE_HEADER_BAR,
+};
+
+pub const Type = enum(c_uint) {
+    info = c.GTK_MESSAGE_INFO,
+    warning = c.GTK_MESSAGE_WARNING,
+    question = c.GTK_MESSAGE_QUESTION,
+    err = c.GTK_MESSAGE_ERROR,
+    other = c.GTK_MESSAGE_OTHER,
+};
+
+pub const ButtonsType = enum(c_uint) {
+    none = c.GTK_BUTTONS_NONE,
+    ok = c.GTK_BUTTONS_OK,
+    close = c.GTK_BUTTONS_CLOSE,
+    cancel = c.GTK_BUTTONS_CANCEL,
+    yes_no = c.GTK_BUTTONS_YES_NO,
+    ok_cancel = c.GTK_BUTTONS_OK_CANCEL,
 };

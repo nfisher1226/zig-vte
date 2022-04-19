@@ -4,13 +4,13 @@
 | GtkApplicationWindow |   | x |   |
 | GtkActionable | x |   |   |
 | GtkBuilder |   | x |   |
-| GtkBuildable | x |   |   |
+| GtkBuildable |   | x |   |
 | GtkWindow |   | x |   |
 | GtkDialog |   | x |   |
-| GtkMessageDialog | x |   |   |
+| GtkMessageDialog |   |   | x |
 | GtkAboutDialog |   |   | x |
 | GtkAssistant | x |   |   |
-| GtkInvisible | x |   |   |
+| GtkInvisible |   |   | x |
 | GtkOffscreenWindow | x |   |   |
 | GtkWindowGroup | x |   |   |
 | GtkBox |   |   | x |
