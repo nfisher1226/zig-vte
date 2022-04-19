@@ -34,7 +34,7 @@
 | GtkFixed | x |   |   |
 | GtkLabel |   | x |   |
 | GtkImage | x |   |   |
-| GtkSpinner | x |   |   |
+| GtkSpinner |   |   | x |
 | GtkInfoBar | x |   |   |
 | GtkProgressBar | x |   |   |
 | GtkLevelBar | x |   |   |

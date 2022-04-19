@@ -24,6 +24,7 @@ pub usingnamespace @import("orientable.zig");
 pub usingnamespace @import("paned.zig");
 pub usingnamespace @import("range.zig");
 pub usingnamespace @import("revealer.zig");
+pub usingnamespace @import("spinner.zig");
 pub usingnamespace @import("stack.zig");
 pub usingnamespace @import("switch.zig");
 pub usingnamespace @import("widget.zig");

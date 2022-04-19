@@ -33,7 +33,10 @@ pub const Dialog = struct {
     }
 
     pub fn is_instance(gtype: u64) bool {
-        return (gtype == c.gtk_dialog_get_type() or AboutDialog.is_instance(gtype));
+        return (gtype == c.gtk_dialog_get_type()
+            or AboutDialog.is_instance(gtype)
+            or MessageDialog.is_instance(gtype)
+        );
     }
 };
 
