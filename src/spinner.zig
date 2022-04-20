@@ -10,7 +10,7 @@ pub const Spinner = struct {
 
     pub fn new() Self {
         return Self{
-            .ptr = c.gtk_spinner_new(),
+            .ptr = @ptrCast(*c.GtkSpinner, c.gtk_spinner_new()),
         };
     }
 

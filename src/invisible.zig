@@ -10,13 +10,13 @@ pub const Invisible = struct {
 
     pub fn new() Self {
         return Self{
-            .ptr = c.gtk_invisible_new(),
+            .ptr = @ptrCast(*c.GtkInvisible, c.gtk_invisible_new()),
         };
     }
 
     pub fn new_for_screen(screen: *c.GdkScreen) Self {
         return Self{
-            .ptr = c.gtk_invisible_new_for_screen(screen),
+            .ptr = @ptrCast(*c.GtkInvisible, c.gtk_invisible_new_for_screen(screen)),
         };
     }
 

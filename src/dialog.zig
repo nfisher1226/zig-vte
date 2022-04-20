@@ -1,6 +1,7 @@
 const c = @import("cimport.zig");
-const common = @import("common.zig");
+const ColorChooserDialog = @import("colorchooser.zig").ColorChooserDialog;
 const Container = @import("container.zig").Container;
+const FontChooserDialog = @import("fontchooser.zig").FontChooserDialog;
 const License = @import("enums.zig").License;
 const Widget = @import("widget.zig").Widget;
 const Window = @import("window.zig").Window;
@@ -33,10 +34,7 @@ pub const Dialog = struct {
     }
 
     pub fn is_instance(gtype: u64) bool {
-        return (gtype == c.gtk_dialog_get_type()
-            or AboutDialog.is_instance(gtype)
-            or MessageDialog.is_instance(gtype)
-        );
+        return (gtype == c.gtk_dialog_get_type() or AboutDialog.is_instance(gtype) or ColorChooserDialog.is_instance(gtype) or FontChooserDialog.is_instance(gtype) or MessageDialog.is_instance(gtype));
     }
 };
 
@@ -239,13 +237,7 @@ pub const MessageDialog = struct {
         };
     }
 
-    pub fn new_with_markup(
-        parent: Window,
-        flags: Flags,
-        kind: Type,
-        buttons: ButtonsType,
-        msg: [:0]const u8
-    ) Self {
+    pub fn new_with_markup(parent: Window, flags: Flags, kind: Type, buttons: ButtonsType, msg: [:0]const u8) Self {
         return Self{
             .ptr = c.gtk_message_dialog_new_with_markup(parent.ptr, flags, kind, buttons, msg),
         };
@@ -287,7 +279,6 @@ pub const MessageDialog = struct {
         return (gtype == c.gtk_message_dialog_get_type());
     }
 };
-
 
 pub const Flags = enum(c_uint) {
     modal = c.GTK_DIALOG_FLAGS_MODAL,

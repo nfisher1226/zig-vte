@@ -1,6 +1,7 @@
 const c = @import("cimport.zig");
 const common = @import("common.zig");
 const enums = @import("enums.zig");
+const Dialog = @import("dialog.zig").Dialog;
 const Widget = @import("widget.zig").Widget;
 
 const std = @import("std");
@@ -209,6 +210,12 @@ pub const FontChooserDialog = struct {
     pub fn new() Self {
         return Self{
             .ptr = @ptrCast(*c.GtkFontChooserDialog, c.gtk_font_chooser_dialog_new()),
+        };
+    }
+
+    pub fn as_dialog(self: Self) Dialog {
+        return Dialog{
+            .ptr = @ptrCast(*c.GtkDialog, self.ptr),
         };
     }
 

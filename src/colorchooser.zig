@@ -1,5 +1,6 @@
 const c = @import("cimport.zig");
 const Button = @import("button.zig").Button;
+const Dialog = @import("dialog.zig").Dialog;
 const enums = @import("enums.zig");
 const Widget = @import("widget.zig").Widget;
 
@@ -135,6 +136,12 @@ pub const ColorChooserDialog = struct {
     pub fn as_color_chooser(self: Self) ColorChooser {
         return ColorChooser{
             .ptr = @ptrCast(*c.GtkColorChooser, self.ptr),
+        };
+    }
+
+    pub fn as_dialog(self: Self) Dialog {
+        return Dialog{
+            .ptr = @ptrCast(*c.GtkDialog, self.ptr),
         };
     }
 

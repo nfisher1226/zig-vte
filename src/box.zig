@@ -8,17 +8,17 @@ const PackType = enums.PackType;
 const Orientable = @import("orientable.zig").Orientable;
 const Widget = @import("widget.zig").Widget;
 
-pub const Packing = struct {
-    expand: bool,
-    fill: bool,
-    padding: c_uint,
-    pack_type: PackType,
-};
-
 pub const Box = struct {
     ptr: *c.GtkBox,
 
     const Self = @This();
+
+    pub const Packing = struct {
+        expand: bool,
+        fill: bool,
+        padding: c_uint,
+        pack_type: PackType,
+    };
 
     pub fn new(orientation: Orientation, spacing: c_int) Self {
         return Self{

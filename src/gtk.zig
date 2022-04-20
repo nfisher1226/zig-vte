@@ -12,6 +12,7 @@ pub usingnamespace @import("dialog.zig");
 pub usingnamespace @import("entry.zig");
 pub usingnamespace @import("enums.zig");
 pub usingnamespace @import("expander.zig");
+pub usingnamespace @import("filechooser.zig");
 pub usingnamespace @import("flowbox.zig");
 pub usingnamespace @import("fontchooser.zig");
 pub usingnamespace @import("grid.zig");
