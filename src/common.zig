@@ -1,5 +1,6 @@
 const c = @import("cimport.zig");
 const enums = @import("enums.zig");
+const Widget = @import("widget.zig").Widget;
 
 const std = @import("std");
 const fmt = std.fmt;
@@ -56,4 +57,18 @@ pub fn widget_set_visible(widget: *c.GtkWidget, state: bool) void {
 /// Convenience function which takes a bool and returns a c_int
 pub fn bool_to_c_int(boolean: bool) c_int {
     return if (boolean) 1 else 0;
+}
+
+/// Convenience function which converts a GSlist singly-linked list to
+/// a Zig ArrayList
+pub fn gslistToArrayList(in: c.GSlist, allocator: mem.Allocator) ?std.ArrayList(Widget) {
+    var list = std.ArrayList(Widget).init(allocator);
+    while (in) |ptr| {
+        list.append(Widget{ .ptr = @ptrCast(*c.GtkWidget, @alignCast(8, ptr.*.data)) }) catch {
+            list.deinit();
+            return null;
+        };
+        in = ptr.*.next;
+    }
+    return list;
 }

@@ -1,7 +1,9 @@
 const c = @import("cimport.zig");
+const com = @import("common.zig");
 const Buildable = @import("buildable.zig").Buildable;
 const Button = @import("button.zig").Button;
 const Dialog = @import("dialog.zig").Dialog;
+const FileFilter = @import("filefilter.zig").FileFilter;
 const Orientable = @import("orientable.zig").Orientable;
 const Widget = @import("widget.zig").Widget;
 const Window = @import("window.zig").Window;
@@ -122,15 +124,7 @@ pub const FileChooser = struct {
     pub fn get_filenames(self: Self, allocator: mem.Allocator) ?std.ArrayList(Widget) {
         var kids = c.gtk_file_chooser_get_filenames(self.ptr);
         defer c.g_list_free(kids);
-        var list = std.ArrayList(Widget).init(allocator);
-        while (kids) |ptr| {
-            list.append(Widget{ .ptr = @ptrCast(*c.GtkWidget, @alignCast(8, ptr.*.data)) }) catch {
-                list.deinit();
-                return null;
-            };
-            kids = ptr.*.next;
-        }
-        return list;
+        return if (com.gslistToArrayList(kids, allocator)) |list| list else null;
     }
 
     pub fn set_current_folder(self: Self, folder: [:0]const u8) void {
@@ -164,16 +158,8 @@ pub const FileChooser = struct {
     pub fn get_uris(self: Self, allocator: mem.Allocator) ?std.ArrayList(Widget) {
         var kids = c.gtk_file_chooser_get_uris(self.ptr);
         defer c.g_list_free(kids);
-        var list = std.ArrayList(Widget).init(allocator);
-        while (kids) |ptr| {
-            list.append(Widget{ .ptr = @ptrCast(*c.GtkWidget, @alignCast(8, ptr.*.data)) }) catch {
-                list.deinit();
-                return null;
-            };
-            kids = ptr.*.next;
-        }
-        return list;
-    }
+        return if (com.gslistToArrayList(kids, allocator)) |list| list else null;
+}
 
     pub fn set_current_folder_uri(self: Self, uri: [:0]const u8) void {
         c.gtk_file_chooser_set_current_folder_uri(self.ptr, uri);
@@ -231,6 +217,80 @@ pub const FileChooser = struct {
         if (c.gtk_file_chooser_get_extra_widget(self.ptr)) |ptr| {
             return Widget{ .ptr = ptr };
         } else return null;
+    }
+
+    pub fn add_choice(self: Self, id: [:0]const u8, label: [:0]const u8, options: [:0][*c]const u8, option_labels: [:0][*c]const u8) void {
+        c.gtk_file_chooser_add_choice(self.ptr, id, label, options, option_labels);
+    }
+
+    pub fn remove_choice(self: Self, id: [:0]const u8) void {
+        c.gtk_file_chooser_remove_choice(self.ptr, id);
+    }
+
+    pub fn set_choice(self: Self, id: [:0]const u8, option: [:0]const u8) void {
+        c.gtk_file_chooser_set_choice(self.ptr, id, option);
+    }
+
+    pub fn get_choice(self: Self, id: [:0]const u8, allocator: mem.Allocator) ?[:0]const u8 {
+        const val = c.gtk_file_chooser_get_choice(self.ptr, id);
+        const len = mem.len(val);
+        return fmt.allocPrintZ(allocator, "{s}", .{val[0..len]}) catch return null;
+    }
+
+    pub fn add_filter(self: Self, filter: FileFilter) void {
+        c.gtk_file_chooser_add_filter(self.ptr, filter.ptr);
+    }
+
+    pub fn remove_filter(self: Self, filter: FileFilter) void {
+        c.gtk_file_chooser_remove_filter(self.ptr, filter.ptr);
+    }
+
+    pub fn list_filters(self: Self, allocator: mem.Allocator) ?std.ArrayList(Widget) {
+        var kids = c.gtk_file_chooser_list_filters(self.ptr);
+        defer c.g_list_free(kids);
+        return if (com.gslistToArrayList(kids, allocator)) |list| list else null;
+    }
+
+    pub fn set_filter(self: Self, filter: FileFilter) void {
+        c.gtk_file_chooser_set_filter(self.ptr, filter.ptr);
+    }
+
+    pub fn get_filter(self: Self) ?FileFilter {
+        if (c.gtk_file_filter_get_filter(self.ptr)) |f| {
+            return FileFilter{ .ptr = f };
+        } else return null;
+    }
+
+    pub fn add_shortcut_folder(self: Self, folder: [:0]const u8) Error!void {
+        if (c.gtk_file_chooser_add_shortcut_folder(self.ptr, folder, null) == 0) {
+            return Error.nonexistent;
+        }
+    }
+
+    pub fn remove_shortcut_folder(self: Self, folder: [:0]const u8) Error!void {
+        if (c.gtk_file_chooser_remove_shortcut_folder(self.ptr, folder, null) == 0) {
+            return Error.nonexistent;
+        }
+    }
+
+    pub fn list_shortcut_folders(self: Self) ?c.GSlist {
+        return if (c.gtk_file_chooser_list_folders(self.ptr)) |ls| ls else null;
+    }
+
+    pub fn add_shortcut_folder_uri(self: Self, uri: [:0]const u8) Error!void {
+        if (c.gtk_file_chooser_add_shortcut_folder_uri(self.ptr, uri, null) == 0) {
+            return Error.nonexistent;
+        }
+    }
+
+    pub fn remove_shorcut_holder_uri(self: Self, uri: [:0]const u8) Error!void {
+        if (c.gtk_file_chooser_remove_shortcut_folder_uri(self.ptr, uri, null) == 0) {
+            return Error.nonexistent;
+        }
+    }
+
+    pub fn list_shortcut_folder_uris(self: Self) ?c.GSlist {
+        return if (c.gtk_file_chooser_list_folder_uris(self.ptr)) |ls| ls else null;
     }
 
     pub fn as_widget(self: Self) Widget {
