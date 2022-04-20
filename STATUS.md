@@ -115,11 +115,11 @@
 | GtkColorChooserWidget |   | x |   |
 | GtkColorChooserDialog |   | x |   |
 | GtkFileChooser | x |   |   |
-| GtkFileChooserButton | x |   |   |
-| GtkFileChooserNative | x |   |   |
-| GtkFileChooserDialog | x |   |   |
-| GtkFileChooserWidget | x |   |   |
-| GtkFileFilter | x |   |   |
+| GtkFileChooserButton |   |   | x |
+| GtkFileChooserNative |   |   | x |
+| GtkFileChooserDialog |   |   | x |
+| GtkFileChooserWidget |   |   | x |
+| GtkFileFilter |   |   | x |
 | GtkFontChooser |   |   | x |
 | GtkFontButton |   |   | x |
 | GtkFontChooserWidget |   |   | x |
