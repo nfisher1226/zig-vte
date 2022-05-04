@@ -192,10 +192,10 @@ pub const Widget = struct {
         return T.is_instance(self.get_g_type());
     }
 
-    pub fn to_button(self: Self) ?Button {
-        if (self.isa(Button)) {
-            return Button{
-                .ptr = @ptrCast(*c.GtkButton, self.ptr),
+    pub fn to_bin(self: Self) ?Bin {
+        if (self.isa(Bin)) {
+            return Bin{
+                .ptr = @ptrCast(*c.GtkBin, self.ptr),
             };
         } else return null;
     }
@@ -208,10 +208,50 @@ pub const Widget = struct {
         } else return null;
     }
 
+    pub fn to_button(self: Self) ?Button {
+        if (self.isa(Button)) {
+            return Button{
+                .ptr = @ptrCast(*c.GtkButton, self.ptr),
+            };
+        } else return null;
+    }
+
     pub fn to_check_button(self: Self) ?CheckButton {
         if (self.isa(CheckButton)) {
             return CheckButton{
                 .ptr = @ptrCast(*c.GtkCheckButton, self.ptr),
+            };
+        } else return null;
+    }
+
+    pub fn to_color_chooser(self: Self) ?ColorChooser {
+        if (self.isa(ColorChooser)) {
+            return ColorChooser{
+                .ptr = @ptrCast(*c.GtkColorChooser, self.ptr),
+            };
+        } else return null;
+    }
+
+    pub fn to_color_button(self: Self) ?ColorButton {
+        if (self.isa(ColorButton)) {
+            return ColorButton{
+                .ptr = @ptrCast(*c.GtkColorButton, self.ptr),
+            };
+        } else return null;
+    }
+
+    pub fn to_color_chooser_widget(self: Self) ?ColorChooserWidget {
+        if (self.isa(ColorChooserWidget)) {
+            return ColorChooserWidget{
+                .ptr = @ptrCast(*c.GtkColorChooserdget, self.ptr),
+            };
+        } else return null;
+    }
+
+    pub fn to_color_dialog(self: Self) ?ColorChooserDialog {
+        if (self.isa(ColorChooserDialog)) {
+            return ColorChooserDialog{
+                .ptr = @ptrCast(*c.GtkColorChooserDialog, self.ptr),
             };
         } else return null;
     }
@@ -228,22 +268,6 @@ pub const Widget = struct {
         if (self.isa(ComboBoxText)) {
             return ComboBoxText{
                 .ptr = @ptrCast(*c.GtkComboBoxText, self.ptr),
-            };
-        } else return null;
-    }
-
-    pub fn to_color_button(self: Self) ?ColorButton {
-        if (self.isa(ColorButton)) {
-            return ColorButton{
-                .ptr = @ptrCast(*c.GtkColorButton, self.ptr),
-            };
-        } else return null;
-    }
-
-    pub fn to_color_chooser(self: Self) ?ColorChooser {
-        if (self.isa(ColorChooser)) {
-            return ColorChooser{
-                .ptr = @ptrCast(*c.GtkColorChooser, self.ptr),
             };
         } else return null;
     }
