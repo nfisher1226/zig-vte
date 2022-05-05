@@ -7,6 +7,10 @@ pub fn build(b: *Builder) void {
     const mode = b.standardReleaseOptions();
     const examples = .{"simple", "glade", "callbacks", "range", "simple-term"};
 
+    const lib = b.addStaticLibrary("zig-vte", "lib.zig");
+    lib.setBuildMode(mode);
+    lib.install();
+
     const example_step = b.step("examples", "Build examples");
     inline for (examples) |name| {
         const example = b.addExecutable(name, "examples/" ++ name ++ ".zig");
