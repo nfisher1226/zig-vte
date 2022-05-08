@@ -1,5 +1,11 @@
-zig-cache/
 zig-out/
-.gyro
-deps.zig
+zig-cache/
+docs/
+*.glade~
+*.a
 gyro.lock
+deps.zig
+.gyro
+.zigmod
+deps.zig
+tags
