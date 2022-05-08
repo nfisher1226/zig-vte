@@ -38,6 +38,10 @@ pub const Dialog = struct {
         return (gtype == c.gtk_dialog_get_type() or AboutDialog.is_instance(gtype) or ColorChooserDialog.is_instance(gtype) or FontChooserDialog.is_instance(gtype) or MessageDialog.is_instance(gtype));
     }
 
+    fn get_g_type(self: Self) u64 {
+        return self.ptr.*.parent_instance.g_type_instance.g_class.*.g_type;
+    }
+
     pub fn isa(self: Self, comptime T: type) bool {
         return T.is_instance(self.get_g_type());
     }
@@ -57,6 +61,12 @@ pub const Dialog = struct {
     pub fn to_filechooser_dialog(self: Self) ?FileChooserDialog {
         return if (self.isa(FileChooserDialog)) FileChooserDialog{
             .ptr = @ptrCast(*c.GtkFileChooserDialog, self.ptr),
+        } else null;
+    }
+
+    pub fn to_fontchooser_dialog(self: Self) ?FontChooserDialog {
+        return if (self.isa(FontChooserDialog)) FontChooserDialog{
+            .ptr = @ptrCast(*c.GtkFontChooserDialog, self.ptr),
         } else null;
     }
 
