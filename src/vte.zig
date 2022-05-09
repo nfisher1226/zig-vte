@@ -1,139 +1,158 @@
 const c = @import("cimport.zig");
-const com = @import("common.zig");
 const enums = @import("enums.zig");
 const Widget = @import("widget.zig").Widget;
 const std = @import("std");
 const fmt = std.fmt;
 const mem = std.mem;
 
-/// An enumeration type that can be used to specify how the terminal uses extra
-/// allocated space.
-pub const Align = enum(c_uint) {
-    /// align to left/top
-    start = c.VTE_ALIGN_START,
-    /// align to centre
-    center = c.VTE_ALIGN_CENTER,
-    /// align to right/bottom
-    end = c.VTE_ALIGN_END,
-};
-
-/// An enumerated type which can be used to indicate the cursor blink mode for
-/// the terminal.
-pub const CursorBlinkMode = enum(c_uint) {
-    /// Follow GTK+ settings for cursor blinking.
-    system = c.VTE_CURSOR_BLINK_SYSTEM,
-    /// Cursor blinks.
-    on = c.VTE_CURSOR_BLINK_ON,
-    /// Cursor does not blink.
-    off = c.VTE_CURSOR_BLINK_OFF,
-};
-
-/// An enumerated type which can be used to indicate what should the terminal
-/// draw at the cursor position.
-pub const CursorShape = enum(c_uint) {
-    /// Draw a block cursor. This is the default.
-    block = c.VTE_CURSOR_SHAPE_BLOCK,
-    /// Draw a vertical bar on the left side of character. This is similar to
-    /// the default cursor for other GTK+ widgets.
-    ibeam = c.VTE_CURSOR_SHAPE_IBEAM,
-    /// Draw a horizontal bar below the character.
-    underline = c.VTE_CURSOR_SHAPE_UNDERLINE,
-};
-
-/// An enumerated type which can be used to indicate which string the terminal
-/// should send to an application when the user presses the Delete or Backspace
-/// keys.
-pub const EraseBinding = enum(c_uint) {
-    /// For backspace, attempt to determine the right value from the terminal's
-    /// IO settings. For delete, use the control sequence.
-    auto = c.VTE_ERASE_AUTO,
-    /// Send an ASCII backspace character (0x08).
-    ascii_backspace = c.VTE_ERASE_ASCII_BACKSPACE,
-    /// Send an ASCII delete character (0x7F).
-    ascii_delete = c.VTE_ERASE_ASCII_DELETE,
-    /// Send the "@7 " control sequence.
-    delete_sequence = c.VTE_ERASE_DELETE_SEQUENCE,
-    /// Send terminal's "erase" setting.
-    tty = c.VTE_ERRASE_TTY,
-};
-
-/// An enumerated type which can be used to indicate whether the terminal allows
-/// the text contents to be blinked.
-pub const TextBlinkMode = enum(c_uint) {
-    /// Do not blink the text.
-    never = c.VTE_TEXT_BLINK_NEVER,
-    /// Allow blinking text only if the terminal is focused.
-    focused = c.VTE_TEXT_BLINK_FOCUSED,
-    /// Allow blinking text only if the terminal is unfocused.
-    unfocused = c.VTE_TEXT_BLINK_UNFOCUSED,
-    /// Allow blinking text. This is the default.
-    always = c.VTE_TEXT_BLINK_ALWAYS,
-};
-
-/// An enumeration type that can be used to specify the format the selection
-/// should be copied to the clipboard in.
-pub const Format = enum(c_uint) {
-    /// Export as plain text
-    text = c.VTE_FORMAT_TEXT,
-    /// Export as HTML formatted text
-    html = c.VTE_FORMAT_HTML,
-};
-
-/// A flag type to determine how terminal contents should be written to an
-/// output stream.
-pub const WriteFlags = enum(c_uint) {
-    default = c.VTE_WRITE_DEFAULT,
-};
-
-/// An enumeration type for features.
-pub const FeatureFlags = enum(c_uint) {
-    /// whether VTE was built with bidirectional text support
-    bidi = c.VTE_FEATURE_FLAG_BIDI,
-    /// whether VTE was built with ICU support
-    icu = c.VTE_FEATURE_FLAG_ICU,
-    /// whether VTE was built with systemd support
-    systemd = c.VTE_FEATURE_FLAG_SYSTEMD,
-    /// whether VTE was built with SIXEL support
-    sixel = c.VTE_FEATURE_FLAG_SIXEL,
-    /// mask of all feature flags
-    mask = c.VTE_FEATURE_FLAGS_MASK,
-};
-
 pub const Terminal = struct {
     ptr: *c.VteTerminal,
 
     const Self = @This();
+
     pub const CursorPosition = struct {
         x: c_long,
         y: c_long,
     };
 
+    /// An enumeration type that can be used to specify how the terminal uses extra
+    /// allocated space.
+    pub const Align = enum(c_uint) {
+        /// align to left/top
+        start = c.VTE_ALIGN_START,
+        /// align to centre
+        center = c.VTE_ALIGN_CENTER,
+        /// align to right/bottom
+        end = c.VTE_ALIGN_END,
+    };
+
+    /// An enumerated type which can be used to indicate the cursor blink mode for
+    /// the terminal.
+    pub const CursorBlinkMode = enum(c_uint) {
+        /// Follow GTK+ settings for cursor blinking.
+        system = c.VTE_CURSOR_BLINK_SYSTEM,
+        /// Cursor blinks.
+        on = c.VTE_CURSOR_BLINK_ON,
+        /// Cursor does not blink.
+        off = c.VTE_CURSOR_BLINK_OFF,
+    };
+
+    /// An enumerated type which can be used to indicate what should the terminal
+    /// draw at the cursor position.
+    pub const CursorShape = enum(c_uint) {
+        /// Draw a block cursor. This is the default.
+        block = c.VTE_CURSOR_SHAPE_BLOCK,
+        /// Draw a vertical bar on the left side of character. This is similar to
+        /// the default cursor for other GTK+ widgets.
+        ibeam = c.VTE_CURSOR_SHAPE_IBEAM,
+        /// Draw a horizontal bar below the character.
+        underline = c.VTE_CURSOR_SHAPE_UNDERLINE,
+    };
+
+    /// An enumerated type which can be used to indicate which string the terminal
+    /// should send to an application when the user presses the Delete or Backspace
+    /// keys.
+    pub const EraseBinding = enum(c_uint) {
+        /// For backspace, attempt to determine the right value from the terminal's
+        /// IO settings. For delete, use the control sequence.
+        auto = c.VTE_ERASE_AUTO,
+        /// Send an ASCII backspace character (0x08).
+        ascii_backspace = c.VTE_ERASE_ASCII_BACKSPACE,
+        /// Send an ASCII delete character (0x7F).
+        ascii_delete = c.VTE_ERASE_ASCII_DELETE,
+        /// Send the "@7 " control sequence.
+        delete_sequence = c.VTE_ERASE_DELETE_SEQUENCE,
+        /// Send terminal's "erase" setting.
+        tty = c.VTE_ERRASE_TTY,
+    };
+
+    /// An enumerated type which can be used to indicate whether the terminal allows
+    /// the text contents to be blinked.
+    pub const TextBlinkMode = enum(c_uint) {
+        /// Do not blink the text.
+        never = c.VTE_TEXT_BLINK_NEVER,
+        /// Allow blinking text only if the terminal is focused.
+        focused = c.VTE_TEXT_BLINK_FOCUSED,
+        /// Allow blinking text only if the terminal is unfocused.
+        unfocused = c.VTE_TEXT_BLINK_UNFOCUSED,
+        /// Allow blinking text. This is the default.
+        always = c.VTE_TEXT_BLINK_ALWAYS,
+    };
+
+    /// An enumeration type that can be used to specify the format the selection
+    /// should be copied to the clipboard in.
+    pub const Format = enum(c_uint) {
+        /// Export as plain text
+        text = c.VTE_FORMAT_TEXT,
+        /// Export as HTML formatted text
+        html = c.VTE_FORMAT_HTML,
+    };
+
+    /// A flag type to determine how terminal contents should be written to an
+    /// output stream.
+    pub const WriteFlags = enum(c_uint) {
+        default = c.VTE_WRITE_DEFAULT,
+    };
+
+    /// An enumeration type for features.
+    pub const FeatureFlags = enum(c_uint) {
+        /// whether VTE was built with bidirectional text support
+        bidi = c.VTE_FEATURE_FLAG_BIDI,
+        /// whether VTE was built with ICU support
+        icu = c.VTE_FEATURE_FLAG_ICU,
+        /// whether VTE was built with systemd support
+        systemd = c.VTE_FEATURE_FLAG_SYSTEMD,
+        /// whether VTE was built with SIXEL support
+        sixel = c.VTE_FEATURE_FLAG_SIXEL,
+        /// mask of all feature flags
+        mask = c.VTE_FEATURE_FLAGS_MASK,
+    };
+
+    /// Creates a new terminal widget.
     pub fn new() Self {
         return Self{
             .ptr = @ptrCast(*c.VteTerminal, c.vte_terminal_new()),
         };
     }
 
+    /// Interprets data as if it were data received from a child process.
     pub fn feed(self: Self, data: [:0]const u8, length: c_long) void {
         c.vte_terminal_feed(self.ptr, data, length);
     }
 
+    /// Sends a block of UTF-8 text to the child as if it were entered by the
+    /// user at the keyboard.
     pub fn feed_child(self: Self, text: [:0]const u8, length: c_long) void {
         c.vte_terminal_feed_child(self.ptr, text, length);
     }
 
+    /// Selects all text within the terminal (not including the scrollback
+    /// buffer).
     pub fn select_all(self: Self) void {
         c.vte_terminal_select_all(self.ptr);
     }
 
+    /// Clears the current selection.
     pub fn unselect_all(self: Self) void {
         c.vte_terminal_unselect_all(self.ptr);
     }
 
+    /// Places the selected text in the terminal in the GDK_SELECTION_CLIPBOARD
+    /// selection in the form specified by format.
+    ///
+    /// For all formats, the selection data (see GtkSelectionData) will include
+    /// the text targets (see gtk_target_list_add_text_targets() and
+    /// gtk_selection_data_targets_includes_text()). For *html*, the selection
+    /// will also include the "text/html" target, which when requested, returns
+    /// the HTML data in UTF-16 with a U+FEFF BYTE ORDER MARK character at the
+    /// start.
     pub fn copy_clipboard_format(self: Self, format: Format) void {
         c.vte_terminal_copy_clipboard_format(self.ptr, @enumToInt(format));
     }
 
+    /// Sends the contents of the GDK_SELECTION_CLIPBOARD selection to the
+    /// terminal's child. It's called on paste menu item, or when user presses
+    /// Shift+Insert.
     pub fn paste_clipboard(self: Self) void {
         c.vte_terminal_paste_clipboard(self.ptr);
     }
@@ -399,7 +418,7 @@ pub const Terminal = struct {
     }
 
     pub fn set_clear_background(self: Terminal, clear: bool) void {
-        c.vte_terminal_set_clear_background(self.ptr, com.bool_to_c_int(clear));
+        c.vte_terminal_set_clear_background(self.ptr, if (clear) 1 else 0);
     }
 
     pub fn get_current_directory_uri(self: Terminal, allocator: mem.Allocator) ?[:0]const u8 {
