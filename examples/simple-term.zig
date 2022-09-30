@@ -21,7 +21,7 @@ const Gui = struct {
         self.window.set_title("Simple Terminal");
         self.window.as_container().add(self.term.as_widget());
         self.term.spawn_async(.default, null, "/bin/sh", null, .default, null, -1, null);
-        self.term.connect_child_exited(@ptrCast(c.GCallback, close_callback), null);
+        self.term.connect_child_exited(@ptrCast(c.GCallback, &close_callback), null);
     }
 };
 
@@ -33,7 +33,7 @@ pub fn main() void {
     _ = c.g_signal_connect_data(
         app,
         "activate",
-        @ptrCast(c.GCallback, activate),
+        @ptrCast(c.GCallback, &activate),
         null,
         null,
         c.G_CONNECT_AFTER,

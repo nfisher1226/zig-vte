@@ -117,13 +117,13 @@ pub const Terminal = struct {
 
     /// Interprets data as if it were data received from a child process.
     pub fn feed(self: Self, data: [:0]const u8, length: c_long) void {
-        c.vte_terminal_feed(self.ptr, data, length);
+        c.vte_terminal_feed(self.ptr, data.ptr, length);
     }
 
     /// Sends a block of UTF-8 text to the child as if it were entered by the
     /// user at the keyboard.
     pub fn feed_child(self: Self, text: [:0]const u8, length: c_long) void {
-        c.vte_terminal_feed_child(self.ptr, text, length);
+        c.vte_terminal_feed_child(self.ptr, text.ptr, length);
     }
 
     /// Selects all text within the terminal (not including the scrollback
@@ -400,9 +400,9 @@ pub const Terminal = struct {
         c.vte_terminal_spawn_async(
             self.ptr,
             @enumToInt(flags),
-            if (wkgdir) |d| d else null,
+            if (wkgdir) |d| d.ptr else null,
             @ptrCast([*c][*c]c.gchar, &([2][*c]c.gchar{
-                c.g_strdup(command),
+                c.g_strdup(command.ptr),
                 null,
             })),
             if (env) |e| @ptrCast([*c][*c]u8, e) else null,
