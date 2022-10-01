@@ -27,7 +27,7 @@ pub const Button = struct {
     /// Creates a Button with a GtkLabel containing the given text
     pub fn new_with_label(text: [:0]const u8) Self {
         return Self{
-            .ptr = @ptrCast(*c.GtkButton, c.gtk_button_new_with_label(text)),
+            .ptr = @ptrCast(*c.GtkButton, c.gtk_button_new_with_label(text.ptr)),
         };
     }
 
@@ -35,14 +35,14 @@ pub const Button = struct {
     /// mnemonic for the button.
     pub fn new_with_mnemonic(text: [:0]const u8) Self {
         return Self{
-            .ptr = @ptrCast(*c.GtkButton, c.gtk_button_new_with_mnemonic(text)),
+            .ptr = @ptrCast(*c.GtkButton, c.gtk_button_new_with_mnemonic(text.ptr)),
         };
     }
 
     /// Creates a new Button containing an icon from the current icon theme.
     pub fn new_from_icon_name(icon_name: [:0]const u8, size: IconSize) Self {
         return Self{
-            .ptr = @ptrCast(*c.GtkButton, c.gtk_button_new_from_icon_name(icon_name, @enumToInt(size))),
+            .ptr = @ptrCast(*c.GtkButton, c.gtk_button_new_from_icon_name(icon_name.ptr, @enumToInt(size))),
         };
     }
 
@@ -69,7 +69,7 @@ pub const Button = struct {
 
     /// Set the text for the Button label
     pub fn set_label(self: Self, text: [:0]const u8) void {
-        c.gtk_button_set_label(self.ptr, text);
+        c.gtk_button_set_label(self.ptr, text.ptr);
     }
 
     /// Returns whether an embedded underline in the button label indicates a mnemonic.
@@ -183,7 +183,7 @@ pub const ToggleButton = struct {
     /// Creates a new ToggleButton with a text label.
     pub fn new_with_label(text: [:0]const u8) Self {
         return Self{
-            .ptr = @ptrCast(*c.GtkToggleButton, c.gtk_toggle_button_new_with_label(text)),
+            .ptr = @ptrCast(*c.GtkToggleButton, c.gtk_toggle_button_new_with_label(text.ptr)),
         };
     }
 
@@ -191,7 +191,7 @@ pub const ToggleButton = struct {
     /// mnemonic for the button.
     pub fn new_with_mnemonic(text: [:0]const u8) Self {
         return Self{
-            .ptr = @ptrCast(*c.GtkToggleButton, c.gtk_toggle_button_new_with_mnemonic(text)),
+            .ptr = @ptrCast(*c.GtkToggleButton, c.gtk_toggle_button_new_with_mnemonic(text.ptr)),
         };
     }
 
@@ -280,7 +280,7 @@ pub const CheckButton = struct {
     // Creates a new CheckButton with a GtkLabel to the right of it.
     pub fn new_with_label(text: [:0]const u8) Self {
         return Self{
-            .ptr = @ptrCast(*c.GtkCheckButton, c.gtk_check_button_new_with_label(text)),
+            .ptr = @ptrCast(*c.GtkCheckButton, c.gtk_check_button_new_with_label(text.ptr)),
         };
     }
 
@@ -288,7 +288,7 @@ pub const CheckButton = struct {
     // Underscores in label indicate the mnemonic for the check button.
     pub fn new_with_mnemonic(text: [:0]const u8) Self {
         return Self{
-            .ptr = @ptrCast(*c.GtkCheckButton, c.gtk_check_button_new_with_mnemonic(text)),
+            .ptr = @ptrCast(*c.GtkCheckButton, c.gtk_check_button_new_with_mnemonic(text.ptr)),
         };
     }
 
